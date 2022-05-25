@@ -1,25 +1,37 @@
 package br.com.ccs.delivery.domain.model.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Restaurante extends AbstractEntity {
+public class Restaurante {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Long id;
 
     @NotBlank
     @Size(min = 3, max = 60)
+    @EqualsAndHashCode.Include
+    @Column(nullable = false)
     private String nome;
-    @NotNull
+
+    @Column(nullable = false)
     @Min(0)
     private BigDecimal taxaEntrega;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    private Cozinha cozinha;
 
 }

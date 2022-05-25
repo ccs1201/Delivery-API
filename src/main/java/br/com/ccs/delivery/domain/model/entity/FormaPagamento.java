@@ -4,19 +4,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Cozinha {
+public class FormaPagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
-
-    @Column(unique = true , nullable = false)
-    private String nome;
     
-    @OneToMany(mappedBy = "cozinha")
-    private Collection<Restaurante> restaurantes;
+    @Column(nullable = false, length = 30)
+    private String descricao;
 }
