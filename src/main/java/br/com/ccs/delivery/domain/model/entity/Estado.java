@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,6 +21,7 @@ public class Estado {
 
     @Column(nullable = false, length = 2)
     private String sigla;
+    @JsonIgnore
     @OneToMany(mappedBy = "estado", fetch = FetchType.LAZY)
     private Collection<Municipio> municipios;
 
