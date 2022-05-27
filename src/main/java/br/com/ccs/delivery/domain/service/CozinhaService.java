@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.domain.service;
 
+import br.com.ccs.delivery.domain.exception.EntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.repository.CozinhaRepository;
 import br.com.ccs.delivery.domain.exception.EntityInUseException;
@@ -35,15 +36,21 @@ public class CozinhaService {
 
     @Transactional
     public Cozinha save(Cozinha cozinha) {
-        return repository.save(cozinha);
+        try {
+            return repository.save(cozinha);
+        } catch (IllegalArgumentException e) {
+            throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
+        } catch (DataIntegrityViolationException e){
+            throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
+        }
     }
 
     @Transactional
     public Cozinha update(Long cozinhaId, Cozinha cozinha) {
 
         findById(cozinhaId);
-
         cozinha.setId(cozinhaId);
+
         return repository.save(cozinha);
     }
 

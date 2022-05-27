@@ -1,7 +1,7 @@
 package br.com.ccs.delivery.api.controller;
 
-import br.com.ccs.delivery.domain.service.EstadoService;
 import br.com.ccs.delivery.domain.model.entity.Estado;
+import br.com.ccs.delivery.domain.service.EstadoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +24,25 @@ public class EstadoController {
     @ResponseStatus(HttpStatus.OK)
     public Estado findById(@PathVariable int estadoId) {
         return service.findById(estadoId);
+
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Estado save(@RequestBody Estado estado) {
+        return service.save(estado);
+    }
+
+    @PutMapping("{estadoId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Estado update(@PathVariable int estadoId, @RequestBody Estado estado) {
+        return service.update(estadoId, estado);
+    }
+
+    @DeleteMapping("{estadoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int estadoId) {
+        service.delete(estadoId);
 
     }
 }
