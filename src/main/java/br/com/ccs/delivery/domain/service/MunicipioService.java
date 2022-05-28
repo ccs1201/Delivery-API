@@ -27,7 +27,8 @@ public class MunicipioService {
 
     public Municipio findById(int municipioId) {
         try {
-            return repository.findById(municipioId).get();
+            Municipio municipio = repository.findById(municipioId).get();
+            return municipio;
         } catch (NoSuchElementException e) {
             throw new EntityNotFoundException(String.format("Município ID: %d, não encontrado.", municipioId));
         }
@@ -60,7 +61,5 @@ public class MunicipioService {
         } catch (IllegalArgumentException | EmptyResultDataAccessException | DataIntegrityViolationException e) {
             throw new EntityRemoveException(String.format("Não foi possível remover o Município ID: %d.\nDetalhes:\n%s", municpioId, e.getMessage()));
         }
-
     }
-
 }
