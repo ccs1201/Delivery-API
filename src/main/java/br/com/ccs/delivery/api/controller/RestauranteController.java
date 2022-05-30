@@ -2,6 +2,8 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
+import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
+import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
 import br.com.ccs.delivery.domain.service.RestauranteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -77,6 +79,15 @@ public class RestauranteController {
 
         return service.anyCriteria(nomeRestaurante, taxaEntregaMin, taxaEntregaMax, nomeCozinha);
 
+    }
+
+    @GetMapping("/com-frete-gratis")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Restaurante> comFreteGratis(String nome){
+        var comFreteGratis = new RestauranteComFreteGratisSpec();
+        var comNomeSemelhante = new RestauranteNomeLikeSpec(nome);
+
+        return service.findAll(comFreteGratis, comNomeSemelhante);
     }
 
 }

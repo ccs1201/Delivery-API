@@ -4,6 +4,8 @@ import br.com.ccs.delivery.domain.exception.EntityInUseException;
 import br.com.ccs.delivery.domain.exception.EntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
+import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
+import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -95,5 +97,10 @@ public class RestauranteService {
 
     public Collection<Restaurante> anyCriteria(String nome, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha) {
         return repository.anyCriteria(nome,taxaEntregaMin, taxaEntregaMax,nomeCozinha);
+    }
+
+    public Collection<Restaurante> findAll(RestauranteComFreteGratisSpec comFreteGratis, RestauranteNomeLikeSpec comNomeSemelhante) {
+
+        return repository.findAll(comFreteGratis.and(comNomeSemelhante));
     }
 }
