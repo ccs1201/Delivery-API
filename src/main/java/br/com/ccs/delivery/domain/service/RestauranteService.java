@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -28,7 +29,9 @@ public class RestauranteService {
         try {
             return repository.findById(id).get();
         } catch (NoSuchElementException e) {
-            throw new EntityNotFoundException(String.format("Restaurante ID: %d não encontrado.", id));
+            throw new EntityNotFoundException(
+                    String.format("Restaurante ID: %d não encontrado.", id)
+            );
         }
     }
 
@@ -37,9 +40,13 @@ public class RestauranteService {
         try {
             repository.deleteById(restauranteId);
         } catch (IllegalArgumentException e) {
-            throw new EntityNotFoundException(String.format("Restaurante ID: %d não encontrado.", restauranteId));
+            throw new EntityNotFoundException(
+                    String.format("Restaurante ID: %d não encontrado.", restauranteId)
+            );
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(String.format("Não é possível remover o Restaurante ID: %d pois esta em uso", restauranteId));
+            throw new EntityInUseException(
+                    String.format("Não é possível remover o Restaurante ID: %d pois esta em uso", restauranteId)
+            );
         }
     }
 
@@ -47,10 +54,14 @@ public class RestauranteService {
     public Restaurante save(Restaurante restaurante) {
         try {
             return repository.save(restaurante);
-        } catch (IllegalArgumentException e) {
-            throw new EntityPersistException(String.format("Erro ao cadastrar Restaurante. Detalhes:\n %s", e.getMessage()));
         } catch (DataIntegrityViolationException e) {
-            throw new EntityPersistException(String.format("Erro ao cadastrar Restaurante. Detalhes:\n %s", e.getMessage()));
+            throw new EntityPersistException(
+                    String.format("Erro ao cadastrar Restaurante. Detalhes:\n %s", e.getMessage())
+            );
+        } catch (IllegalArgumentException e) {
+            throw new EntityPersistException(
+                    String.format("Erro ao cadastrar Restaurante. Detalhes:\n %s", e.getMessage())
+            );
         }
     }
 
@@ -60,7 +71,9 @@ public class RestauranteService {
             restaurante.setId(id);
             return repository.save(restaurante);
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
-            throw new EntityPersistException(String.format("Erro ao atualizar Restaurante.\nDetalhes:\n %s", e.getMessage()));
+            throw new EntityPersistException(
+                    String.format("Erro ao atualizar Restaurante.\nDetalhes:\n %s", e.getMessage())
+            );
         }
     }
 
@@ -70,7 +83,17 @@ public class RestauranteService {
         try {
             return repository.save(restaurante);
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
-            throw new EntityPersistException(String.format("Erro ao atualizar Restaurante.\nDetalhes:\n %s", e.getMessage()));
+            throw new EntityPersistException(
+                    String.format("Erro ao atualizar Restaurante.\nDetalhes:\n %s", e.getMessage())
+            );
         }
+    }
+
+    public Collection<Restaurante> findByNomeCozinha(String nomeCozinha) {
+        return repository.findByNomeCozinha(nomeCozinha);
+    }
+
+    public Collection<Restaurante> anyCriteria(String nome, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha) {
+        return repository.anyCriteria(nome,taxaEntregaMin, taxaEntregaMax,nomeCozinha);
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -25,22 +24,17 @@ public class CozinhaService {
     }
 
     public Cozinha findById(Long cozinhaId) {
-
-        try {
-            return repository.findById(cozinhaId).get();
-
-        } catch (NoSuchElementException e) {
-            throw new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId));
-        }
+        return repository.findById(cozinhaId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId)));
     }
 
     @Transactional
     public Cozinha save(Cozinha cozinha) {
         try {
             return repository.save(cozinha);
-        } catch (IllegalArgumentException e) {
-            throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
         } catch (DataIntegrityViolationException e) {
+            throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
+        } catch (IllegalArgumentException e) {
             throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
         }
     }
@@ -59,7 +53,7 @@ public class CozinhaService {
         try {
             repository.deleteById(cozinhaId);
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(String.format("Cozinha ID: %d não pode ser removida pois esta em uso.", cozinhaId));
+            throw new EntityInUseException(String.format("Cozinha ID: %d não pode ser removida pois está em uso.", cozinhaId));
 
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId));

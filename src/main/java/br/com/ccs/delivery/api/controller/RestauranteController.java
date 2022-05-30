@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 
@@ -61,6 +62,20 @@ public class RestauranteController {
     private void merge(Map<String, Object> updates, Restaurante restaurante) {
 
         mergerUtil.updateModel(updates, restaurante, Restaurante.class);
+
+    }
+
+    @GetMapping("/nome-cozinha")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Restaurante> findByNomeCozinha(@RequestParam String nomeCozinha) {
+        return service.findByNomeCozinha(nomeCozinha);
+    }
+
+    @GetMapping("/find")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Restaurante> anyCriteria(String nomeRestaurante, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha) {
+
+        return service.anyCriteria(nomeRestaurante, taxaEntregaMin, taxaEntregaMax, nomeCozinha);
 
     }
 
