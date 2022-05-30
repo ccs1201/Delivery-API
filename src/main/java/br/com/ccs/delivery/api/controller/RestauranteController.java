@@ -1,14 +1,12 @@
 package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
+import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.service.RestauranteService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 
@@ -18,6 +16,7 @@ import java.util.Map;
 public class RestauranteController {
 
     RestauranteService service;
+    GenericEntityUpdateMergerUtil mergerUtil;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -61,18 +60,8 @@ public class RestauranteController {
 
     private void merge(Map<String, Object> updates, Restaurante restaurante) {
 
-        ObjectMapper mapper = new ObjectMapper();
+        mergerUtil.updateModel(updates, restaurante, Restaurante.class);
 
-        Restaurante restauranteMapper = mapper.convertValue(updates, Restaurante.class);
-
-        updates.forEach((parametro, valor) -> {
-
-            Field atributoDaClasse = ReflectionUtils.findField(Restaurante.class, parametro);
-            atributoDaClasse.setAccessible(true);
-
-            Object valorDoMapper = ReflectionUtils.getField(atributoDaClasse, restauranteMapper);
-            ReflectionUtils.setField(atributoDaClasse, restaurante, valorDoMapper);
-        });
     }
 
 }
