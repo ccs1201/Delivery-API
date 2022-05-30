@@ -1,9 +1,9 @@
 package br.com.ccs.delivery.domain.service;
 
+import br.com.ccs.delivery.domain.exception.EntityInUseException;
 import br.com.ccs.delivery.domain.exception.EntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.repository.CozinhaRepository;
-import br.com.ccs.delivery.domain.exception.EntityInUseException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -40,7 +40,7 @@ public class CozinhaService {
             return repository.save(cozinha);
         } catch (IllegalArgumentException e) {
             throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
         }
     }
@@ -64,5 +64,10 @@ public class CozinhaService {
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId));
         }
+    }
+
+    public Collection<Cozinha> findByNomeContaining(String nome) {
+
+        return repository.findByNomeContaining(nome);
     }
 }

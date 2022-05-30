@@ -13,4 +13,5 @@ public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
     @Query("select distinct c from Cozinha c join fetch c.restaurantes r")
     Collection<Cozinha> findAllEager();
 
+    Collection<Cozinha> findByNomeContaining(String nome);
 }

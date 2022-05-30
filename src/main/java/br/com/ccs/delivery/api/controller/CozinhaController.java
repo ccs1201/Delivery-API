@@ -1,11 +1,12 @@
 package br.com.ccs.delivery.api.controller;
 
-import br.com.ccs.delivery.domain.service.CozinhaService;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.model.wrapper.CozinhaXmlResponse;
+import br.com.ccs.delivery.domain.service.CozinhaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -29,6 +30,13 @@ public class CozinhaController {
         return new CozinhaXmlResponse(service.findAll());
     }
 
+    @GetMapping("/nome")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Cozinha> findByNome(@RequestParam String nome) {
+
+        return service.findByNomeContaining(nome);
+    }
+
     @GetMapping("{cozinhaId}")
     @ResponseStatus(HttpStatus.OK)
     public Cozinha findById(@PathVariable Long cozinhaId) {
@@ -49,7 +57,7 @@ public class CozinhaController {
 
     @DeleteMapping("{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long cozinhaId){
+    public void delete(@PathVariable Long cozinhaId) {
         service.delete(cozinhaId);
     }
 }
