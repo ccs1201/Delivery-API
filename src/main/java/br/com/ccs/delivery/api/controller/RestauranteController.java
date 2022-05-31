@@ -90,4 +90,10 @@ public class RestauranteController {
         return service.findAll(comFreteGratis, comNomeSemelhante);
     }
 
+    @GetMapping("/specs")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Restaurante> getComSpecs(String nomeRestaurante, String nomeCozinha){
+        return service.findAll(nomeRestaurante, nomeCozinha);
+    }
+
 }

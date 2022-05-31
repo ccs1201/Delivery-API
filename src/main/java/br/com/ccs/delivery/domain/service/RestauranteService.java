@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
+import static br.com.ccs.delivery.domain.repository.specification.RestauranteSpecs.*;
+
 @Service
 @AllArgsConstructor
 public class RestauranteService {
@@ -96,11 +98,17 @@ public class RestauranteService {
     }
 
     public Collection<Restaurante> anyCriteria(String nome, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha) {
-        return repository.anyCriteria(nome,taxaEntregaMin, taxaEntregaMax,nomeCozinha);
+        return repository.anyCriteria(nome, taxaEntregaMin, taxaEntregaMax, nomeCozinha);
     }
 
     public Collection<Restaurante> findAll(RestauranteComFreteGratisSpec comFreteGratis, RestauranteNomeLikeSpec comNomeSemelhante) {
 
         return repository.findAll(comFreteGratis.and(comNomeSemelhante));
+    }
+
+    public Collection<Restaurante> findAll(String nomeRestaurante, String nomeCozinha) {
+        return repository.findAll(comFreteGratis()
+                .and(nomeLike(nomeRestaurante)
+                        .and(cozinhaNomeLike(nomeCozinha))));
     }
 }
