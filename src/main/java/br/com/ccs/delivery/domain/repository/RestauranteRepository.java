@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.repository;
 
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long>,
+public interface RestauranteRepository extends CustomJpaRepository<Restaurante, Long>,
         RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante> {
 
     @Query("Select r from Restaurante r join fetch r.cozinha")

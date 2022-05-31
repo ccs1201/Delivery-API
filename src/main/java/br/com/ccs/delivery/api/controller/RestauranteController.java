@@ -96,4 +96,10 @@ public class RestauranteController {
         return service.findAll(nomeRestaurante, nomeCozinha);
     }
 
+    @GetMapping("/first")
+    @ResponseStatus(HttpStatus.OK)
+    public Restaurante getFirst(){
+        return service.getFirst();
+    }
+
 }

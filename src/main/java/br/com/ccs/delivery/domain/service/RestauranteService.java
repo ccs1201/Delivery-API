@@ -15,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.NoSuchElementException;
-
-import static br.com.ccs.delivery.domain.repository.specification.RestauranteSpecs.*;
 
 @Service
 @AllArgsConstructor
@@ -30,13 +27,9 @@ public class RestauranteService {
     }
 
     public Restaurante findById(Long id) {
-        try {
-            return repository.findById(id).get();
-        } catch (NoSuchElementException e) {
-            throw new EntityNotFoundException(
-                    String.format("Restaurante ID: %d não encontrado.", id)
-            );
-        }
+
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException(
+                String.format("Restaurante ID: %d não encontrado.", id)));
     }
 
     @Transactional
@@ -107,8 +100,10 @@ public class RestauranteService {
     }
 
     public Collection<Restaurante> findAll(String nomeRestaurante, String nomeCozinha) {
-        return repository.findAll(comFreteGratis()
-                .and(nomeLike(nomeRestaurante)
-                        .and(cozinhaNomeLike(nomeCozinha))));
+        return repository.comFreteGratisAndNomeAndCozinhaNome(nomeRestaurante, nomeCozinha);
+    }
+
+    public Restaurante getFirst() {
+        return repository.getFirstOccurrence().orElseThrow(() -> new EntityNotFoundException("Não foi possível localizar a primeira ocorrência de restaurante."));
     }
 }

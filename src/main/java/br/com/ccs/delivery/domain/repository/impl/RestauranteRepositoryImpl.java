@@ -1,7 +1,11 @@
 package br.com.ccs.delivery.domain.repository.impl;
 
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
+import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.RestauranteRepositoryQueries;
+import br.com.ccs.delivery.domain.repository.specification.RestauranteSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +25,10 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
     @PersistenceContext
     private EntityManager manager;
+
+    @Autowired
+    @Lazy
+    private RestauranteRepository repository;
 
     @Override
     public Collection<Restaurante> anyCriteria(
@@ -58,9 +66,15 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
         criteria.where(predicates.toArray(new Predicate[0]));
 
-
         TypedQuery<Restaurante> query = manager.createQuery(criteria);
 
         return query.getResultList();
+    }
+
+    @Override
+    public Collection<Restaurante> comFreteGratisAndNomeAndCozinhaNome(String nomeRestaurante, String nomeCozinha) {
+        return repository.findAll(RestauranteSpecs.comFreteGratis()
+                .and(RestauranteSpecs.nomeLike(nomeRestaurante)
+                        .and(RestauranteSpecs.cozinhaNomeLike(nomeCozinha))));
     }
 }

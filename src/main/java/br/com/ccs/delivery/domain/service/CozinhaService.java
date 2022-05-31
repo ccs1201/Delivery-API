@@ -64,4 +64,9 @@ public class CozinhaService {
 
         return repository.findByNomeContaining(nome);
     }
+
+    public Cozinha getFirst() {
+
+        return repository.getFirstOccurrence().orElseThrow(() -> new EntityNotFoundException("Não foi possível localizar a primeira ocorrência de cozinha."));
+    }
 }

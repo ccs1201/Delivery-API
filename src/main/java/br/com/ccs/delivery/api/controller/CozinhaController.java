@@ -59,4 +59,10 @@ public class CozinhaController {
     public void delete(@PathVariable Long cozinhaId) {
         service.delete(cozinhaId);
     }
+
+    @GetMapping("/first")
+    @ResponseStatus(HttpStatus.OK)
+    public Cozinha getFirst(){
+        return service.getFirst();
+    }
 }

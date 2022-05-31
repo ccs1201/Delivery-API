@@ -8,4 +8,6 @@ import java.util.Collection;
 public interface RestauranteRepositoryQueries {
     Collection<Restaurante> anyCriteria(
             String nomeRestaurante, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha);
+
+    Collection<Restaurante> comFreteGratisAndNomeAndCozinhaNome(String nomeRestaurante, String nomeCozinha);
 }
