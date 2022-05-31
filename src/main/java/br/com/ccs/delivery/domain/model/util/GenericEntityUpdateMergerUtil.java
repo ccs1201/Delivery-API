@@ -1,6 +1,6 @@
 package br.com.ccs.delivery.domain.model.util;
 
-import br.com.ccs.delivery.domain.util.exception.GenericEntityUpdateMergerUtilException;
+import br.com.ccs.delivery.domain.model.util.exception.GenericEntityUpdateMergerUtilException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
