@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Está classe é responsável por converter
  * os atributos atualizados na view
- * e seta-los nos atributos das nossas entities(Object Models)
+ * e seta-los nos atributos das nossas Entities(Object Models)
  *
  * @author Cleber Souza
  * @version 0.1

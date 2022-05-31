@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
+import br.com.ccs.delivery.domain.model.component.Endereco;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +36,9 @@ public class Restaurante {
     @Min(0)
     private BigDecimal taxaEntrega;
 
+    @Embedded
+    private Endereco endereco;
+
     @ManyToOne(optional = false)
     @NotNull
     private Cozinha cozinha;
@@ -43,5 +47,7 @@ public class Restaurante {
             @JoinTable(name = "restaurante_tipo_pagamento",
             joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "tipoPgamento_id"))
     Collection<TipoPagamento> tiposPagamento;
+
+
 
 }
