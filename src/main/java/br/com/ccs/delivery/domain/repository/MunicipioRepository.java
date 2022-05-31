@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface MunicipioRepository extends JpaRepository<Municipio, Integer> {
 
-    @Query("select distinct  m from Municipio m join fetch m.estado")
+    @Query("select distinct m from Municipio m join fetch m.estado")
     Collection<Municipio> findAllEager();
 
     @Query("select m from Municipio m join fetch m.estado where m.id= :id")
