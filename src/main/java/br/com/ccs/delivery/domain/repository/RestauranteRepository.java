@@ -13,11 +13,11 @@ import java.util.Optional;
 public interface RestauranteRepository extends CustomJpaRepository<Restaurante, Long>,
         RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante> {
 
-    @Query("Select r from Restaurante r join fetch r.cozinha JOIN FETCH r.tiposPagamento")
+    @Query("Select r from Restaurante r join fetch r.cozinha JOIN FETCH r.tiposPagamento join fetch r.endereco.municipio m join fetch m.estado")
     List<Restaurante> findAll();
 
     @Override
-    @Query("select r from Restaurante r join fetch r.cozinha join fetch r.tiposPagamento where r.id= :id")
+    @Query("select r from Restaurante r join fetch r.cozinha join fetch r.tiposPagamento join fetch r.endereco.municipio m join fetch m.estado where r.id= :id")
     Optional<Restaurante> findById(Long id);
 
     @Query("select r from Restaurante r join fetch r.cozinha c where c.nome like %:nomeCozinha% ")
