@@ -31,57 +31,61 @@ public class GenericEntityUpdateMergerUtil {
      * nos tipos específicos dos atributos da Entity. Depois
      * faz o update/merge dos valores convertidos na Entity
      * recebida como parâmetro, atualizando nosso model Entity
-     * e devolvendo-o atualizado com os valores.
+     * e devolvendo-o atualizado com os novos valores.
      *
-     * @param valuesFromView Map com os atributos e valores vindos da view.
-     * @param entity Entidade que terá seus atributos atualizados.
+     * @param valuesFromRequest Map com os atributos e valores vindos da view.
+     * @param entityToUpdate Entidade que terá seus atributos atualizados.
      * @param entityClass Classe da entidade a ser atualizada.
      * @param <ENTITY> Tipo da entidade que será retornada, o mesmo de @param entityClass.
      */
-    public <ENTITY> ENTITY updateModel(Map<String, Object> valuesFromView, ENTITY entity, Class<ENTITY> entityClass) {
+    public <ENTITY> ENTITY updateModel(Map<String, Object> valuesFromRequest, ENTITY entityToUpdate, Class<ENTITY> entityClass) {
 
         //converte os valores da view para os tipos corretos da entity
-        Object entityMapper = mapper.convertValue(valuesFromView, entityClass);
+        Object entityMapper = mapper.convertValue(valuesFromRequest, entityClass);
 
         //percorre os valore do map um de cada vez
-        valuesFromView.forEach((attribute, value) -> {
+        valuesFromRequest.forEach((field, value) -> {
 
             /*
-             *  Encontra o atributo na entity de destino
-             *  e muda sua acessibilidade para "publica"
+             *  Encontra o atributo na entityToUpdate
+             *  e muda sua acessibilidade para "publica".
              */
-            Field entityAttribute = ReflectionUtils.findField(entityClass, attribute);
+            Field entityField = ReflectionUtils.findField(entityClass, field);
 
+            /*
+            * Garantimos o tratamento de exceções caso aconteça
+            * alguma ao tentarmos mudar a acessibilidade da field.
+             */
             try {
-                entityAttribute.setAccessible(true);
+                entityField.setAccessible(true);
             } catch (InaccessibleObjectException | SecurityException | NullPointerException e){
                 throw new GenericEntityUpdateMergerUtilException(
                         String.format("impossível modificar ou acessar o atributo %s, da classe %s. \nDetalhes:\n %s ",
-                                entityAttribute.getName(), entityClass.getSimpleName(), e.getMessage()));
+                                entityField.getName(), entityClass.getSimpleName(), e.getMessage()));
             }
 
             /*
-             * Pega o valor do atributo no mapper
+             * Pega o valor do atributo no Map valuesFromRequest
              *      Exemplo:
-             *          se o mapper tem um atributo "nome" : "ABCDE";
-             *          valueFromView recebe "ABCDE".
+             *          se o Map tem um atributo "nome" : "ABCDE";
+             *          valueFromMap recebe "ABCDE".
              *
              */
-            Object valueFromMapper = ReflectionUtils.getField(entityAttribute, entityMapper);
+            Object valueFromMap = ReflectionUtils.getField(entityField, entityMapper);
 
             /*
              * Encontra o atributo na entity de destino
-             * declarado em "Field entityAttribute" e
-             * seta o valor do "valueFromMapper" na entity.
+             * declarado em "Field entityField" e
+             * seta o valor do "valueFromMap" na entity.
              *      Exemplo:
              *          Supondo que o field/atributo seja
-             *          "nome" e o valor do mapper "ABCDE"
-             *          pega o atributo "nome" na entity
-             *          se seta o valor "ABCDE".
+             *          "nome" e o valor do valueFromMap "ABCDE"
+             *          pega o atributo "nome" na entityToUpdate
+             *          e seta o valor "ABCDE".
              */
-            ReflectionUtils.setField(entityAttribute, entity, valueFromMapper);
+            ReflectionUtils.setField(entityField, entityToUpdate, valueFromMap);
         });
 
-        return entity;
+        return entityToUpdate;
     }
 }

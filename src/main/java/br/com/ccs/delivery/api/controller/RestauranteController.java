@@ -41,8 +41,8 @@ public class RestauranteController {
 
     @PutMapping("{restauranteId}")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurante update(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
-        return service.update(restauranteId, restaurante);
+    public Restaurante update(@PathVariable Long restauranteId, @RequestBody Map<String, Object> updates) {
+        return service.update(restauranteId, updates);
     }
 
     @DeleteMapping("{restauranteId}")

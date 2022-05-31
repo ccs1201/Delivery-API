@@ -3,6 +3,7 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.domain.exception.EntityInUseException;
 import br.com.ccs.delivery.domain.exception.EntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
+import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
@@ -15,12 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class RestauranteService {
 
     RestauranteRepository repository;
+    GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
 
     public Collection<Restaurante> findAll() {
         return repository.findAll();
@@ -63,10 +66,18 @@ public class RestauranteService {
     }
 
     @Transactional
-    public Restaurante update(Long id, Restaurante restaurante) {
+    public Restaurante update(Long id, Map<String, Object> updates) {
         try {
-            restaurante.setId(id);
+
+            Restaurante restaurante = repository.findById(id)
+                    .orElseThrow(()-> new EntityNotFoundException(String.format("Restaurante ID: %d não encontrado.", id)));
+
+            //BeanUtils.copyProperties(restaurante,oldRestaurante,"id", "tiposPagamento", "taxaEntrega");
+
+            entityUpdateMergerUtil.updateModel(updates,restaurante, Restaurante.class);
+
             return repository.save(restaurante);
+
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
             throw new EntityPersistException(
                     String.format("Erro ao atualizar Restaurante.\nDetalhes:\n %s", e.getMessage())

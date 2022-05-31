@@ -1,6 +1,5 @@
 package br.com.ccs.delivery.domain.model.entity;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.Collection;
 
 
 @Getter
@@ -38,5 +38,10 @@ public class Restaurante {
     @ManyToOne(optional = false)
     @NotNull
     private Cozinha cozinha;
+
+    @ManyToMany
+            @JoinTable(name = "restaurante_tipo_pagamento",
+            joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "tipoPgamento_id"))
+    Collection<TipoPagamento> tiposPagamento;
 
 }
