@@ -1,6 +1,7 @@
 package br.com.ccs.delivery.domain.model.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 

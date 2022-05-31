@@ -1,6 +1,7 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import br.com.ccs.delivery.domain.model.component.Endereco;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,16 +48,23 @@ public class Restaurante {
     private Cozinha cozinha;
 
     @CreationTimestamp
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime", updatable = false)
     private LocalDateTime dataCadastro;
 
     @UpdateTimestamp
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataUltimaAtualizacao;
 
     @ManyToMany
-    @JoinTable(name = "restaurante_tipo_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "tipoPgamento_id"))
+    @JoinTable(name = "restaurante_tipo_pagamento",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "tipo_pagamento_id"))
     Collection<TipoPagamento> tiposPagamento;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
+    private Collection<Produto> produtos;
+
 
 
 }
