@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.model.component;
 
 import br.com.ccs.delivery.domain.model.entity.Municipio;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +13,6 @@ import java.util.Objects;
 @Embeddable
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Endereco {
 
     @NotBlank
@@ -27,7 +25,7 @@ public class Endereco {
     private Integer cep;
 
     @ManyToOne
-    @JoinColumn(name = "municipio_id", nullable = true)
+    @JoinColumn(name = "municipio_id", nullable = false)
     private Municipio municipio;
 
     @Override

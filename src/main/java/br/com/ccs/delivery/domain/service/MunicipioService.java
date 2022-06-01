@@ -21,8 +21,8 @@ public class MunicipioService {
     MunicipioRepository repository;
 
     public Collection<Municipio> getAll() {
-        return repository.findAllEager();
-
+        Collection<Municipio> municipios = repository.findAllEager();
+        return municipios;
     }
 
     public Municipio findById(int municipioId) {
