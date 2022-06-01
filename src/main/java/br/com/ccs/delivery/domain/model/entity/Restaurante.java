@@ -49,7 +49,9 @@ public class Restaurante {
 
     @JsonIgnore
     @CreationTimestamp
-    @Column(nullable = false, columnDefinition = "datetime", updatable = false)
+    @Column(nullable = false,
+            columnDefinition = "datetime",
+            updatable = false)
     private LocalDateTime dataCadastro;
 
     @JsonIgnore
@@ -59,7 +61,9 @@ public class Restaurante {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "restaurante_tipo_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "tipo_pagamento_id"))
+    @JoinTable(name = "restaurante_tipo_pagamento",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "tipo_pagamento_id"))
     Collection<TipoPagamento> tiposPagamento;
 
     @JsonIgnore
