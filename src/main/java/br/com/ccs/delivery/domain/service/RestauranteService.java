@@ -7,6 +7,7 @@ import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
+import br.com.ccs.delivery.domain.service.exception.EntityUpdateException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,6 +23,10 @@ import java.util.Map;
 @AllArgsConstructor
 public class RestauranteService {
 
+    public static final String RESTAURANTE_NAO_ENCONTRADO = "Restaurante ID: %d não encontrado.";
+    public static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante. \nDetalhes:\n %s";
+    public static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante.\nDetalhes:\n %s";
+    public static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
     RestauranteRepository repository;
     GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
 
@@ -31,8 +36,8 @@ public class RestauranteService {
 
     public Restaurante findById(Long id) {
 
-        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException(
-                String.format("Restaurante ID: %d não encontrado.", id)));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                String.format(RESTAURANTE_NAO_ENCONTRADO, id)));
     }
 
     @Transactional
@@ -41,11 +46,11 @@ public class RestauranteService {
             repository.deleteById(restauranteId);
         } catch (IllegalArgumentException e) {
             throw new EntityNotFoundException(
-                    String.format("Restaurante ID: %d não encontrado.", restauranteId)
+                    String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
             );
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(
-                    String.format("Não é possível remover o Restaurante ID: %d pois esta em uso", restauranteId),e);
+                    String.format(RESTAURANTE_USO, restauranteId), e);
         }
     }
 
@@ -55,11 +60,11 @@ public class RestauranteService {
             return repository.save(restaurante);
         } catch (DataIntegrityViolationException e) {
             throw new EntityPersistException(
-                    String.format("Erro ao cadastrar Restaurante. Detalhes:\n %s", e.getMessage())
+                    String.format(ERRO_CADASTRAR_RESTAURANTE, e.getMessage())
             );
         } catch (IllegalArgumentException e) {
             throw new EntityPersistException(
-                    String.format("Erro ao cadastrar Restaurante. Detalhes:\n %s", e.getMessage())
+                    String.format(ERRO_CADASTRAR_RESTAURANTE, e.getMessage())
             );
         }
     }
@@ -69,30 +74,35 @@ public class RestauranteService {
         try {
 
             Restaurante restaurante = repository.findById(id)
-                    .orElseThrow(()-> new EntityNotFoundException(String.format("Restaurante ID: %d não encontrado.", id)));
+                    .orElseThrow(() -> new EntityNotFoundException(String.format(RESTAURANTE_NAO_ENCONTRADO, id)));
 
             //BeanUtils.copyProperties(restaurante,oldRestaurante,"id", "tiposPagamento", "taxaEntrega");
 
-            entityUpdateMergerUtil.updateModel(updates,restaurante, Restaurante.class);
+            entityUpdateMergerUtil.updateModel(updates, restaurante, Restaurante.class);
 
             return repository.save(restaurante);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
             throw new EntityPersistException(
-                    String.format("Erro ao atualizar Restaurante.\nDetalhes:\n %s", e.getMessage())
+                    String.format(ERRO_ATUALIZAR_RESTAURANTE, e.getMessage())
             );
+
         }
     }
 
     @Transactional
-    public Restaurante patchUpdate(Restaurante restaurante) {
+    public Restaurante patchUpdate(Long id, Map<String, Object> updates) {
 
         try {
+
+            Restaurante restaurante = this.findById(id);
+            entityUpdateMergerUtil.updateModel(updates, restaurante, Restaurante.class);
+
             return repository.save(restaurante);
+
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
-            throw new EntityPersistException(
-                    String.format("Erro ao atualizar Restaurante.\nDetalhes:\n %s", e.getMessage())
-            );
+            throw new EntityUpdateException(
+                    String.format(ERRO_ATUALIZAR_RESTAURANTE, e.getMessage()), e);
         }
     }
 

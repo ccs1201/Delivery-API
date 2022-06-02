@@ -55,10 +55,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.OK)
     public Restaurante patchUpdate(@PathVariable Long restauranteId, @RequestBody Map<String, Object> updates) {
 
-        Restaurante restaurante = service.findById(restauranteId);
-        merge(updates, restaurante);
-
-        return service.patchUpdate(restaurante);
+        return service.patchUpdate(restauranteId, updates);
     }
 
     private void merge(Map<String, Object> updates, Restaurante restaurante) {
