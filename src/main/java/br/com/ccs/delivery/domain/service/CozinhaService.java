@@ -2,7 +2,6 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.repository.CozinhaRepository;
-import br.com.ccs.delivery.domain.service.exception.EntityIdNotFoundException;
 import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
 import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
 import br.com.ccs.delivery.domain.service.exception.EntityUpdateException;
@@ -30,16 +29,13 @@ public class CozinhaService {
     }
 
     public Cozinha findById(Long cozinhaId) {
-        return repository.findById(cozinhaId).orElseThrow(
-                () -> new EntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA + ".", cozinhaId)));
+        return repository.findById(cozinhaId).orElseThrow(() -> new EntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA + ".", cozinhaId)));
     }
 
     @Transactional
     public Cozinha save(Cozinha cozinha) {
         try {
             return repository.save(cozinha);
-        } catch (DataIntegrityViolationException e) {
-            throw new EntityPersistException(String.format(ERRO_CADASTRAR_COZINHA, e.getMessage()));
         } catch (IllegalArgumentException e) {
             throw new EntityPersistException(String.format(ERRO_CADASTRAR_COZINHA, e.getMessage()));
         }
@@ -47,12 +43,12 @@ public class CozinhaService {
 
     @Transactional
     public Cozinha update(Long cozinhaId, Cozinha cozinha) {
-        try{
+        try {
             findById(cozinhaId);
             cozinha.setId(cozinhaId);
 
             return repository.save(cozinha);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new EntityUpdateException(String.format(ERRO_ATUALIZAR_COZINHA, cozinhaId), e);
         }
 
@@ -65,8 +61,8 @@ public class CozinhaService {
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(String.format(NAO_PODE_REMOVER_COZINHA, cozinhaId), e);
 
-        } catch (EmptyResultDataAccessException e){
-            throw new EntityIdNotFoundException(COZINHA_NAO_ENCONTRADA, e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA, cozinhaId));
         }
     }
 
@@ -82,7 +78,13 @@ public class CozinhaService {
 
     public Collection<Cozinha> findByNomeContaining(String nome) {
 
-        return repository.findByNomeContaining(nome);
+        Collection<Cozinha> cozinhas = repository.findByNomeContaining(nome);
+
+        if (cozinhas.isEmpty()) {
+            throw new EntityNotFoundException(String.format("Nenhum registro encontrado com para critério de pesquisa: %s", nome));
+        }
+
+        return cozinhas;
     }
 
     public Cozinha getFirst() {
