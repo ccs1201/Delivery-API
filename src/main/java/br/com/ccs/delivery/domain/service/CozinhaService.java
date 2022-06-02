@@ -1,7 +1,8 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.exception.EntityInUseException;
-import br.com.ccs.delivery.domain.exception.EntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.EntityIdNotFoundException;
+import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.repository.CozinhaRepository;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,7 @@ public class CozinhaService {
     }
 
     public Cozinha findById(Long cozinhaId) {
-        return repository.findById(cozinhaId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId)));
+        return repository.findById(cozinhaId).orElseThrow(() -> new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId)));
     }
 
     @Transactional
@@ -53,10 +53,9 @@ public class CozinhaService {
         try {
             repository.deleteById(cozinhaId);
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(String.format("Cozinha ID: %d não pode ser removida pois está em uso.", cozinhaId));
-
-        } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId));
+            throw new EntityInUseException(String.format("Cozinha ID: %d não pode ser removida pois está em uso.", cozinhaId), e);
+        } catch (EmptyResultDataAccessException e){
+            throw new EntityIdNotFoundException("Registro não encontrado.");
         }
     }
 

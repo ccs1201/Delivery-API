@@ -57,12 +57,13 @@ public class CozinhaController {
     @DeleteMapping("{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long cozinhaId) {
+
         service.delete(cozinhaId);
     }
 
     @GetMapping("/first")
     @ResponseStatus(HttpStatus.OK)
-    public Cozinha getFirst(){
+    public Cozinha getFirst() {
         return service.getFirst();
     }
 }

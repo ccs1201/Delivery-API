@@ -1,7 +1,7 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.exception.EntityInUseException;
-import br.com.ccs.delivery.domain.exception.EntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
@@ -45,8 +45,7 @@ public class RestauranteService {
             );
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(
-                    String.format("Não é possível remover o Restaurante ID: %d pois esta em uso", restauranteId)
-            );
+                    String.format("Não é possível remover o Restaurante ID: %d pois esta em uso", restauranteId),e);
         }
     }
 

@@ -1,7 +1,7 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.exception.EntityPersistException;
-import br.com.ccs.delivery.domain.exception.EntityRemoveException;
+import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.EntityRemoveException;
 import br.com.ccs.delivery.domain.model.entity.Municipio;
 import br.com.ccs.delivery.domain.repository.MunicipioRepository;
 import lombok.AllArgsConstructor;

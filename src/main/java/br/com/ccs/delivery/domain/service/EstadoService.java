@@ -1,8 +1,8 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.exception.EntityInUseException;
-import br.com.ccs.delivery.domain.exception.EntityPersistException;
-import br.com.ccs.delivery.domain.exception.EntityRemoveException;
+import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.EntityRemoveException;
 import br.com.ccs.delivery.domain.model.entity.Estado;
 import br.com.ccs.delivery.domain.repository.EstadoRepository;
 import lombok.AllArgsConstructor;
@@ -65,7 +65,7 @@ public class EstadoService {
         } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
             throw new EntityRemoveException(String.format("Não foi possível remover o Estado ID: %d\n Detalhes:\n %s", estadoId, e.getMessage()));
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(String.format("Não foi possível remover o Estado ID: %d , pois está em uso.", estadoId));
+            throw new EntityInUseException(String.format("Não foi possível remover o Estado ID: %d , pois está em uso.", estadoId), e);
         }
 
     }
