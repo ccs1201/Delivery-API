@@ -8,7 +8,8 @@ import java.time.OffsetDateTime;
 @Builder
 public class ApiExceptionResponse {
 
-    private OffsetDateTime dateTime;
+    @Builder.Default
+    private OffsetDateTime dateTime = OffsetDateTime.now();
     private String message;
 
 }

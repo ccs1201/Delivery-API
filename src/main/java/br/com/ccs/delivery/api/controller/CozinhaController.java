@@ -1,18 +1,13 @@
 package br.com.ccs.delivery.api.controller;
 
-import br.com.ccs.delivery.api.exceptionhandler.ApiExceptionResponse;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.model.wrapper.CozinhaXmlResponse;
 import br.com.ccs.delivery.domain.service.CozinhaService;
-import br.com.ccs.delivery.domain.service.exception.BusinessLogicException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
-import java.time.OffsetDateTime;
 import java.util.Collection;
 
 @RestController
@@ -72,23 +67,4 @@ public class CozinhaController {
         return service.getFirst();
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> entityNotFoundExceptionHandler(EntityNotFoundException e) {
-
-        ApiExceptionResponse response = ApiExceptionResponse.builder()
-                .dateTime(OffsetDateTime.now())
-                .message(e.getMessage()).build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
-
-    @ExceptionHandler(BusinessLogicException.class)
-    public ResponseEntity<?> businessLogicExceptionHandler(BusinessLogicException e) {
-
-        ApiExceptionResponse response = ApiExceptionResponse.builder()
-                .dateTime(OffsetDateTime.now())
-                .message(e.getMessage()).build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
 }
