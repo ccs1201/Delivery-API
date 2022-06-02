@@ -70,7 +70,6 @@ public class Restaurante {
     @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
     private Collection<Produto> produtos;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

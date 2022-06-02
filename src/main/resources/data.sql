@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `delivery` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `delivery`;
 -- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
 --
 -- Host: localhost    Database: delivery
@@ -18,44 +16,14 @@ USE `delivery`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cozinha`
---
-
-DROP TABLE IF EXISTS `cozinha`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cozinha` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_21inunwxqp3wdrnbji4sp1vli` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `cozinha`
 --
 
 LOCK TABLES `cozinha` WRITE;
 /*!40000 ALTER TABLE `cozinha` DISABLE KEYS */;
-INSERT INTO `cozinha` VALUES (6,'Alemã'),(3,'Brasileira'),(7,'Francesa'),(2,'Indiana'),(5,'Italiana'),(4,'Portuguesa'),(1,'Tailandesa');
+INSERT INTO `cozinha` VALUES (6,'Alemã'),(8,'Alienigena'),(3,'Brasileira'),(7,'Francesa'),(2,'Indiana'),(5,'Italiana'),(4,'Portuguesa'),(1,'Tailandesa');
 /*!40000 ALTER TABLE `cozinha` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `estado`
---
-
-DROP TABLE IF EXISTS `estado`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `estado` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(50) NOT NULL,
-  `sigla` varchar(2) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `estado`
@@ -68,45 +36,22 @@ INSERT INTO `estado` VALUES (1,'Acre','AC'),(2,'Alagoas','AL'),(3,'Amazonas','AM
 UNLOCK TABLES;
 
 --
--- Table structure for table `forma_pagamento`
+-- Dumping data for table `grupo`
 --
 
-DROP TABLE IF EXISTS `forma_pagamento`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `forma_pagamento` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `descricao` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `forma_pagamento`
---
-
-LOCK TABLES `forma_pagamento` WRITE;
-/*!40000 ALTER TABLE `forma_pagamento` DISABLE KEYS */;
-INSERT INTO `forma_pagamento` VALUES (1,'DINHEIRO'),(2,'CARTÃO CREDITO'),(3,'CARTÃO DEBITO'),(4,'BOLETO'),(5,'PIX'),(6,'VOUCHER');
-/*!40000 ALTER TABLE `forma_pagamento` ENABLE KEYS */;
+LOCK TABLES `grupo` WRITE;
+/*!40000 ALTER TABLE `grupo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `grupo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `municipio`
+-- Dumping data for table `grupo_permissao`
 --
 
-DROP TABLE IF EXISTS `municipio`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `municipio` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(50) NOT NULL,
-  `estado_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKo507uki7f73gchnn0sk0edjps` (`estado_id`),
-  CONSTRAINT `FKo507uki7f73gchnn0sk0edjps` FOREIGN KEY (`estado_id`) REFERENCES `estado` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2068 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `grupo_permissao` WRITE;
+/*!40000 ALTER TABLE `grupo_permissao` DISABLE KEYS */;
+/*!40000 ALTER TABLE `grupo_permissao` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping data for table `municipio`
@@ -119,22 +64,6 @@ INSERT INTO `municipio` VALUES (1,'Afonso Cláudio',8),(2,'Água Doce do Norte',
 UNLOCK TABLES;
 
 --
--- Table structure for table `permissao`
---
-
-DROP TABLE IF EXISTS `permissao`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `permissao` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `descricao` varchar(100) NOT NULL,
-  `nome` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_kgx7ng07rgem07n056nqc7i1q` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `permissao`
 --
 
@@ -145,22 +74,14 @@ INSERT INTO `permissao` VALUES (1,'Administradores do Sistema','ADMINISTRADOR'),
 UNLOCK TABLES;
 
 --
--- Table structure for table `restaurante`
+-- Dumping data for table `produto`
 --
 
-DROP TABLE IF EXISTS `restaurante`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `restaurante` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nome` varchar(60) NOT NULL,
-  `taxa_entrega` decimal(19,2) NOT NULL,
-  `cozinha_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK76grk4roudh659skcgbnanthi` (`cozinha_id`),
-  CONSTRAINT `FK76grk4roudh659skcgbnanthi` FOREIGN KEY (`cozinha_id`) REFERENCES `cozinha` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `produto` WRITE;
+/*!40000 ALTER TABLE `produto` DISABLE KEYS */;
+INSERT INTO `produto` VALUES (1,_binary '','Porco com molho agridoce',78.90,1,'Deliciosa carne suína ao molho especial'),(2,_binary '','Camarão tailandês',110.00,1,'16 camarões grandes ao molho picante'),(3,_binary '','Salada picante com carne grelhada',87.20,2,'Salada de folhas com cortes finos de carne bovina grelhada e nosso molho especial de pimenta vermelha'),(4,_binary '','Garlic Naan',21.00,3,'Pão tradicional indiano com cobertura de alho'),(5,_binary '','Murg Curry',43.00,3,'Cubos de frango preparados com molho curry e especiarias'),(6,_binary '','Bife Ancho',79.00,4,'Corte macio e suculento, com dois dedos de espessura, retirado da parte dianteira do contrafilé'),(7,_binary '','T-Bone',89.00,4,'Corte muito saboroso, com um osso em formato de T, sendo de um lado o contrafilé e do outro o filé mignon'),(8,_binary '','Sanduíche X-Tudo',19.00,5,'Sandubão com muito queijo, hamburger bovino, bacon, ovo, salada e maionese'),(9,_binary '','Espetinho de Cupim',8.00,6,'Acompanha farinha, mandioca e vinagrete');
+/*!40000 ALTER TABLE `produto` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping data for table `restaurante`
@@ -168,8 +89,45 @@ CREATE TABLE `restaurante` (
 
 LOCK TABLES `restaurante` WRITE;
 /*!40000 ALTER TABLE `restaurante` DISABLE KEYS */;
-INSERT INTO `restaurante` VALUES (1,'Thai Gourmet',10.00,1),(2,'Thai Delivery',9.50,1),(3,'Tuk Tuk Comida Indiana',15.00,2),(4,'Comida Brasileira',10.00,3),(5,'Comida Portuguesa',9.50,4),(6,'Comida  Italiana',15.00,5),(7,'Comida Alemã',10.00,6),(8,'Comida Francesa',9.50,7);
+INSERT INTO `restaurante` VALUES (1,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Thai Gourmet',0.00,1,189,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(2,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Thai Delivery',9.50,1,1312,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(3,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Tuk Tuk Comida Indiana',15.00,2,1469,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(4,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Comida Brasileira',100.00,3,45,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(5,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Comida Portuguesa',9.50,4,1201,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(6,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Comida  Italiana',0.00,5,2048,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(7,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Comida Alemã',10.00,6,1001,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(8,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Comida Francesa',9.50,7,575,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(12,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Comida da Vovó',0.00,8,12,'2022-05-31 18:03:09','2022-05-31 18:03:09'),(20,'Campinas',88101365,'102A','Rua Dom Pedro II','841','Restaurante Cozinha Francesa',11.99,5,67,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(21,'Serraria',88102365,'501A','Rua Paulino Pedro Hermes','172','Restaurante Cozinha da Geni',7.99,5,44,'2022-05-31 21:02:16','2022-05-31 21:02:16'),(22,'Serraria',88102365,'501A','Rua Paulino Pedro Hermes','172','Restaurante vô Banga',7.99,5,2001,'2022-05-31 18:33:01','2022-05-31 18:50:02'),(23,NULL,NULL,NULL,NULL,NULL,'Restaurante vô Banga',7.99,5,2000,'2022-05-31 18:50:34','2022-05-31 18:55:47'),(24,NULL,NULL,NULL,NULL,NULL,'Restaurante vô Banga',7.99,5,2000,'2022-05-31 18:56:42','2022-05-31 19:03:42');
 /*!40000 ALTER TABLE `restaurante` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `restaurante_tipo_pagamento`
+--
+
+LOCK TABLES `restaurante_tipo_pagamento` WRITE;
+/*!40000 ALTER TABLE `restaurante_tipo_pagamento` DISABLE KEYS */;
+/*!40000 ALTER TABLE `restaurante_tipo_pagamento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tipo_pagamento`
+--
+
+LOCK TABLES `tipo_pagamento` WRITE;
+/*!40000 ALTER TABLE `tipo_pagamento` DISABLE KEYS */;
+INSERT INTO `tipo_pagamento` VALUES (1,'DINHEIRO'),(2,'CARTÃO CRÉDITO'),(3,'CARTÃO DÉBITO'),(4,'PIX'),(5,'BOLETO'),(6,'VOUCHER'),(7,'CUPOM DESCONTO');
+/*!40000 ALTER TABLE `tipo_pagamento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `usuario_grupos`
+--
+
+LOCK TABLES `usuario_grupos` WRITE;
+/*!40000 ALTER TABLE `usuario_grupos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `usuario_grupos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -181,4 +139,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-25 19:16:09
+-- Dump completed on 2022-06-01 16:12:45

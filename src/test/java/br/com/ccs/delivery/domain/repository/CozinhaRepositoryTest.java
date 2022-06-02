@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.repository;
 
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
-import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

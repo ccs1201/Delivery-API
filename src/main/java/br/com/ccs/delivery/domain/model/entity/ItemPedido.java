@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -13,31 +12,31 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-public class Produto {
+public class ItemPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    @Column(unique = true,length = 50)
-    private String nome;
-
-    private String descricao;
-    @NotNull
-    private BigDecimal valor;
-    @NotNull
-    private boolean ativo;
-
 
     @ManyToOne
-    @JoinColumn(name = "restaurante_id")
-    private Restaurante restaurante;
+    @JoinColumn(name = "produto_id", nullable = false)
+    private Produto produto;
+    @NotNull
+    private Integer quantidade;
+    @NotNull
+    private BigDecimal valorUnitario;
+    @NotNull
+    private BigDecimal valorTotal;
+    private String observacao;
+    @ManyToOne
+    @JoinColumn(name = "pedido_id", nullable = false)
+    private Pedido pedido;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Produto produto = (Produto) o;
-        return id != null && Objects.equals(id, produto.id);
+        ItemPedido that = (ItemPedido) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
