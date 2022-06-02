@@ -5,6 +5,7 @@ import br.com.ccs.delivery.domain.repository.CozinhaRepository;
 import br.com.ccs.delivery.domain.service.exception.EntityIdNotFoundException;
 import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
 import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.EntityUpdateException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,6 +19,10 @@ import java.util.Collection;
 @AllArgsConstructor
 public class CozinhaService {
 
+    public static final String ERRO_ATUALIZAR_COZINHA = "Erro ao Atualizar cozinha ID: %d";
+    public static final String ERRO_CADASTRAR_COZINHA = "Erro ao cadastrar Cozinha. Detalhes:\n %s";
+    public static final String COZINHA_NAO_ENCONTRADA = "Cozinha ID: %d não encontrada";
+    public static final String NAO_PODE_REMOVER_COZINHA = "Cozinha ID: %d não pode ser removida pois está em uso.";
     CozinhaRepository repository;
 
     public Collection<Cozinha> findAll() {
@@ -26,7 +31,7 @@ public class CozinhaService {
 
     public Cozinha findById(Long cozinhaId) {
         return repository.findById(cozinhaId).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Cozinha ID: %d não encontrada.", cozinhaId)));
+                () -> new EntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA + ".", cozinhaId)));
     }
 
     @Transactional
@@ -34,19 +39,23 @@ public class CozinhaService {
         try {
             return repository.save(cozinha);
         } catch (DataIntegrityViolationException e) {
-            throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
+            throw new EntityPersistException(String.format(ERRO_CADASTRAR_COZINHA, e.getMessage()));
         } catch (IllegalArgumentException e) {
-            throw new EntityPersistException(String.format("Erro ao cadastrar Cozinha. Detalhes:\n %s", e.getMessage()));
+            throw new EntityPersistException(String.format(ERRO_CADASTRAR_COZINHA, e.getMessage()));
         }
     }
 
     @Transactional
     public Cozinha update(Long cozinhaId, Cozinha cozinha) {
+        try{
+            findById(cozinhaId);
+            cozinha.setId(cozinhaId);
 
-        findById(cozinhaId);
-        cozinha.setId(cozinhaId);
+            return repository.save(cozinha);
+        } catch (DataIntegrityViolationException e){
+            throw new EntityUpdateException(String.format(ERRO_ATUALIZAR_COZINHA, cozinhaId), e);
+        }
 
-        return repository.save(cozinha);
     }
 
 
@@ -54,10 +63,10 @@ public class CozinhaService {
         try {
             repository.deleteById(cozinhaId);
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(String.format("Cozinha ID: %d não pode ser removida pois está em uso.", cozinhaId), e);
+            throw new EntityInUseException(String.format(NAO_PODE_REMOVER_COZINHA, cozinhaId), e);
 
         } catch (EmptyResultDataAccessException e){
-            throw new EntityIdNotFoundException("Registro não encontrado.", e);
+            throw new EntityIdNotFoundException(COZINHA_NAO_ENCONTRADA, e);
         }
     }
 
@@ -78,6 +87,6 @@ public class CozinhaService {
 
     public Cozinha getFirst() {
 
-        return repository.getFirstOccurrence().orElseThrow(() -> new EntityNotFoundException("Não foi possível localizar a primeira ocorrência de cozinha."));
+        return repository.getFirstOccurrence().orElseThrow(() -> new EntityNotFoundException(COZINHA_NAO_ENCONTRADA));
     }
 }
