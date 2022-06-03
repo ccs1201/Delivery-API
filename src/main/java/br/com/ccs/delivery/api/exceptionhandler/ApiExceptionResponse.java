@@ -10,6 +10,7 @@ public class ApiExceptionResponse {
 
     @Builder.Default
     private OffsetDateTime dateTime = OffsetDateTime.now();
+    private String status;
     private String message;
 
 }

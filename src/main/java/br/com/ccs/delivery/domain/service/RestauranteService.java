@@ -1,7 +1,7 @@
 package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
-import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
@@ -54,16 +54,16 @@ public class RestauranteService {
         }
     }
 
-    @Transactional
+    
     public Restaurante save(Restaurante restaurante) {
         try {
             return repository.save(restaurante);
         } catch (DataIntegrityViolationException e) {
-            throw new EntityPersistException(
+            throw new RepositoryEntityPersistException(
                     String.format(ERRO_CADASTRAR_RESTAURANTE, e.getMessage())
             );
         } catch (IllegalArgumentException e) {
-            throw new EntityPersistException(
+            throw new RepositoryEntityPersistException(
                     String.format(ERRO_CADASTRAR_RESTAURANTE, e.getMessage())
             );
         }
@@ -83,7 +83,7 @@ public class RestauranteService {
             return repository.save(restaurante);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
-            throw new EntityPersistException(
+            throw new RepositoryEntityPersistException(
                     String.format(ERRO_ATUALIZAR_RESTAURANTE, e.getMessage())
             );
 

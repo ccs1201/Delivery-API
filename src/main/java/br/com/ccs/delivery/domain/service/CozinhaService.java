@@ -3,7 +3,7 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.repository.CozinhaRepository;
 import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
-import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
 import br.com.ccs.delivery.domain.service.exception.EntityUpdateException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,7 +37,7 @@ public class CozinhaService {
         try {
             return repository.save(cozinha);
         } catch (IllegalArgumentException e) {
-            throw new EntityPersistException(String.format(ERRO_CADASTRAR_COZINHA, e.getMessage()));
+            throw new RepositoryEntityPersistException(String.format(ERRO_CADASTRAR_COZINHA, e.getMessage()));
         }
     }
 

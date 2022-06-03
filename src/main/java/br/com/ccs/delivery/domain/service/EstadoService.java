@@ -1,8 +1,8 @@
 package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
-import br.com.ccs.delivery.domain.service.exception.EntityPersistException;
-import br.com.ccs.delivery.domain.service.exception.EntityRemoveException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityRemoveException;
 import br.com.ccs.delivery.domain.model.entity.Estado;
 import br.com.ccs.delivery.domain.repository.EstadoRepository;
 import lombok.AllArgsConstructor;
@@ -42,7 +42,7 @@ public class EstadoService {
         try {
             return repository.save(estado);
         } catch (IllegalArgumentException e) {
-            throw new EntityPersistException(String.format("Não foi possível salvar o Estado\n Detalhes:\n %s", e.getMessage()));
+            throw new RepositoryEntityPersistException(String.format("Não foi possível salvar o Estado\n Detalhes:\n %s", e.getMessage()));
         }
     }
 
@@ -53,7 +53,7 @@ public class EstadoService {
             estado.setId(estadoId);
             return repository.save(estado);
         } catch (IllegalArgumentException e) {
-            throw new EntityPersistException(String.format("Erro ao atualizar Estado ID: %d\nDetalhes:\n %s", estadoId, e.getMessage()));
+            throw new RepositoryEntityPersistException(String.format("Erro ao atualizar Estado ID: %d\nDetalhes:\n %s", estadoId, e.getMessage()));
         }
     }
 
@@ -63,7 +63,7 @@ public class EstadoService {
         try {
             repository.deleteById(estadoId);
         } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
-            throw new EntityRemoveException(String.format("Não foi possível remover o Estado ID: %d\n Detalhes:\n %s", estadoId, e.getMessage()));
+            throw new RepositoryEntityRemoveException(String.format("Não foi possível remover o Estado ID: %d\n Detalhes:\n %s", estadoId, e.getMessage()));
         } catch (DataIntegrityViolationException e) {
             throw new EntityInUseException(String.format("Não foi possível remover o Estado ID: %d , pois está em uso.", estadoId), e);
         }
