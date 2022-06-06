@@ -1,6 +1,6 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityRemoveException;
 import br.com.ccs.delivery.domain.model.entity.Estado;
@@ -65,7 +65,7 @@ public class EstadoService {
         } catch (IllegalArgumentException | EmptyResultDataAccessException e) {
             throw new RepositoryEntityRemoveException(String.format("Não foi possível remover o Estado ID: %d\n Detalhes:\n %s", estadoId, e.getMessage()));
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(String.format("Não foi possível remover o Estado ID: %d , pois está em uso.", estadoId), e);
+            throw new RepositoryEntityInUseException(String.format("Não foi possível remover o Estado ID: %d , pois está em uso.", estadoId), e);
         }
 
     }

@@ -2,10 +2,7 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.Municipio;
 import br.com.ccs.delivery.domain.repository.MunicipioRepository;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityRemoveException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
+import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -38,7 +35,7 @@ public class MunicipioService {
             return repository.save(municipio);
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
-                    String.format("Erro ao salvar Município Estado ID: %d não existe.",
+                    String.format("Erro ao salvar Município. Estado ID: %d não existe.",
                             municipio.getEstado().getId()), e);
         }
     }
@@ -65,7 +62,7 @@ public class MunicipioService {
             repository.deleteById(municpioId);
         } catch (DataIntegrityViolationException e) {
 
-            throw new RepositoryDataIntegrityViolationException(
+            throw new RepositoryEntityInUseException(
                     String.format("Não foi possível remover o Município ID: %d pois esta em uso.", municpioId));
 
         } catch (EmptyResultDataAccessException e) {

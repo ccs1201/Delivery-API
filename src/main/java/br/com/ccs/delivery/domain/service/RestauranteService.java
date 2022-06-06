@@ -1,13 +1,13 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
-import br.com.ccs.delivery.domain.service.exception.EntityUpdateException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityUpdateException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -49,12 +49,12 @@ public class RestauranteService {
                     String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
             );
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(
+            throw new RepositoryEntityInUseException(
                     String.format(RESTAURANTE_USO, restauranteId), e);
         }
     }
 
-    
+
     public Restaurante save(Restaurante restaurante) {
         try {
             return repository.save(restaurante);
@@ -101,7 +101,7 @@ public class RestauranteService {
             return repository.save(restaurante);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
-            throw new EntityUpdateException(
+            throw new RepositoryEntityUpdateException(
                     String.format(ERRO_ATUALIZAR_RESTAURANTE, e.getMessage()), e);
         }
     }

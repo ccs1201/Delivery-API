@@ -2,16 +2,16 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.repository.CozinhaRepository;
-import br.com.ccs.delivery.domain.service.exception.EntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
-import br.com.ccs.delivery.domain.service.exception.EntityUpdateException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 
 @Service
@@ -29,7 +29,7 @@ public class CozinhaService {
     }
 
     public Cozinha findById(Long cozinhaId) {
-        return repository.findById(cozinhaId).orElseThrow(() -> new EntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA + ".", cozinhaId)));
+        return repository.findById(cozinhaId).orElseThrow(() -> new RepositoryEntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA + ".", cozinhaId)));
     }
 
     @Transactional
@@ -49,7 +49,7 @@ public class CozinhaService {
 
             return repository.save(cozinha);
         } catch (DataIntegrityViolationException e) {
-            throw new EntityUpdateException(String.format(ERRO_ATUALIZAR_COZINHA, cozinhaId), e);
+            throw new RepositoryDataIntegrityViolationException(String.format(ERRO_ATUALIZAR_COZINHA, cozinhaId), e);
         }
 
     }
@@ -59,10 +59,10 @@ public class CozinhaService {
         try {
             repository.deleteById(cozinhaId);
         } catch (DataIntegrityViolationException e) {
-            throw new EntityInUseException(String.format(NAO_PODE_REMOVER_COZINHA, cozinhaId), e);
+            throw new RepositoryEntityInUseException(String.format(NAO_PODE_REMOVER_COZINHA, cozinhaId), e);
 
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA, cozinhaId));
+            throw new RepositoryEntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA, cozinhaId));
         }
     }
 
@@ -81,7 +81,7 @@ public class CozinhaService {
         Collection<Cozinha> cozinhas = repository.findByNomeContaining(nome);
 
         if (cozinhas.isEmpty()) {
-            throw new EntityNotFoundException(String.format("Nenhum registro encontrado com para critério de pesquisa: %s", nome));
+            throw new RepositoryEntityNotFoundException(String.format("Nenhum registro encontrado com para critério de pesquisa: %s", nome));
         }
 
         return cozinhas;
@@ -89,6 +89,6 @@ public class CozinhaService {
 
     public Cozinha getFirst() {
 
-        return repository.getFirstOccurrence().orElseThrow(() -> new EntityNotFoundException(COZINHA_NAO_ENCONTRADA));
+        return repository.getFirstOccurrence().orElseThrow(() -> new RepositoryEntityNotFoundException(COZINHA_NAO_ENCONTRADA));
     }
 }
