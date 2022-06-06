@@ -4,6 +4,7 @@ import br.com.ccs.delivery.domain.model.util.exception.GenericEntityUpdateMerger
 import br.com.ccs.delivery.domain.service.exception.*;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
@@ -90,12 +91,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
 
     @Override
-    protected @NotNull ResponseEntity<Object> handleExceptionInternal(
-            @NotNull Exception ex,
-            @Nullable Object body,
-            @NotNull HttpHeaders headers,
-            @NotNull HttpStatus status,
-            @NotNull WebRequest request) {
+    protected @NotNull ResponseEntity<Object> handleExceptionInternal(@NotNull Exception ex, @Nullable Object body, @NotNull HttpHeaders headers, @NotNull HttpStatus status, @NotNull WebRequest request) {
 
         if (ex instanceof MethodArgumentNotValidException) {
 
@@ -111,15 +107,9 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
     private ApiValidationErrorResponse httpRequestMethodNotSupportedHandler(MethodArgumentNotValidException ex, HttpStatus status) {
 
-        ApiValidationErrorResponse apiValidationErrorResponse = ApiValidationErrorResponse.builder()
-                .status(status.value())
-                .type(status.name())
-                .build();
+        ApiValidationErrorResponse apiValidationErrorResponse = ApiValidationErrorResponse.builder().status(status.value()).type(status.name()).build();
 
-        ex.getFieldErrors().forEach(fieldError -> apiValidationErrorResponse.getDetails()
-                .add(apiValidationErrorResponse.new FieldValidationError(
-                        fieldError.getField(), fieldError.getDefaultMessage(),
-                        String.format("%s", fieldError.getRejectedValue()))));
+        ex.getFieldErrors().forEach(fieldError -> apiValidationErrorResponse.getDetails().add(apiValidationErrorResponse.new FieldValidationError(fieldError.getField(), fieldError.getDefaultMessage(), String.format("%s", fieldError.getRejectedValue()))));
 
         return apiValidationErrorResponse;
     }
@@ -130,41 +120,62 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         Throwable rootCause = ExceptionUtils.getRootCause(ex);
 
         if (rootCause instanceof JsonParseException) {
-            return new ResponseEntity<>( jsonParseExceptionHandler((JsonParseException)rootCause, status), status);
+            return jsonParseExceptionHandler((JsonParseException) rootCause, status);
         }
+
+     /*   if (rootCause instanceof InvalidFormatException) {
+            return iInvalidFormatExceptionHandler((InvalidFormatException) rootCause, status);
+        }*/
+
+        if (rootCause instanceof JsonMappingException) {
+            return jsonMappingExceptionHandler((JsonMappingException) rootCause, status);
+        }
+
 
         return buildResponseEntity(status, new Exception("Malformed data. Check your data pattern to comply with JSON pattern."), "Invalid value for one or more fields");
     }
 
-    private ApiValidationErrorResponse jsonParseExceptionHandler(JsonParseException e, HttpStatus status) {
-        ApiValidationErrorResponse errorResponse = ApiValidationErrorResponse.builder()
-                .status(status.value())
-                .type(status.name())
-                .build();
+    private ResponseEntity iInvalidFormatExceptionHandler(InvalidFormatException e, HttpStatus status) {
+        ApiValidationErrorResponse errorResponse = buildApiValidationErrorResponse(status);
 
-        String message = e.getMessage().replace("\n at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 4, column: 21]","");
-
-        errorResponse.getDetails().add(errorResponse.new FieldValidationError(null,message,null));
-
-        return errorResponse;
+        e.getPath().forEach(path -> {
+            errorResponse
+                    .getDetails()
+                    .add(errorResponse.new
+                            FieldValidationError(
+                            path.getFieldName(),
+                            String.format("Requires %s Found %s", e.getTargetType().getSimpleName(), e.getValue().getClass().getSimpleName()),
+                            (String) e.getValue()));
+        });
+        return new ResponseEntity(errorResponse, status);
     }
 
-    /* @ExceptionHandler(JsonMappingException.class)
-     @ResponseStatus(HttpStatus.BAD_REQUEST)
-     @ApiResponse(responseCode = "404", description = "Invalid value for one or more fields")*/
-    public ApiValidationErrorResponse jsonMappingExceptionHandler(JsonMappingException e, HttpStatus status) {
+    private ResponseEntity jsonParseExceptionHandler(JsonParseException e, HttpStatus status) {
+        ApiValidationErrorResponse errorResponse = buildApiValidationErrorResponse(status);
 
-        ApiValidationErrorResponse errorResponse = ApiValidationErrorResponse
-                .builder()
-                .status(status.value())
-                .type(status.name())
-                .build();
+        String message = e.getMessage().replace("\n at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 4, column: 21]", "");
 
-        e.getPath().forEach(path -> errorResponse.getDetails().add(
-                errorResponse.new FieldValidationError(path.getFieldName(),e.getMessage(), null)));
+        errorResponse.getDetails().add(errorResponse.new FieldValidationError(null, message, null));
+
+        return new ResponseEntity(errorResponse, status);
+    }
 
 
-        return errorResponse;//buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
+    public ResponseEntity jsonMappingExceptionHandler(JsonMappingException e, HttpStatus status) {
+
+        ApiValidationErrorResponse errorResponse = buildApiValidationErrorResponse(status);
+
+        e.getPath().forEach(path -> {
+            errorResponse
+                    .getDetails()
+                    .add(errorResponse.new
+                            FieldValidationError(
+                            path.getFieldName(),
+                            "" + e.getOriginalMessage(),//.replace("\n at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 4, column: 21]", ""),
+                            null));
+        });
+
+        return new ResponseEntity<>(errorResponse, status);
 
     }
 }

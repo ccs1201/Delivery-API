@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.domain.service;
 
+import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
@@ -59,7 +60,7 @@ public class RestauranteService {
         try {
             return repository.save(restaurante);
         } catch (DataIntegrityViolationException e) {
-            throw new RepositoryEntityPersistException(
+            throw new RepositoryDataIntegrityViolationException(
                     String.format(ERRO_CADASTRAR_RESTAURANTE, e.getMessage())
             );
         } catch (IllegalArgumentException e) {

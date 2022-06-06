@@ -25,6 +25,13 @@ public interface ApiExceptionHandlerInterface {
                 .build();
     }
 
+    default ApiValidationErrorResponse buildApiValidationErrorResponse(HttpStatus status){
+        return ApiValidationErrorResponse.builder()
+                .status(status.value())
+                .type(status.name())
+                .build();
+    }
+
     default ResponseEntity<Object> buildResponseEntity(@NotNull HttpStatus httpStatus, @NotNull Exception exception, @NotNull String title) {
         return ResponseEntity.status(httpStatus).body(buildResponse(exception, httpStatus, title));
 
