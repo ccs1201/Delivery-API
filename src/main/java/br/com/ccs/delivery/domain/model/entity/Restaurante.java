@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -41,6 +42,7 @@ public class Restaurante {
 
     @JsonIgnore
     @Embedded
+    @Valid
     private Endereco endereco;
 
     @ManyToOne(optional = false)

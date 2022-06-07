@@ -17,7 +17,7 @@ public final class ApiValidationErrorResponse {
     private OffsetDateTime timestamp = OffsetDateTime.now();
     private int status;
     private String type;
-    private final String title = "Um ou mais campos obrigatórios não são válidos, verifique...";
+    private final String title = "One or more fields are not valid. Please check...";
     @Builder.Default
     private Collection<FieldValidationError> details = new LinkedList<>();
 

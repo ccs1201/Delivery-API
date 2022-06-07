@@ -1,13 +1,13 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
+import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityUpdateException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,8 +25,8 @@ import java.util.Map;
 public class RestauranteService {
 
     public static final String RESTAURANTE_NAO_ENCONTRADO = "Restaurante ID: %d não encontrado.";
-    public static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante. \nDetalhes:\n %s";
-    public static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante.\nDetalhes:\n %s";
+    public static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante.";
+    public static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante.";
     public static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
     RestauranteRepository repository;
     GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
@@ -61,12 +61,10 @@ public class RestauranteService {
             return repository.save(restaurante);
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
-                    String.format(ERRO_CADASTRAR_RESTAURANTE, e.getMessage())
-            );
+                    ERRO_CADASTRAR_RESTAURANTE, e);
         } catch (IllegalArgumentException e) {
             throw new RepositoryEntityPersistException(
-                    String.format(ERRO_CADASTRAR_RESTAURANTE, e.getMessage())
-            );
+                    ERRO_CADASTRAR_RESTAURANTE+ e.getMessage());
         }
     }
 
@@ -74,8 +72,7 @@ public class RestauranteService {
     public Restaurante update(Long id, Map<String, Object> updates) {
         try {
 
-            Restaurante restaurante = repository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(String.format(RESTAURANTE_NAO_ENCONTRADO, id)));
+            Restaurante restaurante = this.findById(id);
 
             //BeanUtils.copyProperties(restaurante,oldRestaurante,"id", "tiposPagamento", "taxaEntrega");
 
@@ -83,11 +80,9 @@ public class RestauranteService {
 
             return repository.save(restaurante);
 
-        } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
+        } catch (IllegalArgumentException | DataIntegrityViolationException e) {
             throw new RepositoryEntityPersistException(
-                    String.format(ERRO_ATUALIZAR_RESTAURANTE, e.getMessage())
-            );
-
+                    ERRO_ATUALIZAR_RESTAURANTE,e);
         }
     }
 
@@ -102,8 +97,7 @@ public class RestauranteService {
             return repository.save(restaurante);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
-            throw new RepositoryEntityUpdateException(
-                    String.format(ERRO_ATUALIZAR_RESTAURANTE, e.getMessage()), e);
+            throw new RepositoryEntityUpdateException(ERRO_ATUALIZAR_RESTAURANTE, e);
         }
     }
 
@@ -125,6 +119,8 @@ public class RestauranteService {
     }
 
     public Restaurante getFirst() {
-        return repository.getFirstOccurrence().orElseThrow(() -> new EntityNotFoundException("Não foi possível localizar a primeira ocorrência de restaurante."));
+        return repository
+                .getFirstOccurrence()
+                .orElseThrow(() -> new EntityNotFoundException("Não foi possível localizar a primeira ocorrência de restaurante."));
     }
 }
