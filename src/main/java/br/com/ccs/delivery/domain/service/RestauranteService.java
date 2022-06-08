@@ -5,10 +5,7 @@ import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
-import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityUpdateException;
+import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -37,7 +34,7 @@ public class RestauranteService {
 
     public Restaurante findById(Long id) {
 
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+        return repository.findById(id).orElseThrow(() -> new RepositoryEntityNotFoundException(
                 String.format(RESTAURANTE_NAO_ENCONTRADO, id)));
     }
 
@@ -45,13 +42,13 @@ public class RestauranteService {
     public void delete(Long restauranteId) {
         try {
             repository.deleteById(restauranteId);
-        } catch (IllegalArgumentException e) {
-            throw new EntityNotFoundException(
-                    String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
-            );
+
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryEntityInUseException(
                     String.format(RESTAURANTE_USO, restauranteId), e);
+        } catch (IllegalArgumentException e) {
+            throw new RepositoryEntityNotFoundException(
+                    String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId));
         }
     }
 
@@ -64,7 +61,7 @@ public class RestauranteService {
                     ERRO_CADASTRAR_RESTAURANTE, e);
         } catch (IllegalArgumentException e) {
             throw new RepositoryEntityPersistException(
-                    ERRO_CADASTRAR_RESTAURANTE+ e.getMessage());
+                    ERRO_CADASTRAR_RESTAURANTE + e.getMessage());
         }
     }
 
@@ -82,7 +79,7 @@ public class RestauranteService {
 
         } catch (IllegalArgumentException | DataIntegrityViolationException e) {
             throw new RepositoryEntityPersistException(
-                    ERRO_ATUALIZAR_RESTAURANTE,e);
+                    ERRO_ATUALIZAR_RESTAURANTE, e);
         }
     }
 

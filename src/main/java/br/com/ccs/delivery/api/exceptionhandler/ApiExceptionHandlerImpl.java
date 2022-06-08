@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.constraints.NotNull;
@@ -29,6 +30,20 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler implements ApiExceptionHandlerInterface {
+
+    /*
+     *Handler Genérico para capturar
+     * exceções não tratadas ou não
+     * previstas pela nossa classe Handler
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ApiResponse(responseCode = "500", description = "An unexpected error occur.")
+    public ResponseEntity<Object> unCaughtHandler(Exception e) {
+        e.printStackTrace();
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
+                String.format("Uncaught error, please contact Sys Admin Details: %s", e.getMessage()), "An unexpected error occur.");
+    }
 
     @ExceptionHandler(RepositoryEntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -137,14 +152,8 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         return apiValidationErrorResponse;
     }
 
-    /**
-     * Do not touch in if() sequences the order matters. ;)
-     *
-     * @param ex
-     * @param headers
-     * @param status
-     * @param request
-     * @return ResponseEntity to be sent to client containing detailed message resuming the error.
+    /*
+     * Do not touch in if() sequences, the order matters. ;)
      */
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -181,6 +190,15 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         }
 
         return ResponseEntity.status(status).body(buildResponseEntity(status, ex));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        String detail = String.format("The requested resource %s does not exists.", ex.getRequestURL());
+
+        return buildResponseEntity(status, detail, "Resource not found.");
+
     }
 
     private ResponseEntity<Object> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException e, HttpStatus status) {
