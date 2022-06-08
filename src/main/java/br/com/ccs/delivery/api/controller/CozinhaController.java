@@ -4,15 +4,18 @@ import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.model.wrapper.CozinhaXmlResponse;
 import br.com.ccs.delivery.domain.service.CozinhaService;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
 @RequestMapping(value = "/api/cozinhas", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 @AllArgsConstructor
+@DynamicUpdate
 public class CozinhaController {
 
     CozinhaService service;
@@ -44,13 +47,13 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha save(@RequestBody Cozinha cozinha) {
+    public Cozinha save(@RequestBody @Valid Cozinha cozinha) {
         return service.save(cozinha);
     }
 
     @PutMapping("{cozinhaId}")
     @ResponseStatus(HttpStatus.OK)
-    public Cozinha update(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+    public Cozinha update(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
         return service.update(cozinhaId, cozinha);
     }
 

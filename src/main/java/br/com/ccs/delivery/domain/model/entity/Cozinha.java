@@ -1,11 +1,14 @@
 package br.com.ccs.delivery.domain.model.entity;
 
+import br.com.ccs.delivery.domain.model.util.validationgroups.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -16,10 +19,12 @@ import java.util.Objects;
 public class Cozinha {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(groups = ValidationGroups.CozinhaId.class)
     private Long id;
 
     //@JsonProperty(value = "Categoria Cozinha")
     @Column(unique = true , nullable = false)
+    @NotBlank
     private String nome;
 
     @JsonIgnore

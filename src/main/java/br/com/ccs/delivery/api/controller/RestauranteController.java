@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
@@ -35,14 +36,14 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante save(@RequestBody Restaurante restaurante) {
+    public Restaurante save(@RequestBody @Valid Restaurante restaurante) {
         return service.save(restaurante);
     }
 
     @PutMapping("{restauranteId}")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurante update(@PathVariable Long restauranteId, @RequestBody Map<String, Object> updates) {
-        return service.update(restauranteId, updates);
+    public Restaurante update(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
+        return service.update(restauranteId, restaurante);
     }
 
     @DeleteMapping("{restauranteId}")
@@ -80,7 +81,7 @@ public class RestauranteController {
 
     @GetMapping("/com-frete-gratis")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Restaurante> comFreteGratis(String nome){
+    public Collection<Restaurante> comFreteGratis(String nome) {
         var comFreteGratis = new RestauranteComFreteGratisSpec();
         var comNomeSemelhante = new RestauranteNomeLikeSpec(nome);
 
@@ -89,13 +90,13 @@ public class RestauranteController {
 
     @GetMapping("/specs")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Restaurante> getComSpecs(String nomeRestaurante, String nomeCozinha){
+    public Collection<Restaurante> getComSpecs(String nomeRestaurante, String nomeCozinha) {
         return service.findAll(nomeRestaurante, nomeCozinha);
     }
 
     @GetMapping("/first")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurante getFirst(){
+    public Restaurante getFirst() {
         return service.getFirst();
     }
 

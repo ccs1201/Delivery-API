@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -29,13 +30,13 @@ public class MunicipioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Municipio save(@RequestBody Municipio municipio) {
+    public Municipio save(@RequestBody  @Valid Municipio municipio) {
         return service.save(municipio);
     }
 
     @PutMapping("{municipioId}")
     @ResponseStatus(HttpStatus.OK)
-    public Municipio update(@PathVariable int municipioId, @RequestBody Municipio municipio) {
+    public Municipio update(@PathVariable int municipioId, @RequestBody @Valid Municipio municipio) {
         return service.update(municipioId, municipio);
     }
 

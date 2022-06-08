@@ -1,13 +1,19 @@
 package br.com.ccs.delivery.domain.model.component;
 
 import br.com.ccs.delivery.domain.model.entity.Municipio;
+import br.com.ccs.delivery.domain.model.util.validationgroups.ValidationGroups;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.groups.ConvertGroup;
 import java.util.Objects;
 
 @Embeddable
@@ -22,10 +28,16 @@ public class Endereco {
     private String complemento;
     @NotBlank
     private String bairro;
-    private Integer cep;
+    @NotNull
+    @Size(min = 8, max = 8, message = "Cep deve conter 8 dígitos")
+    private String cep;
 
     @ManyToOne
     @JoinColumn(name = "municipio_id", nullable = false)
+    @JsonIgnore
+    @NotNull
+    @Valid
+    @ConvertGroup(to = ValidationGroups.MunicipioId.class)
     private Municipio municipio;
 
     @Override

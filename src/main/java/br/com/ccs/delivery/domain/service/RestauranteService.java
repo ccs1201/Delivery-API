@@ -7,12 +7,14 @@ import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGr
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
 import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
@@ -66,18 +68,15 @@ public class RestauranteService {
     }
 
     @Transactional
-    public Restaurante update(Long id, Map<String, Object> updates) {
+    public Restaurante update(Long id, Restaurante restaurante) {
         try {
 
-            Restaurante restaurante = this.findById(id);
+            Restaurante restauranteAtual = this.findById(id);
 
-            //BeanUtils.copyProperties(restaurante,oldRestaurante,"id", "tiposPagamento", "taxaEntrega");
+            BeanUtils.copyProperties(restaurante,restauranteAtual, "endereco", "id");
+            return repository.save(restauranteAtual);
 
-            entityUpdateMergerUtil.updateModel(updates, restaurante, Restaurante.class);
-
-            return repository.save(restaurante);
-
-        } catch (IllegalArgumentException | DataIntegrityViolationException e) {
+        } catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
             throw new RepositoryEntityPersistException(
                     ERRO_ATUALIZAR_RESTAURANTE, e);
         }

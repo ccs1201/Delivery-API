@@ -1,6 +1,7 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import br.com.ccs.delivery.domain.model.component.Endereco;
+import br.com.ccs.delivery.domain.model.util.validationgroups.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,10 +12,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -30,23 +32,25 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 60)
-    @EqualsAndHashCode.Include
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
+    @Size(min = 3, max = 60)
+    @NotBlank
     private String nome;
 
     @Column(nullable = false)
-    @Min(0)
+    @PositiveOrZero
+    @NotNull
     private BigDecimal taxaEntrega;
 
-    @JsonIgnore
     @Embedded
-    @Valid
+    @JsonIgnore
     private Endereco endereco;
 
     @ManyToOne(optional = false)
     @NotNull
+    @Valid
+    @ConvertGroup(to = ValidationGroups.CozinhaId.class)
     private Cozinha cozinha;
 
     @JsonIgnore
