@@ -34,7 +34,7 @@ public class Restaurante {
 
     @Column(nullable = false)
     @EqualsAndHashCode.Include
-    @Size(min = 3, max = 60)
+    @Size(max = 60, min = 3)
     @NotBlank
     private String nome;
 

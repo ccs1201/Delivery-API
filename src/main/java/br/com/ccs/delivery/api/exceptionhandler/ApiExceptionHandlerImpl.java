@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,13 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler implements ApiExceptionHandlerInterface {
+
+    private final MessageSource messageSource;
+
+    @Autowired
+    public ApiExceptionHandlerImpl(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     /*
      *Handler Genérico para capturar
@@ -156,7 +166,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                         ApiValidationErrorResponse.FieldValidationError
                                 .builder()
                                 .field(fieldError.getField())
-                                .fieldValidationMessage(fieldError.getDefaultMessage())
+                                .fieldValidationMessage(messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()))
                                 .rejectedValue(String.format("%s", fieldError.getRejectedValue()))
                                 .build()));
 
@@ -215,7 +225,8 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     private ResponseEntity<Object> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException e, HttpStatus status) {
         String detail =
                 String.format("Invalid URL parameter %s. Requires %s found %s",
-                        e.getName(), Objects.requireNonNull(e.getRequiredType()).getSimpleName(), e.getValue().getClass().getSimpleName());
+                        e.getName(), Objects.requireNonNull(e.getRequiredType()).getSimpleName(),
+                        Objects.requireNonNull(e.getValue()).getClass().getSimpleName());
 
         ApiValidationErrorResponse errorResponse = buildApiValidationErrorResponse(status);
 
