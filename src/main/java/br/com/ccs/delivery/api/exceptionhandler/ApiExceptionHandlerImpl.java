@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.api.exceptionhandler;
 
+import br.com.ccs.delivery.core.validations.exceptions.EntityValidationException;
 import br.com.ccs.delivery.domain.model.util.exception.GenericEntityUpdateMergerUtilException;
 import br.com.ccs.delivery.domain.service.exception.*;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,7 +45,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     }
 
     /*
-     *Handler Genérico para capturar
+     * Handler Genérico para capturar
      * exceções não tratadas ou não
      * previstas pela nossa classe Handler
      */
@@ -54,6 +57,23 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
                 String.format("Uncaught error, please contact Sys Admin Details: %s", e.getMessage()), "An unexpected error occur.");
     }
+
+    @ExceptionHandler(EntityValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(responseCode = "400", description = "Invalid Value for one or mores fields")
+    public ResponseEntity<Object> entityValidationExceptionHandler(EntityValidationException e, HttpStatus status) {
+
+        ApiValidationErrorResponse apiValidationErrorResponse = ApiValidationErrorResponse.builder()
+                .type(status.getReasonPhrase())
+                .status(status.value())
+                .build();
+
+        getDetails(e.getBindingResult().getAllErrors(), apiValidationErrorResponse);
+
+
+        return ResponseEntity.status(status).body(apiValidationErrorResponse);
+    }
+
 
     @ExceptionHandler(RepositoryEntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -115,7 +135,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ApiResponse(responseCode = "409", description = "A constraint violation occurred")
     public ResponseEntity<?> dataIntegrityViolationExceptionHandler(RepositoryDataIntegrityViolationException e) {
 
-    //   Throwable rootCause = ExceptionUtils.getRootCause(e);
+        //   Throwable rootCause = ExceptionUtils.getRootCause(e);
 
         return buildResponseEntity(HttpStatus.CONFLICT, e, "Invalid value for one or more fields");
     }
@@ -149,10 +169,10 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return ResponseEntity.status(status).body(httpRequestMethodNotSupportedHandler(ex, status));
+        return ResponseEntity.status(status).body(validationErrorsHandler(ex, status));
     }
 
-    private ApiValidationErrorResponse httpRequestMethodNotSupportedHandler(MethodArgumentNotValidException ex, HttpStatus status) {
+    private ApiValidationErrorResponse validationErrorsHandler(MethodArgumentNotValidException ex, HttpStatus status) {
 
         ApiValidationErrorResponse apiValidationErrorResponse
                 = ApiValidationErrorResponse
@@ -161,14 +181,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                 .type(status.getReasonPhrase())
                 .build();
 
-        ex.getFieldErrors().forEach(fieldError ->
-                apiValidationErrorResponse.getDetails().add(
-                        ApiValidationErrorResponse.FieldValidationError
-                                .builder()
-                                .field(fieldError.getField())
-                                .fieldValidationMessage(messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()))
-                                .rejectedValue(String.format("%s", fieldError.getRejectedValue()))
-                                .build()));
+        getDetails(ex.getAllErrors(), apiValidationErrorResponse);
 
         return apiValidationErrorResponse;
     }
@@ -296,5 +309,29 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         return references.stream()
                 .map(JsonMappingException.Reference::getFieldName)
                 .collect(Collectors.joining("."));
+    }
+
+    private void getDetails(List<ObjectError> e, ApiValidationErrorResponse apiValidationErrorResponse) {
+        e.forEach(error -> {
+
+            if (error instanceof FieldError) {
+                FieldError fieldError = (FieldError) error;
+                apiValidationErrorResponse.getDetails().add(
+                        ApiValidationErrorResponse.FieldValidationError
+                                .builder()
+                                .field(fieldError.getField())
+                                .fieldValidationMessage(messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()))
+                                .rejectedValue(String.format("%s", fieldError.getRejectedValue()))
+                                .build());
+
+            } else {
+                apiValidationErrorResponse.getDetails().add(
+                        ApiValidationErrorResponse.FieldValidationError
+                                .builder()
+                                .field(error.getObjectName())
+                                .fieldValidationMessage(messageSource.getMessage(error, LocaleContextHolder.getLocale()))
+                                .build());
+            }
+        });
     }
 }

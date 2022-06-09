@@ -1,6 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
-import br.com.ccs.delivery.domain.model.util.validationgroups.ValidationGroups;
+import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;

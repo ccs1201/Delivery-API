@@ -10,4 +10,8 @@ public abstract class BusinessLogicException extends RuntimeException {
         super(message);
 
     }
+
+    public BusinessLogicException() {
+
+    }
 }

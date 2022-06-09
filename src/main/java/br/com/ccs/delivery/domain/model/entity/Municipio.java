@@ -1,6 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
-import br.com.ccs.delivery.domain.model.util.validationgroups.ValidationGroups;
+import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

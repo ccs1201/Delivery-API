@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.domain.model.util.validationgroups;
+package br.com.ccs.delivery.core.validations.validationgroups;
 
 public interface ValidationGroups {
 

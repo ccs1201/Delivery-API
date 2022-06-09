@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.domain.service;
 
+import br.com.ccs.delivery.core.validations.exceptions.EntityValidationException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
@@ -12,6 +13,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
@@ -22,13 +25,14 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public class RestauranteService {
+    private static final String RESTAURANTE_NAO_ENCONTRADO = "Restaurante ID: %d não encontrado.";
+    private static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante.";
+    private static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante.";
+    private static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
+    private final RestauranteRepository repository;
+    private final GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
+    private final SmartValidator smartValidator;
 
-    public static final String RESTAURANTE_NAO_ENCONTRADO = "Restaurante ID: %d não encontrado.";
-    public static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante.";
-    public static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante.";
-    public static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
-    RestauranteRepository repository;
-    GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
 
     public Collection<Restaurante> findAll() {
         return repository.findAll();
@@ -73,7 +77,7 @@ public class RestauranteService {
 
             Restaurante restauranteAtual = this.findById(id);
 
-            BeanUtils.copyProperties(restaurante,restauranteAtual, "endereco", "id");
+            BeanUtils.copyProperties(restaurante, restauranteAtual, "endereco", "id");
             return repository.save(restauranteAtual);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
@@ -90,11 +94,25 @@ public class RestauranteService {
             Restaurante restaurante = this.findById(id);
             entityUpdateMergerUtil.updateModel(updates, restaurante, Restaurante.class);
 
+            Validate(restaurante);
+
             return repository.save(restaurante);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
             throw new RepositoryEntityUpdateException(ERRO_ATUALIZAR_RESTAURANTE, e);
         }
+    }
+
+    private void Validate(Restaurante restaurante) {
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante, restaurante.getClass().getSimpleName());
+
+        smartValidator.validate(restaurante, bindingResult);
+
+        if(bindingResult.hasErrors()){
+            throw new EntityValidationException(bindingResult);
+        }
+
     }
 
     public Collection<Restaurante> findByNomeCozinha(String nomeCozinha) {

@@ -1,7 +1,9 @@
 package br.com.ccs.delivery.domain.model.entity;
 
+import br.com.ccs.delivery.core.validations.annotations.TaxaEntregaValidator;
+import br.com.ccs.delivery.core.validations.annotations.ValorZeroIncluiDescricao;
+import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import br.com.ccs.delivery.domain.model.component.Endereco;
-import br.com.ccs.delivery.domain.model.util.validationgroups.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,7 +16,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ import java.util.Objects;
 @Setter
 @DynamicUpdate
 @Entity
+@ValorZeroIncluiDescricao(fieldTaxa = "taxaEntrega", fieldName ="nome", descricaoObrigatoria="Frete Grátis")
 public class Restaurante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,8 +41,9 @@ public class Restaurante {
     private String nome;
 
     @Column(nullable = false)
-    @PositiveOrZero
-    @NotNull
+    //@PositiveOrZero (message = "{TaxaEntrega.invalida}")
+    @TaxaEntregaValidator
+    //@ExemploValidadorDeUmNumeroMultiplo(numero = 3)
     private BigDecimal taxaEntrega;
 
     @Embedded

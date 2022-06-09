@@ -1,7 +1,7 @@
 package br.com.ccs.delivery.domain.model.component;
 
 import br.com.ccs.delivery.domain.model.entity.Municipio;
-import br.com.ccs.delivery.domain.model.util.validationgroups.ValidationGroups;
+import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
