@@ -1,24 +1,20 @@
 package br.com.ccs.delivery.domain.repository;
 
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Profile("dev")
+//@Profile("dev")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class CozinhaRepositoryTest {
+class CozinhaRepositoryIT {
 
     @Autowired
     CozinhaRepository repository;
@@ -59,18 +55,12 @@ class CozinhaRepositoryTest {
 
     @Test
     @Order(3)
+    @DisplayName("digo o que meu teste vai fazer e qual deveria ser o resultado")
     public void remove() {
         repository.deleteById(persisted.getId());
-        Cozinha cozinha = null;
 
         Optional<Cozinha> cozinhaOptional = repository.findById(persisted.getId());
 
-        if (cozinhaOptional.isPresent()) {
-            cozinha = cozinhaOptional.get();
-
-        }
-        assertNull(cozinha);
-
+        assertThrows(NoSuchElementException.class, cozinhaOptional::get);
     }
-
 }
