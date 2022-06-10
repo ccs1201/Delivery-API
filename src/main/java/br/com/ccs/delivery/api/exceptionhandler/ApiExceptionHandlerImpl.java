@@ -53,7 +53,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ApiResponse(responseCode = "500", description = "An unexpected error occur.")
     public ResponseEntity<Object> unCaughtHandler(Exception e) {
-        e.printStackTrace();
+       // e.printStackTrace();
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
                 String.format("Uncaught error, please contact Sys Admin Details: %s", e.getMessage()), "An unexpected error occur.");
     }
@@ -61,17 +61,17 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ExceptionHandler(EntityValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = "Invalid Value for one or mores fields")
-    public ResponseEntity<Object> entityValidationExceptionHandler(EntityValidationException e, HttpStatus status) {
+    public ResponseEntity<Object> entityValidationExceptionHandler(EntityValidationException e) {
 
         ApiValidationErrorResponse apiValidationErrorResponse = ApiValidationErrorResponse.builder()
-                .type(status.getReasonPhrase())
-                .status(status.value())
+                .type(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .build();
 
         getDetails(e.getBindingResult().getAllErrors(), apiValidationErrorResponse);
 
 
-        return ResponseEntity.status(status).body(apiValidationErrorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiValidationErrorResponse);
     }
 
 
