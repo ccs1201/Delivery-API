@@ -68,7 +68,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                 .status(HttpStatus.BAD_REQUEST.value())
                 .build();
 
-        getDetails(e.getBindingResult().getAllErrors(), apiValidationErrorResponse);
+        getBindingResults(e.getBindingResult().getAllErrors(), apiValidationErrorResponse);
 
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiValidationErrorResponse);
@@ -181,7 +181,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                 .type(status.getReasonPhrase())
                 .build();
 
-        getDetails(ex.getAllErrors(), apiValidationErrorResponse);
+        getBindingResults(ex.getAllErrors(), apiValidationErrorResponse);
 
         return apiValidationErrorResponse;
     }
@@ -311,7 +311,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                 .collect(Collectors.joining("."));
     }
 
-    private void getDetails(List<ObjectError> e, ApiValidationErrorResponse apiValidationErrorResponse) {
+    private void getBindingResults(List<ObjectError> e, ApiValidationErrorResponse apiValidationErrorResponse) {
         e.forEach(error -> {
 
             if (error instanceof FieldError) {
