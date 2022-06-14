@@ -5,9 +5,7 @@ import br.com.ccs.delivery.core.validations.annotations.ValorZeroIncluiDescricao
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import br.com.ccs.delivery.domain.model.component.Endereco;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -28,6 +26,9 @@ import java.util.Objects;
 @Setter
 @DynamicUpdate
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @ValorZeroIncluiDescricao(fieldTaxa = "taxaEntrega", fieldName ="nome", descricaoObrigatoria="Frete Grátis")
 public class Restaurante {
     @Id
@@ -47,7 +48,6 @@ public class Restaurante {
     private BigDecimal taxaEntrega;
 
     @Embedded
-    @JsonIgnore
     private Endereco endereco;
 
     @ManyToOne(optional = false)

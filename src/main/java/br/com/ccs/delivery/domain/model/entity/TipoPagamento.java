@@ -1,9 +1,7 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -12,6 +10,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TipoPagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

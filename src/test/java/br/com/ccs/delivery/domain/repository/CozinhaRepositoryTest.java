@@ -24,8 +24,7 @@ class CozinhaRepositoryTest {
     @Order(0)
     public void save() {
 
-        Cozinha cozinha = new Cozinha();
-        cozinha.setNome("Nova Cozinha");
+        Cozinha cozinha = Cozinha.builder().nome("Nova Cozinha").build();
         persisted = repository.save(cozinha);
 
         assertEquals(cozinha.getNome(), persisted.getNome());

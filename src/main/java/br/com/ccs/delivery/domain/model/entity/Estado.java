@@ -2,7 +2,9 @@ package br.com.ccs.delivery.domain.model.entity;
 
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -15,6 +17,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Estado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

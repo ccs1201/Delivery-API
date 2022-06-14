@@ -3,8 +3,7 @@ package br.com.ccs.delivery.domain.model.entity;
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +15,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cozinha {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

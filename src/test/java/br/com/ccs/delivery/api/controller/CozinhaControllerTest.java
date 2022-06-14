@@ -2,6 +2,7 @@ package br.com.ccs.delivery.api.controller;
 
 
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
+import br.com.ccs.delivery.domain.repository.CozinhaRepository;
 import br.com.ccs.delivery.domain.service.CozinhaService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -26,10 +27,12 @@ class CozinhaControllerTest {
     private static final String BASE_URI = "/api/cozinhas/";
     @LocalServerPort
     private int port;
-//    @Autowired
-//    private Flyway flyway;
+
     @Autowired
     private CozinhaService cozinhaService;
+    @Autowired
+    private CozinhaRepository repository;
+    private long qtdRegistrosNoBanco;
 
 
     @BeforeAll
@@ -38,8 +41,7 @@ class CozinhaControllerTest {
         enableLoggingOfRequestAndResponseIfValidationFails();
         basePath = BASE_URI;
         RestAssured.port = port;
-//        flyway.migrate();
-
+        qtdRegistrosNoBanco = repository.count();
     }
 
     @Test
@@ -52,7 +54,7 @@ class CozinhaControllerTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .assertThat()
-                .body("size()", greaterThan(0));
+                .body("", hasSize(((int) qtdRegistrosNoBanco)));
     }
 
     @Test

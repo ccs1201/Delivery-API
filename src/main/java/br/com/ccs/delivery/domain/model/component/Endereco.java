@@ -1,10 +1,8 @@
 package br.com.ccs.delivery.domain.model.component;
 
-import br.com.ccs.delivery.domain.model.entity.Municipio;
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import br.com.ccs.delivery.domain.model.entity.Municipio;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -19,6 +17,9 @@ import java.util.Objects;
 @Embeddable
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Endereco {
 
     @NotBlank
@@ -34,7 +35,6 @@ public class Endereco {
 
     @ManyToOne
     @JoinColumn(name = "municipio_id", nullable = false)
-    @JsonIgnore
     @NotNull
     @Valid
     @ConvertGroup(to = ValidationGroups.MunicipioId.class)

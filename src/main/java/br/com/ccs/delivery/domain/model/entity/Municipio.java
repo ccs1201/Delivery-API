@@ -1,9 +1,7 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -16,6 +14,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Municipio {
 
     @Id
@@ -28,7 +29,7 @@ public class Municipio {
     @Size(min = 3, max = 50)
     private String nome;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @NotNull
     @Valid
     @ConvertGroup(to=ValidationGroups.EstadoId.class)

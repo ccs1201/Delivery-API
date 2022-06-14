@@ -22,4 +22,6 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
 
     @Query("select r from Restaurante r join fetch r.cozinha c where c.nome like %:nomeCozinha% ")
     Collection<Restaurante> findByNomeCozinha(String nomeCozinha);
+
+    Restaurante findByNomeContaining(String nome);
 }

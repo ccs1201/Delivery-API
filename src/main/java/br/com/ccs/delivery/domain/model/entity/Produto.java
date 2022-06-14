@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -11,8 +10,10 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
-@Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
