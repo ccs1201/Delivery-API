@@ -36,6 +36,8 @@ public class CozinhaService {
     public Cozinha save(Cozinha cozinha) {
         try {
             return repository.save(cozinha);
+        } catch (DataIntegrityViolationException e) {
+            throw new RepositoryDataIntegrityViolationException(String.format("Cozinha com nome: %s já está cadastrada.", cozinha.getNome()), e);
         } catch (IllegalArgumentException e) {
             throw new RepositoryEntityPersistException(String.format(ERRO_CADASTRAR_COZINHA, e.getMessage()));
         }
