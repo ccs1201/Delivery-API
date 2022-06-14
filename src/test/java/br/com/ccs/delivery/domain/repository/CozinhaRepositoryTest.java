@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 //@Profile("dev")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class CozinhaRepositoryIT {
+class CozinhaRepositoryTest {
 
     @Autowired
     CozinhaRepository repository;
