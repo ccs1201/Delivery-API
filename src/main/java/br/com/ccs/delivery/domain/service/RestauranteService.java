@@ -58,7 +58,7 @@ public class RestauranteService {
         }
     }
 
-
+    @Transactional
     public Restaurante save(Restaurante restaurante) {
         try {
             return repository.save(restaurante);
@@ -109,7 +109,7 @@ public class RestauranteService {
 
         smartValidator.validate(restaurante, bindingResult);
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new EntityValidationException(bindingResult);
         }
 

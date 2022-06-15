@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.*;
 
@@ -25,11 +24,10 @@ public class Cozinha {
     private Long id;
 
     //@JsonProperty(value = "Categoria Cozinha")
-    @Column(unique = true , nullable = false)
+    @Column(unique = true, nullable = false)
     @NotBlank
     private String nome;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "cozinha", fetch = FetchType.LAZY)
     private Collection<Restaurante> restaurantes;
 

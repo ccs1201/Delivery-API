@@ -4,7 +4,6 @@ import br.com.ccs.delivery.core.validations.annotations.TaxaEntregaValidator;
 import br.com.ccs.delivery.core.validations.annotations.ValorZeroIncluiDescricao;
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import br.com.ccs.delivery.domain.model.component.Endereco;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
@@ -29,7 +28,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ValorZeroIncluiDescricao(fieldTaxa = "taxaEntrega", fieldName ="nome", descricaoObrigatoria="Frete Grátis")
+@ValorZeroIncluiDescricao(fieldTaxa = "taxaEntrega", fieldName = "nome", descricaoObrigatoria = "Frete Grátis")
 public class Restaurante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +47,7 @@ public class Restaurante {
     private BigDecimal taxaEntrega;
 
     @Embedded
+    @Valid
     private Endereco endereco;
 
     @ManyToOne(optional = false)
@@ -56,26 +56,25 @@ public class Restaurante {
     @ConvertGroup(to = ValidationGroups.CozinhaId.class)
     private Cozinha cozinha;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false,
             columnDefinition = "datetime",
             updatable = false)
     private LocalDateTime dataCadastro;
 
-    @JsonIgnore
+
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataUltimaAtualizacao;
 
-    @JsonIgnore
+
     @ManyToMany
     @JoinTable(name = "restaurante_tipo_pagamento",
             joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "tipo_pagamento_id"))
     Collection<TipoPagamento> tiposPagamento;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
     private Collection<Produto> produtos;
 
