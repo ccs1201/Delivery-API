@@ -7,7 +7,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -27,10 +27,10 @@ public class Pedido {
     private BigDecimal subTotal;
     private BigDecimal taxaEntrega;
     private BigDecimal valorTotal;
-    private LocalDateTime dataCriacao;
-    private LocalDateTime dataConfirmacao;
-    private LocalDateTime dataCancelamento;
-    private LocalDateTime dataEntrega;
+    private OffsetDateTime dataCriacao;
+    private OffsetDateTime dataConfirmacao;
+    private OffsetDateTime dataCancelamento;
+    private OffsetDateTime dataEntrega;
 
     @Enumerated(EnumType.STRING)
     private StatusPedido statusPedido;

@@ -1,5 +1,8 @@
 package br.com.ccs.delivery.api.controller;
 
+import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
+import br.com.ccs.delivery.api.model.representation.mapper.RestauranteMapper;
+import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
@@ -22,28 +25,33 @@ public class RestauranteController {
     RestauranteService service;
     GenericEntityUpdateMergerUtil mergerUtil;
 
+    RestauranteMapper mapper;
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Restaurante> findAll() {
-        return service.findAll();
+    public Collection<RestauranteResponse> findAll() {
+        return mapper.toCollection(service.findAll());
     }
 
     @GetMapping("{restauranteId}")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurante findById(@PathVariable Long restauranteId) {
-        return service.findById(restauranteId);
+    public RestauranteResponse findById(@PathVariable Long restauranteId) {
+        Restaurante restaurante = service.findById(restauranteId);
+
+        return mapper.toResponseModel(restaurante);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante save(@RequestBody @Valid Restaurante restaurante) {
-        return service.save(restaurante);
+    public RestauranteResponse save(@RequestBody @Valid RestauranteInput restauranteInput) {
+
+        return mapper.toResponseModel(service.save(mapper.toEntity(restauranteInput)));
     }
 
     @PutMapping("{restauranteId}")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurante update(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
-        return service.update(restauranteId, restaurante);
+    public RestauranteResponse update(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
+        return mapper.toResponseModel(service.update(restauranteId, restaurante));
     }
 
     @DeleteMapping("{restauranteId}")
@@ -54,9 +62,9 @@ public class RestauranteController {
 
     @PatchMapping("{restauranteId}")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurante patchUpdate(@PathVariable Long restauranteId, @RequestBody Map<String, Object> updates) {
+    public RestauranteResponse patchUpdate(@PathVariable Long restauranteId, @RequestBody Map<String, Object> updates) {
 
-        return service.patchUpdate(restauranteId, updates);
+        return mapper.toResponseModel(service.patchUpdate(restauranteId, updates));
     }
 
     private void merge(Map<String, Object> updates, Restaurante restaurante) {
@@ -67,37 +75,37 @@ public class RestauranteController {
 
     @GetMapping("/nome-cozinha")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Restaurante> findByNomeCozinha(@RequestParam String nomeCozinha) {
-        return service.findByNomeCozinha(nomeCozinha);
+    public Collection<RestauranteResponse> findByNomeCozinha(@RequestParam String nomeCozinha) {
+        return mapper.toCollection(service.findByNomeCozinha(nomeCozinha));
     }
 
     @GetMapping("/find")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Restaurante> anyCriteria(String nomeRestaurante, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha) {
+    public Collection<RestauranteResponse> anyCriteria(String nomeRestaurante, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha) {
 
-        return service.anyCriteria(nomeRestaurante, taxaEntregaMin, taxaEntregaMax, nomeCozinha);
+        return mapper.toCollection(service.anyCriteria(nomeRestaurante, taxaEntregaMin, taxaEntregaMax, nomeCozinha));
 
     }
 
     @GetMapping("/com-frete-gratis")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Restaurante> comFreteGratis(String nome) {
+    public Collection<RestauranteResponse> comFreteGratis(String nome) {
         var comFreteGratis = new RestauranteComFreteGratisSpec();
         var comNomeSemelhante = new RestauranteNomeLikeSpec(nome);
 
-        return service.findAll(comFreteGratis, comNomeSemelhante);
+        return mapper.toCollection(service.findAll(comFreteGratis, comNomeSemelhante));
     }
 
     @GetMapping("/specs")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Restaurante> getComSpecs(String nomeRestaurante, String nomeCozinha) {
-        return service.findAll(nomeRestaurante, nomeCozinha);
+    public Collection<RestauranteResponse> getComSpecs(String nomeRestaurante, String nomeCozinha) {
+        return mapper.toCollection(service.findAll(nomeRestaurante, nomeCozinha));
     }
 
     @GetMapping("/first")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurante getFirst() {
-        return service.getFirst();
+    public RestauranteResponse getFirst() {
+        return mapper.toResponseModel(service.getFirst());
     }
 
 }

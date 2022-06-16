@@ -51,6 +51,15 @@
 			<version>5.1.1</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- REST Assured-->
+
+		<!-- modelmapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<!-- modelmapper -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
