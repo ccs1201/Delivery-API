@@ -3,14 +3,14 @@ package br.com.ccs.delivery.api.model.representation.mapper;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class RestauranteMapper implements MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> {
-    ModelMapper mapper;
+    private ModelMapper mapper;
 
     @Override
     public RestauranteResponse toResponseModel(Restaurante restaurante) {
@@ -19,7 +19,11 @@ public class RestauranteMapper implements MapperInterface<RestauranteResponse, R
 
     @Override
     public Restaurante toEntity(RestauranteInput restauranteInput) {
+        //Tenho que resolver o problema do mapper setar
+        //o Id da cozinha no id do Restaurante
+
         return mapper.map(restauranteInput, Restaurante.class);
+
     }
 }
 

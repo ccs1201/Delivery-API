@@ -18,7 +18,7 @@ public class RestauranteInput {
     @PositiveOrZero
     @NotNull
     private BigDecimal taxaEntrega;
-    @NotBlank
+    @NotNull
     @Positive
     private Long cozinhaId;
 }
