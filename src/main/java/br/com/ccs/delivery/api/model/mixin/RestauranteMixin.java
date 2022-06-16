@@ -7,7 +7,7 @@ import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 
 public abstract class RestauranteMixin {
@@ -18,11 +18,11 @@ public abstract class RestauranteMixin {
     @JsonIgnoreProperties(value = "nome", allowGetters = true)
     private Cozinha cozinha;
 
-    @JsonIgnore
-    private LocalDateTime dataCadastro;
+    //@JsonIgnore
+    private OffsetDateTime dataCadastro;
 
-    @JsonIgnore
-    private LocalDateTime dataUltimaAtualizacao;
+    //@JsonIgnore
+    private OffsetDateTime dataUltimaAtualizacao;
 
     @JsonIgnore
     Collection<TipoPagamento> tiposPagamento;
