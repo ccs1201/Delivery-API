@@ -5,6 +5,8 @@ import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,10 +21,26 @@ public class RestauranteMapper implements MapperInterface<RestauranteResponse, R
 
     @Override
     public Restaurante toEntity(RestauranteInput restauranteInput) {
-        //Tenho que resolver o problema do mapper setar
-        //o Id da cozinha no id do Restaurante
+        /*
+        Foi precisa criar uma variável local
+        para poder configurar a estratégia de mapping
+        Visto que, se deixarmos com o default
+        ele injeta o ID da cozinha no ID do Restaurante
+        */
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        return mapper.map(restauranteInput, Restaurante.class);
+        PropertyMap<RestauranteInput, Restaurante> propertyMap = new PropertyMap<RestauranteInput, Restaurante>() {
+            @Override
+            protected void configure() {
+                map().getCozinha().setId(source.getCozinhaId());
+            }
+        };
+
+        modelMapper.addMappings(propertyMap);
+
+        Restaurante restaurante = modelMapper.map(restauranteInput, Restaurante.class);
+        return restaurante;
 
     }
 }
