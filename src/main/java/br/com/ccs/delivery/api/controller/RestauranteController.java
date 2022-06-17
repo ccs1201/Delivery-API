@@ -1,8 +1,10 @@
 package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
-import br.com.ccs.delivery.api.model.representation.mapper.RestauranteMapper;
+import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifierEnum;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
@@ -24,8 +26,8 @@ public class RestauranteController {
 
     RestauranteService service;
     GenericEntityUpdateMergerUtil mergerUtil;
-
-    RestauranteMapper mapper;
+    @MapperQualifier(MapperQualifierEnum.RESTAURANTE)
+    MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> mapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
