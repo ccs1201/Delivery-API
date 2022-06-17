@@ -1,10 +1,14 @@
 package br.com.ccs.delivery.api.controller;
 
+import br.com.ccs.delivery.api.model.representation.input.CozinhaInput;
+import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.api.model.representation.response.CozinhaResponse;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifierEnum;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.model.wrapper.CozinhaXmlResponse;
 import br.com.ccs.delivery.domain.service.CozinhaService;
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +19,15 @@ import java.util.Collection;
 @RestController
 @RequestMapping(value = "/api/cozinhas", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 @AllArgsConstructor
-@DynamicUpdate
 public class CozinhaController {
-
     CozinhaService service;
+    @MapperQualifier(MapperQualifierEnum.COZINHA)
+    MapperInterface<CozinhaResponse, CozinhaInput, Cozinha> cozinhaMapper;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Cozinha> findAll() {
-        return service.findAll();
+    public Collection<CozinhaResponse> findAll() {
+        return cozinhaMapper.toCollection(service.findAll());
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
@@ -34,27 +38,31 @@ public class CozinhaController {
 
     @GetMapping("/nome")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Cozinha> findByNome(@RequestParam String nome) {
+    public Collection<CozinhaResponse> findByNome(@RequestParam String nome) {
 
-        return service.findByNomeContaining(nome);
+        return cozinhaMapper.toCollection(service.findByNomeContaining(nome));
     }
 
     @GetMapping("{cozinhaId}")
     @ResponseStatus(HttpStatus.OK)
-    public Cozinha findById(@PathVariable Long cozinhaId) {
-        return service.findById(cozinhaId);
+    public CozinhaResponse findById(@PathVariable Long cozinhaId) {
+        return cozinhaMapper.toResponseModel(service.findById(cozinhaId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha save(@RequestBody @Valid Cozinha cozinha) {
-        return service.save(cozinha);
+    public CozinhaResponse save(@RequestBody @Valid CozinhaInput cozinhaInput) {
+
+        Cozinha cozinha = service.save(cozinhaMapper.toEntity(cozinhaInput));
+
+        return cozinhaMapper.toResponseModel(cozinha);
     }
 
     @PutMapping("{cozinhaId}")
     @ResponseStatus(HttpStatus.OK)
-    public Cozinha update(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
-        return service.update(cozinhaId, cozinha);
+    public CozinhaResponse update(@PathVariable Long cozinhaId, @RequestBody @Valid CozinhaInput cozinhaInput) {
+        Cozinha cozinha = service.update(cozinhaId, cozinhaMapper.toEntity(cozinhaInput));
+        return cozinhaMapper.toResponseModel(cozinha);
     }
 
     @DeleteMapping("{cozinhaId}")
@@ -66,8 +74,8 @@ public class CozinhaController {
 
     @GetMapping("/first")
     @ResponseStatus(HttpStatus.OK)
-    public Cozinha getFirst() {
-        return service.getFirst();
+    public CozinhaResponse getFirst() {
+        return cozinhaMapper.toResponseModel(service.getFirst());
     }
 
 }
