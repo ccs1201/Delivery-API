@@ -50,8 +50,13 @@ public class RestauranteController {
 
     @PutMapping("{restauranteId}")
     @ResponseStatus(HttpStatus.OK)
-    public RestauranteResponse update(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
-        return mapper.toResponseModel(service.update(restauranteId, restaurante));
+    public RestauranteResponse update(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
+
+        Restaurante restaurante = mapper.toEntity(restauranteInput);
+
+        restaurante = service.update(restauranteId, restaurante);
+
+        return mapper.toResponseModel(restaurante);
     }
 
     @DeleteMapping("{restauranteId}")

@@ -1,11 +1,13 @@
 package br.com.ccs.delivery.api.model.representation.input;
 
+import br.com.ccs.delivery.api.model.representation.input.component.CozinhaIdInput;
+import br.com.ccs.delivery.api.model.representation.input.component.EnderecoInput;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
@@ -18,7 +20,10 @@ public class RestauranteInput {
     @PositiveOrZero
     @NotNull
     private BigDecimal taxaEntrega;
+    @Valid
     @NotNull
-    @Positive
-    private Long cozinhaId;
+    private CozinhaIdInput cozinha;
+    @Valid
+    @NotNull
+    private EnderecoInput endereco;
 }

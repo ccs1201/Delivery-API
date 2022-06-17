@@ -77,7 +77,7 @@ public class RestauranteService {
 
             Restaurante restauranteAtual = this.findById(id);
 
-            BeanUtils.copyProperties(restaurante, restauranteAtual, "endereco", "id");
+            BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
             return repository.save(restauranteAtual);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
