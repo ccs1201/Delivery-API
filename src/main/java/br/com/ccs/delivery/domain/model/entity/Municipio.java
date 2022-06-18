@@ -4,11 +4,9 @@ import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.validation.groups.ConvertGroup;
 import java.util.Objects;
 
 @Getter
@@ -30,9 +28,9 @@ public class Municipio {
     private String nome;
 
     @ManyToOne(optional = false)
-    @NotNull
-    @Valid
-    @ConvertGroup(to=ValidationGroups.EstadoId.class)
+    //@NotNull
+    //@Valid
+    //@ConvertGroup(to=ValidationGroups.EstadoId.class)
     private Estado estado;
 
     @Override

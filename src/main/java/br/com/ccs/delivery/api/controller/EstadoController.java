@@ -4,7 +4,7 @@ import br.com.ccs.delivery.api.model.representation.input.EstadoInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.EstadoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierEnum;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Estado;
 import br.com.ccs.delivery.domain.service.EstadoService;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class EstadoController {
     EstadoService service;
-    @MapperQualifier(MapperQualifierEnum.ESTADO)
+    @MapperQualifier(MapperQualifierType.ESTADO)
     MapperInterface<EstadoResponse, EstadoInput, Estado> mapper;
 
     @GetMapping

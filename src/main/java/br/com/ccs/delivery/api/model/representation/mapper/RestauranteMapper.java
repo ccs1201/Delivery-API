@@ -3,12 +3,12 @@ package br.com.ccs.delivery.api.model.representation.mapper;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierEnum;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import org.springframework.stereotype.Component;
 
 @Component
-@MapperQualifier(MapperQualifierEnum.RESTAURANTE)
+@MapperQualifier(MapperQualifierType.RESTAURANTE)
 public class RestauranteMapper extends AbstractMapper<RestauranteResponse, RestauranteInput, Restaurante> {
 
  /*   @Override

@@ -30,9 +30,10 @@ public class MunicipioService {
         }
     }
 
+    @Transactional
     public Municipio save(Municipio municipio) {
         try {
-            return repository.save(municipio);
+            return repository.saveAndFlush(municipio);
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
                     String.format("Erro ao salvar Município. Estado ID: %d não existe.",
@@ -43,7 +44,7 @@ public class MunicipioService {
     @Transactional
     public Municipio update(Municipio municipio) {
         try {
-            return repository.save(municipio);
+            return repository.saveAndFlush(municipio);
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
                     String.format("Erro ao atualizar Município ID: %d Estado: %d inválido",
@@ -58,6 +59,7 @@ public class MunicipioService {
     public void delete(int municpioId) {
         try {
             repository.deleteById(municpioId);
+            repository.flush();
         } catch (DataIntegrityViolationException e) {
 
             throw new RepositoryEntityInUseException(

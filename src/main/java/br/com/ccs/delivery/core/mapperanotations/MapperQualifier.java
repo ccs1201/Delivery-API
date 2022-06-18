@@ -9,5 +9,5 @@ import java.lang.annotation.RetentionPolicy;
 @Qualifier
 public @interface MapperQualifier {
 
-    MapperQualifierEnum value();
+    MapperQualifierType value();
 }

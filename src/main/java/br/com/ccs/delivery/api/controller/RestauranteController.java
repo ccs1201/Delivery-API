@@ -4,7 +4,7 @@ import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierEnum;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
@@ -26,7 +26,7 @@ public class RestauranteController {
 
     RestauranteService service;
     GenericEntityUpdateMergerUtil mergerUtil;
-    @MapperQualifier(MapperQualifierEnum.RESTAURANTE)
+    @MapperQualifier(MapperQualifierType.RESTAURANTE)
     MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> mapper;
 
     @GetMapping

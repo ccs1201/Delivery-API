@@ -4,7 +4,7 @@ import br.com.ccs.delivery.api.model.representation.input.CozinhaInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.CozinhaResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierEnum;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.model.wrapper.CozinhaXmlResponse;
 import br.com.ccs.delivery.domain.service.CozinhaService;
@@ -21,7 +21,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class CozinhaController {
     CozinhaService service;
-    @MapperQualifier(MapperQualifierEnum.COZINHA)
+    @MapperQualifier(MapperQualifierType.COZINHA)
     MapperInterface<CozinhaResponse, CozinhaInput, Cozinha> cozinhaMapper;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

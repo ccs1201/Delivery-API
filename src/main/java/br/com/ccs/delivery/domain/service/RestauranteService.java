@@ -47,6 +47,7 @@ public class RestauranteService {
     public void delete(Long restauranteId) {
         try {
             repository.deleteById(restauranteId);
+            repository.flush();
 
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryEntityInUseException(
@@ -73,7 +74,7 @@ public class RestauranteService {
     @Transactional
     public Restaurante update(Restaurante restaurante) {
         try {
-            return repository.save(restaurante);
+            return repository.saveAndFlush(restaurante);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
             throw new RepositoryEntityPersistException(
@@ -91,7 +92,7 @@ public class RestauranteService {
 
             Validate(restaurante);
 
-            return repository.save(restaurante);
+            return repository.saveAndFlush(restaurante);
 
         } catch (IllegalArgumentException | DataIntegrityViolationException | EmptyResultDataAccessException e) {
             throw new RepositoryEntityUpdateException(ERRO_ATUALIZAR_RESTAURANTE, e);

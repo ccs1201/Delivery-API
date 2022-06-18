@@ -13,7 +13,8 @@ import javax.validation.constraints.NotNull;
 public class MunicipioInput {
     @NotBlank
     private String nome;
-    @NotNull
+
     @Valid
+    @NotNull
     private EstadoIdInput estado;
 }

@@ -56,12 +56,13 @@ public class CozinhaService {
 
     }
 
-
+    @Transactional
     public void delete(Long cozinhaId) {
         try {
             repository.deleteById(cozinhaId);
+            repository.flush();
         } catch (DataIntegrityViolationException e) {
-            throw new RepositoryEntityInUseException(String.format(NAO_PODE_REMOVER_COZINHA, cozinhaId), e);
+            throw new RepositoryEntityInUseException(String.format(NAO_PODE_REMOVER_COZINHA, cozinhaId), e.getRootCause());
 
         } catch (EmptyResultDataAccessException e) {
             throw new RepositoryEntityNotFoundException(String.format(COZINHA_NAO_ENCONTRADA, cozinhaId));

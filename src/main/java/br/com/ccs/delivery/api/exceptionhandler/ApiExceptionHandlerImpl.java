@@ -9,10 +9,12 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +58,16 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
        // e.printStackTrace();
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
                 String.format("Uncaught error, please contact Sys Admin Details: %s", e.getMessage()), "An unexpected error occur.");
+    }
+
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ApiResponse(responseCode = "409", description = "Data integrity violation.")
+    ResponseEntity<Object> constraintViolationExceptionHandler(ConstraintViolationException e){
+
+        Throwable rootCause = ExceptionUtils.getRootCause(e);
+
+        return buildResponseEntity(HttpStatus.CONFLICT,rootCause.getMessage() ,"Data integrity violation. Check Detail:");
     }
 
     @ExceptionHandler(EntityValidationException.class)
@@ -142,7 +154,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
     @ExceptionHandler(JsonParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ApiResponse(responseCode = "400", description = "malformed data, check JSON syntax")
+    @ApiResponse(responseCode = "400", description = "Malformed data, check JSON syntax")
     public ResponseEntity<?> jsonParseExceptionHandler(JsonParseException e) {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
     }
@@ -314,8 +326,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     private void getBindingResults(List<ObjectError> e, ApiValidationErrorResponse apiValidationErrorResponse) {
         e.forEach(error -> {
 
-            if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
+            if (error instanceof FieldError fieldError) {
                 apiValidationErrorResponse.getDetails().add(
                         ApiValidationErrorResponse.FieldValidationError
                                 .builder()
