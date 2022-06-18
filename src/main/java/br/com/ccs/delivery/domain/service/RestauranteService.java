@@ -71,7 +71,7 @@ public class RestauranteService {
     }
 
     @Transactional
-    public Restaurante update(Long id, Restaurante restaurante) {
+    public Restaurante update(Restaurante restaurante) {
         try {
             return repository.save(restaurante);
 

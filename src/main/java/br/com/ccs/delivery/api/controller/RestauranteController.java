@@ -58,7 +58,7 @@ public class RestauranteController {
 
         mapper.updateEntity(restauranteInput, restaurante);
 
-        return mapper.toResponseModel(service.update(restauranteId, restaurante));
+        return mapper.toResponseModel(service.update(restaurante));
     }
 
     @DeleteMapping("{restauranteId}")
