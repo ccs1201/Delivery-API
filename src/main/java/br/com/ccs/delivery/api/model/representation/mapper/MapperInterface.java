@@ -11,6 +11,8 @@ public interface MapperInterface<RESPONSEMODEL,INPUTMODEL, ENTITY> {
 
     ENTITY toEntity(INPUTMODEL inputmodel);
 
+    void updateEntity (INPUTMODEL inputmodel, ENTITY entity);
+
     default Page<RESPONSEMODEL> toPage(Page<ENTITY> page) {
         return page.map(this::toResponseModel);
     }

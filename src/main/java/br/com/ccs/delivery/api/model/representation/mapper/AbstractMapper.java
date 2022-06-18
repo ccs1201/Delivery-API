@@ -29,4 +29,9 @@ public abstract class AbstractMapper<RESPONSEMODEL, INPUTMODEL, ENTITY> implemen
     public ENTITY toEntity(INPUTMODEL inputmodel) {
         return mapper.map(inputmodel, entityClass);
     }
+
+    @Override
+    public void updateEntity(INPUTMODEL inputmodel, ENTITY entity) {
+        mapper.map(inputmodel, entity);
+    }
 }

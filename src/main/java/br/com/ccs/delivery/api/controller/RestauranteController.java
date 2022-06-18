@@ -54,11 +54,11 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.OK)
     public RestauranteResponse update(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
 
-        Restaurante restaurante = mapper.toEntity(restauranteInput);
+        Restaurante restaurante = service.findById(restauranteId);
 
-        restaurante = service.update(restauranteId, restaurante);
+        mapper.updateEntity(restauranteInput, restaurante);
 
-        return mapper.toResponseModel(restaurante);
+        return mapper.toResponseModel(service.update(restauranteId, restaurante));
     }
 
     @DeleteMapping("{restauranteId}")
