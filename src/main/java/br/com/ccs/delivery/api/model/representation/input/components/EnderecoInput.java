@@ -1,5 +1,6 @@
-package br.com.ccs.delivery.api.model.representation.input.component;
+package br.com.ccs.delivery.api.model.representation.input.components;
 
+import br.com.ccs.delivery.api.model.representation.input.components.ids.MunicipioIdInput;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
 import lombok.Setter;

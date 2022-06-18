@@ -41,10 +41,8 @@ public class MunicipioService {
     }
 
     @Transactional
-    public Municipio update(int municipioId, Municipio municipio) {
+    public Municipio update(Municipio municipio) {
         try {
-            findById(municipioId);
-            municipio.setId(municipioId);
             return repository.save(municipio);
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
@@ -52,7 +50,7 @@ public class MunicipioService {
                             municipio.getId(), municipio.getEstado().getId()), e);
 
         } catch (IllegalArgumentException e) {
-            throw new RepositoryEntityPersistException("Erro ao atualizar Municipio ID: " + municipioId);
+            throw new RepositoryEntityPersistException("Erro ao atualizar Municipio ID: " + municipio.getId());
         }
     }
 

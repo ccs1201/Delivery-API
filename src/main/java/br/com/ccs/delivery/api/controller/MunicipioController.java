@@ -1,5 +1,10 @@
 package br.com.ccs.delivery.api.controller;
 
+import br.com.ccs.delivery.api.model.representation.input.MunicipioInput;
+import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.api.model.representation.response.MunicipioResponse;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
+import br.com.ccs.delivery.core.mapperanotations.MapperQualifierEnum;
 import br.com.ccs.delivery.domain.model.entity.Municipio;
 import br.com.ccs.delivery.domain.service.MunicipioService;
 import lombok.AllArgsConstructor;
@@ -15,29 +20,36 @@ import java.util.Collection;
 public class MunicipioController {
 
     MunicipioService service;
+    @MapperQualifier(MapperQualifierEnum.MUNICIPIO)
+    MapperInterface<MunicipioResponse, MunicipioInput,Municipio> mapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Municipio> getAll() {
-        return service.getAll();
+    public Collection<MunicipioResponse> getAll() {
+        return mapper.toCollection(service.getAll());
     }
 
     @GetMapping("{municipioId}")
     @ResponseStatus(HttpStatus.OK)
-    public Municipio findbyId(@PathVariable int municipioId) {
-        return service.findById(municipioId);
+    public MunicipioResponse findbyId(@PathVariable int municipioId) {
+        return mapper.toResponseModel(service.findById(municipioId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Municipio save(@RequestBody  @Valid Municipio municipio) {
-        return service.save(municipio);
+    public MunicipioResponse save(@RequestBody @Valid MunicipioInput municipioInput) {
+
+        return mapper.toResponseModel(service.save(mapper.toEntity(municipioInput)));
     }
 
     @PutMapping("{municipioId}")
     @ResponseStatus(HttpStatus.OK)
-    public Municipio update(@PathVariable int municipioId, @RequestBody @Valid Municipio municipio) {
-        return service.update(municipioId, municipio);
+    public MunicipioResponse update(@PathVariable int municipioId, @RequestBody @Valid MunicipioInput municipioInput) {
+
+        Municipio municipio = service.findById(municipioId);
+        mapper.updateEntity(municipioInput, municipio);
+
+        return mapper.toResponseModel(service.update(municipio));
     }
 
     @DeleteMapping("{municipioId}")

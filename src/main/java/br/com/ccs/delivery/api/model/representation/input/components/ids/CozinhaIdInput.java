@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.api.model.representation.input.component;
+package br.com.ccs.delivery.api.model.representation.input.components.ids;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
@@ -9,8 +9,9 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
-@JsonRootName("municipio")
-public class MunicipioIdInput {
+@JsonRootName("cozinha")
+public class CozinhaIdInput {
+
     @NotNull
     @Positive
     private Long id;

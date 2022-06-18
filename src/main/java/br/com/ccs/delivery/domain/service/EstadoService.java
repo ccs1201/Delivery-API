@@ -43,13 +43,11 @@ public class EstadoService {
     }
 
 
-    public Estado update(int estadoId, Estado estado) {
+    public Estado update(Estado estado) {
         try {
-            findById(estadoId);
-            estado.setId(estadoId);
             return repository.save(estado);
         } catch (IllegalArgumentException e) {
-            throw new RepositoryEntityPersistException(String.format("Erro ao atualizar Estado ID: %d\nDetalhes:\n %s", estadoId, e.getMessage()));
+            throw new RepositoryEntityPersistException(String.format("Erro ao atualizar Estado ID: %d\nDetalhes:\n %s", estado.getId(), e.getMessage()));
         }
     }
 
