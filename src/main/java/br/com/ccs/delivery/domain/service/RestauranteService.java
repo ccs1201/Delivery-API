@@ -99,6 +99,20 @@ public class RestauranteService {
         }
     }
 
+    @Transactional
+    public void ativar(Long restauranteId) {
+        Restaurante restaurante = this.findById(restauranteId);
+        restaurante.ativar();
+        repository.saveAndFlush(restaurante);
+    }
+
+    @Transactional
+    public void inativar(Long restauranteId) {
+        Restaurante restaurante = this.findById(restauranteId);
+        restaurante.inativar();
+        repository.saveAndFlush(restaurante);
+    }
+
     private void Validate(Restaurante restaurante) {
 
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante, restaurante.getClass().getSimpleName());

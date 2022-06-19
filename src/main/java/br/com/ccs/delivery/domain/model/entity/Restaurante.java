@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import br.com.ccs.delivery.core.validations.annotations.TaxaEntregaValidator;
-import br.com.ccs.delivery.core.validations.annotations.ValorZeroIncluiDescricao;
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
 import br.com.ccs.delivery.domain.model.component.Endereco;
 import lombok.*;
@@ -28,7 +27,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ValorZeroIncluiDescricao(fieldTaxa = "taxaEntrega", fieldName = "nome", descricaoObrigatoria = "Frete Grátis")
+//@ValorZeroIncluiDescricao(fieldTaxa = "taxaEntrega", fieldName = "nome", descricaoObrigatoria = "Frete Grátis")
 public class Restaurante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +46,7 @@ public class Restaurante {
     private BigDecimal taxaEntrega;
 
     @Embedded
-    @Valid
+    //@Valid
     private Endereco endereco;
 
     @ManyToOne(optional = false)
@@ -55,6 +54,8 @@ public class Restaurante {
     @Valid
     @ConvertGroup(to = ValidationGroups.CozinhaId.class)
     private Cozinha cozinha;
+
+    private boolean ativo = true;
 
     @CreationTimestamp
     @Column(nullable = false,
@@ -77,6 +78,14 @@ public class Restaurante {
 
     @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
     private Collection<Produto> produtos;
+
+    public void ativar() {
+        this.ativo = true;
+    }
+
+    public void inativar() {
+        this.ativo = false;
+    }
 
     @Override
     public boolean equals(Object o) {
