@@ -75,3 +75,5 @@ insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Bif
 insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('T-Bone', 'Corte muito saboroso, com um osso em formato de T, sendo de um lado o contrafilé e do outro o filé mignon', 89, 1, 4);
 insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Sanduíche X-Tudo', 'Sandubão com muito queijo, hamburger bovino, bacon, ovo, salada e maionese', 19, 1, 5);
 insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Espetinho de Cupim', 'Acompanha farinha, mandioca e vinagrete', 8, 1, 6);
+
+insert into  grupo (nome) values ('Gerentes'), ('Vendedores'), ('Secretarias'),('Cadastradores');

@@ -57,7 +57,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     public ResponseEntity<Object> unCaughtHandler(Exception e) {
        // e.printStackTrace();
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
-                String.format("Uncaught error, please contact Sys Admin Details: %s", e.getMessage()), "An unexpected error occur.");
+                String.format("Uncaught error, please contact SYS Admin Details: %s", e.getMessage()), "An unexpected error occur.");
     }
 
     @ExceptionHandler(value = {DataIntegrityViolationException.class})
@@ -98,6 +98,13 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = "Exception in business logic.")
     public ResponseEntity<?> businessLogicExceptionHandler(BusinessLogicException e) {
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
+    }
+
+    @ExceptionHandler(ServiceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(responseCode = "400", description = "Exception in business logic.")
+    public ResponseEntity<Object> serviceExceptionHandler(ServiceException e){
         return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
     }
 

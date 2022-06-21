@@ -26,9 +26,13 @@ import java.util.Map;
 public class RestauranteService {
     private static final String RESTAURANTE_NAO_ENCONTRADO = "Restaurante ID: %d não encontrado.";
     private static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante.";
-    private static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante.";
+    private static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante. ";
     private static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
     private final RestauranteRepository repository;
+
+    private final MunicipioService municipioService;
+
+    private final CozinhaService cozinhaService;
     private final GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
     private final SmartValidator smartValidator;
 
@@ -74,9 +78,17 @@ public class RestauranteService {
     @Transactional
     public Restaurante update(Restaurante restaurante) {
         try {
+
+            cozinhaService.findById(restaurante.getCozinha().getId());
+            municipioService.findById(restaurante.getEndereco().getMunicipio().getId());
+
+
             return repository.saveAndFlush(restaurante);
 
-        } catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
+        } catch (RepositoryEntityNotFoundException e){
+            throw new ServiceException(ERRO_ATUALIZAR_RESTAURANTE + e.getMessage(),e) ;
+
+        }  catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
             throw new RepositoryEntityPersistException(
                     ERRO_ATUALIZAR_RESTAURANTE, e);
         }
