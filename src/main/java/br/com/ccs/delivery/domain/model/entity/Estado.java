@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import br.com.ccs.delivery.core.validations.validationgroups.ValidationGroups;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +33,7 @@ public class Estado {
     @NotBlank
     @Size(min = 2, max = 2)
     private String sigla;
-    @JsonIgnore
+
     @OneToMany(mappedBy = "estado", fetch = FetchType.LAZY)
     private Collection<Municipio> municipios;
 

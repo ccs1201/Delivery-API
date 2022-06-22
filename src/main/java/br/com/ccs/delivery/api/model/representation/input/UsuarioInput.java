@@ -13,6 +13,7 @@ public class UsuarioInput {
     @NotBlank
     private String nome;
     @Email
+    @NotBlank
     private String email;
     @NotBlank
     private String senha;

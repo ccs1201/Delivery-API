@@ -42,6 +42,7 @@ public class UsuarioService {
     public void delete(Long id) {
         try {
             repository.deleteById(id);
+            repository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryEntityInUseException(String.format("Erro ao remover usuário ID: %d pois está em uso.", id));
         } catch (EmptyResultDataAccessException e) {
@@ -54,12 +55,16 @@ public class UsuarioService {
 
         Usuario usuario = this.findaById(idUsuario);
 
-        if (!senhaAtual.contentEquals(usuario.getSenha())) {
+        if (!validarSenha(usuario.getSenha(), senhaAtual)) {
             throw new AtualizaSenhaException("Senha atual incorreta verifique.");
         }
 
         usuario.setSenha(novaSenha);
 
         repository.saveAndFlush(usuario);
+    }
+
+    private boolean validarSenha(String senha, String senhaParaValidar){
+        return senha.contentEquals(senhaParaValidar);
     }
 }

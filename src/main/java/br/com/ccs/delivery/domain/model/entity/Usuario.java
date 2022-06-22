@@ -3,6 +3,7 @@ package br.com.ccs.delivery.domain.model.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@DynamicUpdate
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
