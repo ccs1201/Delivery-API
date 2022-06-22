@@ -54,7 +54,7 @@ public class UsuarioController {
     public UsuarioResponse update(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioUpdateInput usuarioUpdateInput) {
 
         Usuario usuario = service.findaById(usuarioId);
-        mapper.updateUsuario(usuarioUpdateInput, usuario);
+        mapper.updateUsuarioFromUsuarioUpdateInput(usuarioUpdateInput, usuario);
 
         return mapper.toResponseModel(service.update(usuario));
     }

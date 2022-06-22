@@ -12,10 +12,7 @@ import org.springframework.stereotype.Component;
 @MapperQualifier(MapperQualifierType.USUARIO)
 public class UsuarioMapper extends AbstractMapper<UsuarioResponse, UsuarioInput, Usuario> {
 
-    public Usuario updateUsuario(UsuarioUpdateInput usuarioUpdateInput, Usuario usuario) {
+    public void updateUsuarioFromUsuarioUpdateInput(UsuarioUpdateInput usuarioUpdateInput, Usuario usuario) {
         getMapper().map(usuarioUpdateInput, usuario);
-
-        return usuario;
-
     }
 }
