@@ -34,4 +34,8 @@ public abstract class AbstractMapper<RESPONSEMODEL, INPUTMODEL, ENTITY> implemen
     public void updateEntity(INPUTMODEL inputmodel, ENTITY entity) {
         mapper.map(inputmodel, entity);
     }
+
+    protected ModelMapper getMapper(){
+        return this.mapper;
+    }
 }
