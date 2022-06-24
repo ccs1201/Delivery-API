@@ -1,9 +1,11 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.beans.factory.support.ScopeNotActiveException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -23,6 +25,8 @@ public class Usuario {
 
     private String nome;
     @Email
+    @NonNull
+    @Column(unique = true, nullable = false)
     private String email;
     private String senha;
 

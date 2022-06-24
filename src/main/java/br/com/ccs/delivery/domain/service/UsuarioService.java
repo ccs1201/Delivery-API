@@ -3,9 +3,11 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.repository.UsuarioRepository;
 import br.com.ccs.delivery.domain.service.exception.AtualizaSenhaException;
+import br.com.ccs.delivery.domain.service.exception.EmailJaCadastradoException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class UsuarioService {
 
     UsuarioRepository repository;
 
+    private final String EMAIL_JA_CADASTRADO = "Já existe um usuário com e-mail %s cadastrado.";
+
     public Collection<Usuario> findAll() {
         return repository.findAll();
     }
@@ -30,12 +34,21 @@ public class UsuarioService {
 
     @Transactional
     public Usuario save(Usuario usuario) {
-        return repository.saveAndFlush(usuario);
+        try {
+            return repository.saveAndFlush(usuario);
+        } catch (DataIntegrityViolationException e) {
+            throw new EmailJaCadastradoException(String.format(EMAIL_JA_CADASTRADO, usuario.getEmail()), e);
+        }
     }
 
     @Transactional
     public Usuario update(Usuario usuario) {
-        return repository.saveAndFlush(usuario);
+        try {
+            return repository.saveAndFlush(usuario);
+        } catch (DataIntegrityViolationException e){
+            throw new EmailJaCadastradoException(String.format(EMAIL_JA_CADASTRADO, usuario.getEmail()), e);
+        }
+
     }
 
     @Transactional
