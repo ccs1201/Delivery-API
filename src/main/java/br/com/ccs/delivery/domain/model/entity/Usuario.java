@@ -5,7 +5,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.beans.factory.support.ScopeNotActiveException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
