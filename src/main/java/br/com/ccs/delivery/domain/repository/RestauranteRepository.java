@@ -24,4 +24,7 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
     Collection<Restaurante> findByNomeCozinha(String nomeCozinha);
 
     Restaurante findByNomeContaining(String nome);
+
+    @Query("select distinct r from Restaurante r join fetch r.tiposPagamento tp where r.id = :restauranteId order by tp.nome asc")
+    Restaurante findComTiposPagamento(Long restauranteId);
 }

@@ -5,6 +5,7 @@ import br.com.ccs.delivery.domain.model.entity.Municipio;
 import lombok.*;
 
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.Valid;
@@ -33,7 +34,7 @@ public class Endereco {
     @Size(min = 8, max = 8, message = "Cep deve conter 8 dígitos")
     private String cep;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "municipio_id", nullable = false)
     @NotNull
     @Valid

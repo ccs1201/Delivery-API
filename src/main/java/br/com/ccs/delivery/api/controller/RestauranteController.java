@@ -2,7 +2,9 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.api.model.representation.mapper.TipoPagamentoMapper;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
+import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
@@ -28,6 +30,8 @@ public class RestauranteController {
     GenericEntityUpdateMergerUtil mergerUtil;
     @MapperQualifier(MapperQualifierType.RESTAURANTE)
     MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> mapper;
+
+    TipoPagamentoMapper tipoPagamentoMapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -129,4 +133,20 @@ public class RestauranteController {
 
     }
 
+    @GetMapping("{restauranteId}/tipos-pagamento")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<TipoPagamentoResponse> getTiposPagamentoRestaurante(@PathVariable Long restauranteId) {
+
+        Restaurante restaurante = service.findTiposPagamentoRestaurante(restauranteId);
+
+        return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
+    }
+
+    @DeleteMapping("{resturanteId}/tipos-pagamento/{tipoPagamentoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void (@PathVariable Long resturanteId, @PathVariable Long tipoPagamentoId){
+
+        Restaurante restaurante = service.findById(resturanteId);
+        restaurante.getTiposPagamento().stream();
+    }
 }

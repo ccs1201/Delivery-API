@@ -46,10 +46,9 @@ public class Restaurante {
     private BigDecimal taxaEntrega;
 
     @Embedded
-    //@Valid
     private Endereco endereco;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @Valid
     @ConvertGroup(to = ValidationGroups.CozinhaId.class)

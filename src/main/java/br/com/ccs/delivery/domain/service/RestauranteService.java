@@ -38,7 +38,7 @@ public class RestauranteService {
 
 
     public Collection<Restaurante> findAll() {
-        return repository.findAll();
+        return repository.findAllEager();
     }
 
     public Restaurante findById(Long id) {
@@ -158,5 +158,10 @@ public class RestauranteService {
         return repository
                 .getFirstOccurrence()
                 .orElseThrow(() -> new EntityNotFoundException("Não foi possível localizar a primeira ocorrência de restaurante."));
+    }
+
+    public Restaurante findTiposPagamentoRestaurante(Long restauranteId) {
+
+        return repository.findComTiposPagamento(restauranteId);
     }
 }
