@@ -30,13 +30,10 @@ public class RestauranteService {
     private static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante. ";
     private static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
     private static final String TIPO_PAGAMENTO_NAO_ENCONTRADO = "Tipo de Pagamento: %s não encontrado para o Restaurante: %s";
-
     private static final String TIPO_PAGAMENTO_JA_CADASTRADO = "Tipo de Pagamento: %s, já cadastrado para o Restaurante: %s";
     private final RestauranteRepository repository;
-
     private final MunicipioService municipioService;
     private final TipoPagamentoService tipoPagamentoService;
-
     private final CozinhaService cozinhaService;
     private final GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
     private final SmartValidator smartValidator;
@@ -171,15 +168,16 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void deleteTipoPagamento(Long restauranteId, Long tipoPagamentoId) {
-        Restaurante restaurante = this.findById(restauranteId);
+    public void deleteTipoPagamento(Restaurante restaurante, Long tipoPagamentoId) {
+
         TipoPagamento tipoPagamento = tipoPagamentoService.findById(tipoPagamentoId);
 
         if (!restaurante.getTiposPagamento().contains(tipoPagamento)) {
             throw new ServiceException(
                     String.format(TIPO_PAGAMENTO_NAO_ENCONTRADO, tipoPagamento.getNome(), restaurante.getNome()));
         }
-        repository.deleteTipoPagamentoByIdFromRestauranteId(restauranteId, tipoPagamentoId);
+        repository.deleteTipoPagamentoByIdFromRestauranteId(restaurante.getId(), tipoPagamentoId);
+        repository.flush();
     }
 
     @Transactional

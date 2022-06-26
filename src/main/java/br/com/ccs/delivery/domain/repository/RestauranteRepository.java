@@ -36,4 +36,5 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
     @Query(value = "delete from restaurante_tipo_pagamento where restaurante_id= :restauranteId and tipo_pagamento_id = :tipoPagamentoId",
             nativeQuery = true)
     void deleteTipoPagamentoByIdFromRestauranteId(Long restauranteId, Long tipoPagamentoId);
+
 }

@@ -30,7 +30,7 @@ public class TipoPagamento {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TipoPagamento that = (TipoPagamento) o;
-        return Objects.equals(id, that.id) && Objects.equals(nome, that.nome) && Objects.equals(restaurantes, that.restaurantes);
+        return Objects.equals(id, that.id) && Objects.equals(nome, that.nome);
     }
 
     @Override

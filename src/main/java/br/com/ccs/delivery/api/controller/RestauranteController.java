@@ -140,7 +140,9 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTipoPagamento(@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId) {
 
-        service.deleteTipoPagamento(restauranteId, tipoPagamentoId);
+        Restaurante restaurante = service.findById(restauranteId);
+
+        service.deleteTipoPagamento(restaurante, tipoPagamentoId);
     }
 
     @PostMapping("{restauranteId}/tipos-pagamento/{tipoPagamentoId}")
