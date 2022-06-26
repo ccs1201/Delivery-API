@@ -181,9 +181,8 @@ public class RestauranteService {
     }
 
     @Transactional
-    public Restaurante addTipoPagamento(Long restauranteId, Long tipoPagamentoId) {
+    public Restaurante addTipoPagamento(Restaurante restaurante, Long tipoPagamentoId) {
         TipoPagamento tipoPagamento = tipoPagamentoService.findById(tipoPagamentoId);
-        Restaurante restaurante = this.findById(restauranteId);
 
         restaurante.getTiposPagamento().add(tipoPagamento);
 

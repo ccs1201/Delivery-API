@@ -148,8 +148,11 @@ public class RestauranteController {
     @PostMapping("{restauranteId}/tipos-pagamento/{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteResponse addTipoPagamento(@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId) {
-      Restaurante restaurante = service.addTipoPagamento(restauranteId, tipoPagamentoId);
 
-      return mapper.toResponseModel(restaurante);
+        Restaurante restaurante = service.findById(restauranteId);
+
+        restaurante = service.addTipoPagamento(restaurante, tipoPagamentoId);
+
+        return mapper.toResponseModel(restaurante);
     }
 }
