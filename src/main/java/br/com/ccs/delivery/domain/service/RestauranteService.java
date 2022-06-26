@@ -28,6 +28,7 @@ public class RestauranteService {
     private static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante.";
     private static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante. ";
     private static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
+    private static final String TIPO_PAGAMENTO_NAO_ENCONTRADO = "Tipo de Pagamento ID: %d não encontrado para o Restaurante ID: %d";
     private final RestauranteRepository repository;
 
     private final MunicipioService municipioService;
@@ -85,10 +86,10 @@ public class RestauranteService {
 
             return repository.saveAndFlush(restaurante);
 
-        } catch (RepositoryEntityNotFoundException e){
-            throw new ServiceException(ERRO_ATUALIZAR_RESTAURANTE + e.getMessage(),e) ;
+        } catch (RepositoryEntityNotFoundException e) {
+            throw new ServiceException(ERRO_ATUALIZAR_RESTAURANTE + e.getMessage(), e);
 
-        }  catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
+        } catch (IllegalArgumentException | DataIntegrityViolationException | ConstraintViolationException e) {
             throw new RepositoryEntityPersistException(
                     ERRO_ATUALIZAR_RESTAURANTE, e);
         }
@@ -163,5 +164,15 @@ public class RestauranteService {
     public Restaurante findTiposPagamentoRestaurante(Long restauranteId) {
 
         return repository.findComTiposPagamento(restauranteId);
+    }
+
+    @Transactional
+    public void deleteTipoPagamento(Long restauranteId, Long tipoPagamentoId) {
+        Restaurante restaurante = repository.findByTiposPagamentoIs(restauranteId, tipoPagamentoId);
+        if (restaurante == null) {
+            throw new ServiceException(
+                    String.format(TIPO_PAGAMENTO_NAO_ENCONTRADO, tipoPagamentoId, restauranteId));
+        }
+        repository.deleteTipoPagamentoByIdFromRestauranteId(restauranteId, tipoPagamentoId);
     }
 }

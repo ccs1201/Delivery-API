@@ -78,12 +78,6 @@ public class RestauranteController {
         return mapper.toResponseModel(service.patchUpdate(restauranteId, updates));
     }
 
-    private void merge(Map<String, Object> updates, Restaurante restaurante) {
-
-        mergerUtil.updateModel(updates, restaurante, Restaurante.class);
-
-    }
-
     @GetMapping("/nome-cozinha")
     @ResponseStatus(HttpStatus.OK)
     public Collection<RestauranteResponse> findByNomeCozinha(@RequestParam String nomeCozinha) {
@@ -142,11 +136,12 @@ public class RestauranteController {
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
 
-    @DeleteMapping("/{resturanteId}/tipos-pagamento/{tipoPagamentoId}")
+    @DeleteMapping("{restauranteId}/tipos-pagamento/{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTipoPagamento (@PathVariable Long resturanteId, @PathVariable Long tipoPagamentoId){
+    public void deleteTipoPagamento (@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId){
 
-        Restaurante restaurante = service.findById(resturanteId);
-        restaurante.getTiposPagamento().stream();
+        service.deleteTipoPagamento(restauranteId, tipoPagamentoId);
+
+
     }
 }

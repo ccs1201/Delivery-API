@@ -2,6 +2,7 @@ package br.com.ccs.delivery.domain.repository;
 
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +28,12 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
 
     @Query("select distinct r from Restaurante r join fetch r.tiposPagamento tp where r.id = :restauranteId order by tp.nome asc")
     Restaurante findComTiposPagamento(Long restauranteId);
+
+    @Query("select r from Restaurante  r join fetch r.tiposPagamento tp where r.id=:restauranteId and tp.id =:tipoPagamentoId")
+    Restaurante findByTiposPagamentoIs(Long restauranteId,Long tipoPagamentoId);
+
+    @Modifying
+    @Query(value = "delete from restaurante_tipo_pagamento where restaurante_id= :restauranteId and tipo_pagamento_id = :tipoPagamentoId",
+            nativeQuery = true)
+    void deleteTipoPagamentoByIdFromRestauranteId(Long restauranteId, Long tipoPagamentoId);
 }
