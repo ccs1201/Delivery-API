@@ -2,6 +2,7 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.core.validations.exceptions.EntityValidationException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
+import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
@@ -28,10 +29,13 @@ public class RestauranteService {
     private static final String ERRO_CADASTRAR_RESTAURANTE = "Erro ao cadastrar Restaurante.";
     private static final String ERRO_ATUALIZAR_RESTAURANTE = "Erro ao atualizar Restaurante. ";
     private static final String RESTAURANTE_USO = "Não é possível remover o Restaurante ID: %d pois esta em uso";
-    private static final String TIPO_PAGAMENTO_NAO_ENCONTRADO = "Tipo de Pagamento ID: %d não encontrado para o Restaurante ID: %d";
+    private static final String TIPO_PAGAMENTO_NAO_ENCONTRADO = "Tipo de Pagamento: %s não encontrado para o Restaurante: %s";
+
+    private static final String TIPO_PAGAMENTO_JA_CADASTRADO = "Tipo de Pagamento: %s, já cadastrado para o Restaurante: %s";
     private final RestauranteRepository repository;
 
     private final MunicipioService municipioService;
+    private final TipoPagamentoService tipoPagamentoService;
 
     private final CozinhaService cozinhaService;
     private final GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
@@ -44,7 +48,7 @@ public class RestauranteService {
 
     public Restaurante findById(Long id) {
 
-        return repository.findById(id).orElseThrow(() -> new RepositoryEntityNotFoundException(
+        return repository.findByIdEager(id).orElseThrow(() -> new RepositoryEntityNotFoundException(
                 String.format(RESTAURANTE_NAO_ENCONTRADO, id)));
     }
 
@@ -168,11 +172,28 @@ public class RestauranteService {
 
     @Transactional
     public void deleteTipoPagamento(Long restauranteId, Long tipoPagamentoId) {
-        Restaurante restaurante = repository.findByTiposPagamentoIs(restauranteId, tipoPagamentoId);
-        if (restaurante == null) {
+        Restaurante restaurante = this.findById(restauranteId);
+        TipoPagamento tipoPagamento = tipoPagamentoService.findById(tipoPagamentoId);
+
+        if (!restaurante.getTiposPagamento().contains(tipoPagamento)) {
             throw new ServiceException(
-                    String.format(TIPO_PAGAMENTO_NAO_ENCONTRADO, tipoPagamentoId, restauranteId));
+                    String.format(TIPO_PAGAMENTO_NAO_ENCONTRADO, tipoPagamento.getNome(), restaurante.getNome()));
         }
         repository.deleteTipoPagamentoByIdFromRestauranteId(restauranteId, tipoPagamentoId);
+    }
+
+    @Transactional
+    public Restaurante addTipoPagamento(Long restauranteId, Long tipoPagamentoId) {
+        TipoPagamento tipoPagamento = tipoPagamentoService.findById(tipoPagamentoId);
+        Restaurante restaurante = this.findById(restauranteId);
+
+        restaurante.getTiposPagamento().add(tipoPagamento);
+
+        try {
+            return repository.saveAndFlush(restaurante);
+        } catch (DataIntegrityViolationException e) {
+            throw new RepositoryDataIntegrityViolationException(
+                    String.format(TIPO_PAGAMENTO_JA_CADASTRADO, tipoPagamento.getNome(), restaurante.getNome()));
+        }
     }
 }

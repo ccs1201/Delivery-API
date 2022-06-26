@@ -138,10 +138,16 @@ public class RestauranteController {
 
     @DeleteMapping("{restauranteId}/tipos-pagamento/{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTipoPagamento (@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId){
+    public void deleteTipoPagamento(@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId) {
 
         service.deleteTipoPagamento(restauranteId, tipoPagamentoId);
+    }
 
+    @PostMapping("{restauranteId}/tipos-pagamento/{tipoPagamentoId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RestauranteResponse addTipoPagamento(@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId) {
+      Restaurante restaurante = service.addTipoPagamento(restauranteId, tipoPagamentoId);
 
+      return mapper.toResponseModel(restaurante);
     }
 }
