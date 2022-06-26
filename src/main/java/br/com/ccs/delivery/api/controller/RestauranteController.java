@@ -142,9 +142,9 @@ public class RestauranteController {
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
 
-    @DeleteMapping("{resturanteId}/tipos-pagamento/{tipoPagamentoId}")
+    @DeleteMapping("/{resturanteId}/tipos-pagamento/{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void (@PathVariable Long resturanteId, @PathVariable Long tipoPagamentoId){
+    public void deleteTipoPagamento (@PathVariable Long resturanteId, @PathVariable Long tipoPagamentoId){
 
         Restaurante restaurante = service.findById(resturanteId);
         restaurante.getTiposPagamento().stream();
