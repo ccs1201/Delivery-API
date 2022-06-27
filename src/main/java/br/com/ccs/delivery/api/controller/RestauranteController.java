@@ -1,22 +1,28 @@
 package br.com.ccs.delivery.api.controller;
 
+import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.api.model.representation.mapper.ProdutoMapper;
 import br.com.ccs.delivery.api.model.representation.mapper.TipoPagamentoMapper;
+import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
+import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
+import br.com.ccs.delivery.domain.service.ProdutoService;
 import br.com.ccs.delivery.domain.service.RestauranteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
@@ -27,11 +33,13 @@ import java.util.Map;
 public class RestauranteController {
 
     RestauranteService service;
+    ProdutoService produtoService;
     GenericEntityUpdateMergerUtil mergerUtil;
     @MapperQualifier(MapperQualifierType.RESTAURANTE)
     MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> mapper;
 
     TipoPagamentoMapper tipoPagamentoMapper;
+    ProdutoMapper produtoMapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -155,4 +163,65 @@ public class RestauranteController {
 
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
+
+    @GetMapping("/{restauranteId}/produtos")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<ProdutoResponse> getProdutos(@PathVariable @Positive Long restauranteId) {
+        Restaurante restaurante = service.findComProdutos(restauranteId);
+
+        return produtoMapper.toCollection(restaurante.getProdutos());
+    }
+
+    @PutMapping("/{restauranteId}/produtos")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Collection<ProdutoResponse> addProduto(@PathVariable @Positive Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
+
+        Restaurante restaurante = service.findById(restauranteId);
+
+        Produto produto = produtoMapper.toEntity(produtoInput);
+
+        produto.setRestaurante(restaurante);
+        produto.setAtivo(true);
+
+        produtoService.save(produto);
+
+        return produtoMapper.toCollection(service.findComProdutos(restauranteId).getProdutos());
+    }
+
+    @PutMapping("/produtos/{produtoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProdutoResponse updateProduto(@PathVariable @Positive Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
+        Produto produto = produtoService.findById(produtoId);
+        produtoMapper.updateEntity(produtoInput, produto);
+
+        return produtoMapper.toResponseModel(produtoService.update(produto));
+    }
+
+    @DeleteMapping("/produtos/{produtoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduto(@PathVariable @Positive Long produtoId) {
+        Produto produto = produtoService.findById(produtoId);
+        produtoService.delete(produto);
+    }
+
+    @PutMapping("/produtos/{produtoId}/ativar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarProduto(@PathVariable @Positive Long produtoId) {
+        Produto produto = produtoService.findById(produtoId);
+        produto.setAtivo(true);
+
+        produtoService.update(produto);
+
+    }
+
+    @PutMapping("/produtos/{produtoId}/inativar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarProduto(@PathVariable @Positive Long produtoId) {
+        Produto produto = produtoService.findById(produtoId);
+        produto.setAtivo(false);
+
+        produtoService.update(produto);
+
+    }
+
 }

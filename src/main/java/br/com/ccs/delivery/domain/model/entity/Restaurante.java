@@ -86,6 +86,11 @@ public class Restaurante {
         this.ativo = false;
     }
 
+    public void addProduto(Produto produto){
+        produto.setRestaurante(this);
+        this.produtos.add(produto);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

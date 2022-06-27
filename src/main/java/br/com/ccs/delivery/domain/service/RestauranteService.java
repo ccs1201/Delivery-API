@@ -164,6 +164,8 @@ public class RestauranteService {
 
     public Restaurante findTiposPagamentoRestaurante(Long restauranteId) {
 
+        checkIfRestauranteExists(restauranteId);
+
         return repository.findComTiposPagamento(restauranteId);
     }
 
@@ -192,5 +194,27 @@ public class RestauranteService {
             throw new RepositoryDataIntegrityViolationException(
                     String.format(TIPO_PAGAMENTO_JA_CADASTRADO, tipoPagamento.getNome(), restaurante.getNome()));
         }
+    }
+
+    public Restaurante findComProdutos(Long restauranteId) {
+
+        checkIfRestauranteExists(restauranteId);
+        Restaurante restaurante = repository.findComProdutos(restauranteId);
+
+        if (restaurante == null) {
+            throw new RepositoryEntityNotFoundException(
+                    String.format("Nenhum Produto encontrado para o restaurante: %d.", restauranteId));
+        }
+
+        return restaurante;
+
+    }
+
+    private void checkIfRestauranteExists(Long restauranteId) {
+        repository.findById(restauranteId).orElseThrow(
+                () -> new RepositoryEntityNotFoundException(
+                        String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
+                )
+        );
     }
 }

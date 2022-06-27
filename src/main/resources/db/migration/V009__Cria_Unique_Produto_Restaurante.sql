@@ -1,0 +1,1 @@
+alter table produto add constraint UN_Produto_Restaurante UNIQUE (restaurante_id, nome);
