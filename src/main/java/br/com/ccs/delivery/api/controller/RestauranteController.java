@@ -127,11 +127,11 @@ public class RestauranteController {
 
     }
 
-    @GetMapping("{restauranteId}/tipos-pagamento")
+    @GetMapping("/{restauranteId}/tipos-pagamento")
     @ResponseStatus(HttpStatus.OK)
     public Collection<TipoPagamentoResponse> getTiposPagamentoRestaurante(@PathVariable Long restauranteId) {
 
-        Restaurante restaurante = service.findTiposPagamentoRestaurante(restauranteId);
+        Restaurante restaurante = service.findById(restauranteId);
 
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
@@ -145,14 +145,14 @@ public class RestauranteController {
         service.deleteTipoPagamento(restaurante, tipoPagamentoId);
     }
 
-    @PostMapping("{restauranteId}/tipos-pagamento/{tipoPagamentoId}")
+    @PutMapping("{restauranteId}/tipos-pagamento/{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public RestauranteResponse addTipoPagamento(@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId) {
+    public Collection<TipoPagamentoResponse> addTipoPagamento(@PathVariable Long restauranteId, @PathVariable Long tipoPagamentoId) {
 
         Restaurante restaurante = service.findById(restauranteId);
 
         restaurante = service.addTipoPagamento(restaurante, tipoPagamentoId);
 
-        return mapper.toResponseModel(restaurante);
+        return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
 }
