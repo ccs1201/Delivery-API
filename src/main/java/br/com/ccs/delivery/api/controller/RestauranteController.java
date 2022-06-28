@@ -227,11 +227,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void abrirRestaurante(@PathVariable @Positive Long restaruanteId) {
 
-        Restaurante restaurante = service.findById(restaruanteId);
-
-        restaurante.abrir();
-
-        service.update(restaurante);
+        service.abrir(restaruanteId);
 
     }
 
@@ -239,11 +235,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void fecharRestaurante(@PathVariable @Positive Long restaruanteId) {
 
-        Restaurante restaurante = service.findById(restaruanteId);
-
-        restaurante.fechar();
-
-        service.update(restaurante);
+        service.fechar(restaruanteId);
 
     }
 }

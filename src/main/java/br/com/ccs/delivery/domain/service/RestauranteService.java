@@ -217,4 +217,18 @@ public class RestauranteService {
                 )
         );
     }
+
+    @Transactional
+    public void abrir(Long restauranteId) {
+        Restaurante restaurante = this.findById(restauranteId);
+        restaurante.abrir();
+        repository.saveAndFlush(restaurante);
+    }
+
+    @Transactional
+    public void fechar(Long restauranteId) {
+        Restaurante restaurante = this.findById(restauranteId);
+        restaurante.fechar();
+        repository.saveAndFlush(restaurante);
+    }
 }
