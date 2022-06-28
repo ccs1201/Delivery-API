@@ -15,9 +15,11 @@ public class RestauranteResponse {
     private String nome;
     private BigDecimal taxaEntrega;
     private boolean ativo;
+    private boolean aberto;
     @JsonIgnoreProperties("id")
     private CozinhaResponse cozinha;
     @JsonIgnoreProperties("municipio.id")
     private Endereco endereco;
+
 
 }

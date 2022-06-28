@@ -221,7 +221,29 @@ public class RestauranteController {
         produto.setAtivo(false);
 
         produtoService.update(produto);
+    }
+
+    @PutMapping("{restaruanteId}/abrir")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrirRestaurante(@PathVariable @Positive Long restaruanteId) {
+
+        Restaurante restaurante = service.findById(restaruanteId);
+
+        restaurante.abrir();
+
+        service.update(restaurante);
 
     }
 
+    @PutMapping("{restaruanteId}/fechar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fecharRestaurante(@PathVariable @Positive Long restaruanteId) {
+
+        Restaurante restaurante = service.findById(restaruanteId);
+
+        restaurante.fechar();
+
+        service.update(restaurante);
+
+    }
 }

@@ -78,6 +78,9 @@ public class Restaurante {
     @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
     private Collection<Produto> produtos;
 
+    @NotNull
+    private Boolean aberto = Boolean.FALSE;
+
     public void ativar() {
         this.ativo = true;
     }
@@ -86,7 +89,15 @@ public class Restaurante {
         this.ativo = false;
     }
 
-    public void addProduto(Produto produto){
+    public void abrir() {
+        this.setAberto(true);
+    }
+
+    public void fechar() {
+        this.setAberto(false);
+    }
+
+    public void addProduto(Produto produto) {
         produto.setRestaurante(this);
         this.produtos.add(produto);
     }
