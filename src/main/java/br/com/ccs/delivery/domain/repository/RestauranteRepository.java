@@ -40,4 +40,6 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
     @Query("select r from  Restaurante r join fetch r.produtos where r.id=:id")
     Restaurante findComProdutos(Long id);
 
+    @Query("select r from  Restaurante  r join fetch  r.usuarios where r.id =:restauranteId")
+    Optional<Restaurante> findUsuarios(Long restauranteId);
 }

@@ -231,4 +231,14 @@ public class RestauranteService {
         restaurante.fechar();
         repository.saveAndFlush(restaurante);
     }
+
+    public Restaurante findUsuarios(Long restauranteId) {
+
+        this.findById(restauranteId);
+
+        return repository.findUsuarios(restauranteId).orElseThrow(() ->
+                new RepositoryEntityNotFoundException(
+                        String.format("Nenhuma Usuário encontrado para o Restaurante ID: %d", restauranteId)
+                ));
+    }
 }

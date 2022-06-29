@@ -74,9 +74,15 @@ public class Restaurante {
             inverseJoinColumns = @JoinColumn(name = "tipo_pagamento_id"))
     Collection<TipoPagamento> tiposPagamento;
 
+    @ManyToMany
+    @JoinTable(name = "restaurante_usuario",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+    Collection<Usuario> usuarios;
 
     @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
     private Collection<Produto> produtos;
+
 
     @NotNull
     private Boolean aberto = Boolean.FALSE;

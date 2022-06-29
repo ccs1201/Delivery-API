@@ -2,16 +2,19 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
+import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.mapper.ProdutoMapper;
 import br.com.ccs.delivery.api.model.representation.mapper.TipoPagamentoMapper;
 import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
+import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
+import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
@@ -40,6 +43,9 @@ public class RestauranteController {
 
     TipoPagamentoMapper tipoPagamentoMapper;
     ProdutoMapper produtoMapper;
+
+    @MapperQualifier(MapperQualifierType.USUARIO)
+    MapperInterface<UsuarioResponse, UsuarioInput, Usuario> mapperUsuario;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -125,14 +131,12 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void ativar(@PathVariable Long restauranteId) {
         service.ativar(restauranteId);
-
     }
 
     @DeleteMapping("{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
         service.inativar(restauranteId);
-
     }
 
     @GetMapping("/{restauranteId}/tipos-pagamento")
@@ -211,7 +215,6 @@ public class RestauranteController {
         produto.setAtivo(true);
 
         produtoService.update(produto);
-
     }
 
     @PutMapping("/produtos/{produtoId}/inativar")
@@ -226,16 +229,18 @@ public class RestauranteController {
     @PutMapping("{restaruanteId}/abrir")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void abrirRestaurante(@PathVariable @Positive Long restaruanteId) {
-
         service.abrir(restaruanteId);
-
     }
 
     @PutMapping("{restaruanteId}/fechar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void fecharRestaurante(@PathVariable @Positive Long restaruanteId) {
-
         service.fechar(restaruanteId);
+    }
 
+    @GetMapping("{restauranteId}/usuarios")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<UsuarioResponse> getUsuarios(@PathVariable @Positive Long restauranteId) {
+        return mapperUsuario.toCollection(service.findUsuarios(restauranteId).getUsuarios());
     }
 }
