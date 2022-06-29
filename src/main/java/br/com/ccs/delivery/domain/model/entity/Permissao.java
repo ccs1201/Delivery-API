@@ -28,16 +28,13 @@ public class Permissao {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
-
         Permissao permissao = (Permissao) o;
-
-        return new EqualsBuilder().append(id, permissao.id).isEquals();
+        return id.equals(permissao.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, descricao);
+        return Objects.hash(id);
     }
 }

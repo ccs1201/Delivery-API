@@ -108,16 +108,25 @@ public class Restaurante {
         this.produtos.add(produto);
     }
 
+    public void addUsuario(Usuario usuario){
+        this.getUsuarios().add(usuario);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Restaurante that = (Restaurante) o;
-        return Objects.equals(id, that.id) && Objects.equals(nome, that.nome) && Objects.equals(taxaEntrega, that.taxaEntrega) && Objects.equals(endereco, that.endereco) && Objects.equals(cozinha, that.cozinha) && Objects.equals(dataCadastro, that.dataCadastro) && Objects.equals(dataUltimaAtualizacao, that.dataUltimaAtualizacao) && Objects.equals(tiposPagamento, that.tiposPagamento) && Objects.equals(produtos, that.produtos);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, taxaEntrega, endereco, cozinha, dataCadastro, dataUltimaAtualizacao, tiposPagamento, produtos);
+        return Objects.hash(id);
     }
+
+    public void removeUsuario(Usuario usuario){
+        this.getUsuarios().remove(usuario);
+    }
+
 }

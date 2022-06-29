@@ -31,17 +31,16 @@ public class Cozinha {
     @OneToMany(mappedBy = "cozinha", fetch = FetchType.LAZY)
     private Collection<Restaurante> restaurantes;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cozinha cozinha = (Cozinha) o;
-        return Objects.equals(id, cozinha.id) && Objects.equals(nome, cozinha.nome) && Objects.equals(restaurantes, cozinha.restaurantes);
+        return id.equals(cozinha.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, restaurantes);
+        return Objects.hash(id);
     }
 }

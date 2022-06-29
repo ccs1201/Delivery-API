@@ -3,6 +3,7 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.core.validations.exceptions.EntityValidationException;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
+import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
@@ -37,6 +38,8 @@ public class RestauranteService {
     private final CozinhaService cozinhaService;
     private final GenericEntityUpdateMergerUtil entityUpdateMergerUtil;
     private final SmartValidator smartValidator;
+
+    private final UsuarioService usuarioService;
 
 
     public Collection<Restaurante> findAll() {
@@ -240,5 +243,32 @@ public class RestauranteService {
                 new RepositoryEntityNotFoundException(
                         String.format("Nenhuma Usuário encontrado para o Restaurante ID: %d", restauranteId)
                 ));
+    }
+
+    @Transactional
+    public void addUsuario(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = this.findById(restauranteId);
+
+        Usuario usuario = usuarioService.findaById(usuarioId);
+
+        restaurante.addUsuario(usuario);
+        try {
+            repository.saveAndFlush(restaurante);
+        } catch (DataIntegrityViolationException e) {
+            throw new RepositoryDataIntegrityViolationException(
+                    String.format("Usuario: %d-%s já cadastrado para o Restaurante: %d-%s.",
+                            usuario.getId(), usuario.getNome(), restaurante.getId(), restaurante.getNome())
+            );
+        }
+    }
+
+    @Transactional
+    public void removeUsuario(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = this.findById(restauranteId);
+
+        Usuario usuario = usuarioService.findaById(usuarioId);
+
+        restaurante.removeUsuario(usuario);
+        repository.saveAndFlush(restaurante);
     }
 }

@@ -39,13 +39,13 @@ public class Produto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Produto produto = (Produto) o;
-        return id != null && Objects.equals(id, produto.id);
+        return id.equals(produto.id);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }

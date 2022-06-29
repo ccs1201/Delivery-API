@@ -30,11 +30,11 @@ public class TipoPagamento {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TipoPagamento that = (TipoPagamento) o;
-        return Objects.equals(id, that.id) && Objects.equals(nome, that.nome);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, restaurantes);
+        return Objects.hash(id);
     }
 }

@@ -1,3 +1,5 @@
+# noinspection SqlWithoutWhereForFile
+
 set foreign_key_checks = 0;
 
 delete from restaurante;
@@ -12,6 +14,7 @@ delete from restaurante_tipo_pagamento;
 delete from tipo_pagamento;
 delete from usuario;
 delete from usuario_grupos;
+delete from restaurante_usuario;
 
 set foreign_key_checks = 1;
 
@@ -81,3 +84,5 @@ insert into  grupo (nome) values ('Gerentes'), ('Vendedores'), ('Secretarias'),(
 insert into usuario (nome, email, senha, data_cadastro) values ('um', 'um@usuario.com', '12345', utc_timestamp), ('dois', 'dois@usuario.com', '12345', utc_timestamp), ('três', 'três@usuario.com', '12345', utc_timestamp), ('quatro', 'quatro@usuario.com', '12345', utc_timestamp);
 
 insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
+
+insert into restaurante_usuario (restaurante_id, usuario_id) values (1,1),(2,2),(3,3),(4,4),(5,1), (6,2), (7,3), (8,4), (9,1), (10,2);

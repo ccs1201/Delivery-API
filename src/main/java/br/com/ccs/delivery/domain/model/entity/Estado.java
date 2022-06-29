@@ -51,11 +51,11 @@ public class Estado {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Estado estado = (Estado) o;
-        return Objects.equals(id, estado.id) && Objects.equals(nome, estado.nome) && Objects.equals(sigla, estado.sigla) && Objects.equals(municipios, estado.municipios);
+        return id.equals(estado.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, sigla, municipios);
+        return Objects.hash(id);
     }
 }

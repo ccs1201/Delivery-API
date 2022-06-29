@@ -238,9 +238,5 @@ public class RestauranteController {
         service.fechar(restaruanteId);
     }
 
-    @GetMapping("{restauranteId}/usuarios")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<UsuarioResponse> getUsuarios(@PathVariable @Positive Long restauranteId) {
-        return mapperUsuario.toCollection(service.findUsuarios(restauranteId).getUsuarios());
-    }
+
 }

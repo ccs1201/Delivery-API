@@ -30,11 +30,6 @@ public class Grupo {
         return getPermissoes().remove(permissao);
     }
 
-    public boolean addPermissao(Permissao permissao) {
-        return getPermissoes().add(permissao);
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,6 +40,12 @@ public class Grupo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, permissoes);
+        return Objects.hash(id);
     }
+
+    public boolean addPermissao(Permissao permissao) {
+        return getPermissoes().add(permissao);
+    }
+
+
 }

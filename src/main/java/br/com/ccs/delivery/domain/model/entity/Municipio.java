@@ -38,11 +38,11 @@ public class Municipio {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Municipio municipio = (Municipio) o;
-        return Objects.equals(id, municipio.id) && Objects.equals(nome, municipio.nome) && Objects.equals(estado, municipio.estado);
+        return id.equals(municipio.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, estado);
+        return Objects.hash(id);
     }
 }
