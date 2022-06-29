@@ -3,6 +3,8 @@ package br.com.ccs.delivery.domain.model.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -10,6 +12,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@DynamicUpdate
 public class Permissao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +28,12 @@ public class Permissao {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
+
         Permissao permissao = (Permissao) o;
-        return Objects.equals(id, permissao.id) && Objects.equals(nome, permissao.nome) && Objects.equals(descricao, permissao.descricao);
+
+        return new EqualsBuilder().append(id, permissao.id).isEquals();
     }
 
     @Override
