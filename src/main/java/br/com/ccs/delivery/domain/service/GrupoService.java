@@ -34,10 +34,9 @@ public class GrupoService {
     }
 
     public Grupo findById(Long grupoId) {
-        return repository.findById(grupoId).orElseThrow(
-                () ->
-                        new RepositoryEntityNotFoundException(
-                                String.format("Grupo ID: %d não encontrado.", grupoId)));
+        return repository.findById(grupoId).orElseThrow(() ->
+                new RepositoryEntityNotFoundException(
+                        String.format("Grupo ID: %d não encontrado.", grupoId)));
     }
 
     @Transactional
@@ -51,16 +50,17 @@ public class GrupoService {
             repository.deleteById(grupoId);
         } catch (EmptyResultDataAccessException e) {
             throw new RepositoryEntityNotFoundException(
-                    String.format("Grupo ID: %d, não encontrado.", grupoId)
-            );
+                    String.format("Grupo ID: %d, não encontrado.", grupoId));
         }
-
     }
 
     public Grupo findComPermissoes(Long grupoId) {
 
+        this.findById(grupoId);
+
         return repository.findByIdComPermissoes(grupoId).orElseThrow(() ->
-                new RepositoryEntityNotFoundException(String.format("Grupo ID: %d, não possui permissões.", grupoId)));
+                new RepositoryEntityNotFoundException(
+                        String.format("Grupo ID: %d, não possui permissões.", grupoId)));
     }
 
     @Transactional
@@ -73,11 +73,8 @@ public class GrupoService {
             repository.saveAndFlush(grupo);
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
-                    String.format("Permissao: %d-%s, já cadastrada para o Grupo: %d-%s.",
-                            permissao.getId(), permissao.getNome(), grupo.getId(), grupo.getNome())
-            );
+                    String.format("Permissao: %d-%s, já cadastrada para o Grupo: %d-%s.", permissao.getId(), permissao.getNome(), grupo.getId(), grupo.getNome()));
         }
-
     }
 
     @Transactional
