@@ -208,7 +208,7 @@ public class RestauranteController {
         produtoService.delete(produto);
     }
 
-    @PutMapping("/produtos/{produtoId}/ativar")
+    @PutMapping("/produtos/{produtoId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void ativarProduto(@PathVariable @Positive Long produtoId) {
         Produto produto = produtoService.findById(produtoId);
@@ -217,7 +217,7 @@ public class RestauranteController {
         produtoService.update(produto);
     }
 
-    @PutMapping("/produtos/{produtoId}/inativar")
+    @PutMapping("/produtos/{produtoId}/inativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativarProduto(@PathVariable @Positive Long produtoId) {
         Produto produto = produtoService.findById(produtoId);
@@ -226,13 +226,13 @@ public class RestauranteController {
         produtoService.update(produto);
     }
 
-    @PutMapping("{restaruanteId}/abrir")
+    @PutMapping("{restauranteId}/aberto")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void abrirRestaurante(@PathVariable @Positive Long restaruanteId) {
-        service.abrir(restaruanteId);
+    public void abrirRestaurante(@PathVariable @Positive Long restauranteId) {
+        service.abrir(restauranteId);
     }
 
-    @PutMapping("{restaruanteId}/fechar")
+    @PutMapping("{restaruanteId}/fechado")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void fecharRestaurante(@PathVariable @Positive Long restaruanteId) {
         service.fechar(restaruanteId);

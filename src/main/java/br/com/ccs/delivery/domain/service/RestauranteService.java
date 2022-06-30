@@ -241,7 +241,7 @@ public class RestauranteService {
 
         return repository.findUsuarios(restauranteId).orElseThrow(() ->
                 new RepositoryEntityNotFoundException(
-                        String.format("Nenhuma Usuário encontrado para o Restaurante ID: %d", restauranteId)
+                        String.format("Nenhum Usuário encontrado para o Restaurante ID: %d", restauranteId)
                 ));
     }
 
