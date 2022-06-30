@@ -127,7 +127,7 @@ public class RestauranteController {
         return mapper.toResponseModel(service.getFirst());
     }
 
-    @PutMapping("{restauranteId}/ativo")
+    @PatchMapping("{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void ativar(@PathVariable Long restauranteId) {
         service.ativar(restauranteId);
@@ -168,71 +168,15 @@ public class RestauranteController {
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
 
-    @GetMapping("/{restauranteId}/produtos")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<ProdutoResponse> getProdutos(@PathVariable @Positive Long restauranteId) {
-        Restaurante restaurante = service.findComProdutos(restauranteId);
 
-        return produtoMapper.toCollection(restaurante.getProdutos());
-    }
 
-    @PutMapping("/{restauranteId}/produtos")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Collection<ProdutoResponse> addProduto(@PathVariable @Positive Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
-
-        Restaurante restaurante = service.findById(restauranteId);
-
-        Produto produto = produtoMapper.toEntity(produtoInput);
-
-        produto.setRestaurante(restaurante);
-        produto.setAtivo(true);
-
-        produtoService.save(produto);
-
-        return produtoMapper.toCollection(service.findComProdutos(restauranteId).getProdutos());
-    }
-
-    @PutMapping("/produtos/{produtoId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ProdutoResponse updateProduto(@PathVariable @Positive Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
-        Produto produto = produtoService.findById(produtoId);
-        produtoMapper.updateEntity(produtoInput, produto);
-
-        return produtoMapper.toResponseModel(produtoService.update(produto));
-    }
-
-    @DeleteMapping("/produtos/{produtoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduto(@PathVariable @Positive Long produtoId) {
-        Produto produto = produtoService.findById(produtoId);
-        produtoService.delete(produto);
-    }
-
-    @PutMapping("/produtos/{produtoId}/ativo")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativarProduto(@PathVariable @Positive Long produtoId) {
-        Produto produto = produtoService.findById(produtoId);
-        produto.setAtivo(true);
-
-        produtoService.update(produto);
-    }
-
-    @PutMapping("/produtos/{produtoId}/inativo")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inativarProduto(@PathVariable @Positive Long produtoId) {
-        Produto produto = produtoService.findById(produtoId);
-        produto.setAtivo(false);
-
-        produtoService.update(produto);
-    }
-
-    @PutMapping("{restauranteId}/aberto")
+    @PatchMapping("{restauranteId}/aberto")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void abrirRestaurante(@PathVariable @Positive Long restauranteId) {
         service.abrir(restauranteId);
     }
 
-    @PutMapping("{restaruanteId}/fechado")
+    @PatchMapping("{restaruanteId}/fechado")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void fecharRestaurante(@PathVariable @Positive Long restaruanteId) {
         service.fechar(restaruanteId);

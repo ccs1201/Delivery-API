@@ -22,7 +22,7 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @Column(unique = true,length = 50)
+    @Column(unique = true, length = 50)
     private String nome;
 
     private String descricao;
@@ -35,6 +35,14 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
+
+    public void ativar() {
+        this.ativo = true;
+    }
+
+    public void inativar() {
+        this.ativo = false;
+    }
 
     @Override
     public boolean equals(Object o) {

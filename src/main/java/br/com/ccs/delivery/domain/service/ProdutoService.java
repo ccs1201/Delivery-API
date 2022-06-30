@@ -68,4 +68,19 @@ public class ProdutoService {
         }
     }
 
+    @Transactional
+    public void inativar(Long produtoId) {
+        Produto produto = this.findById(produtoId);
+        produto.inativar();
+
+        repository.saveAndFlush(produto);
+    }
+
+    @Transactional
+    public void ativar(Long produtoId) {
+        Produto produto = this.findById(produtoId);
+        produto.ativar();
+
+        repository.saveAndFlush(produto);
+    }
 }
