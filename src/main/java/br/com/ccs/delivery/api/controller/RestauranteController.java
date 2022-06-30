@@ -1,18 +1,15 @@
 package br.com.ccs.delivery.api.controller;
 
-import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.mapper.ProdutoMapper;
 import br.com.ccs.delivery.api.model.representation.mapper.TipoPagamentoMapper;
-import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
 import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
-import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
@@ -167,7 +164,6 @@ public class RestauranteController {
 
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
-
 
 
     @PatchMapping("{restauranteId}/aberto")
