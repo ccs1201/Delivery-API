@@ -17,7 +17,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/api/restaurantes/{restauranteId}/usuarios")
 @AllArgsConstructor
-public class CadastroRestauranteUsuarioController {
+public class CadastroUsuarioRestauranteController {
 
     @MapperQualifier(MapperQualifierType.USUARIO)
     private final MapperInterface<UsuarioResponse, UsuarioInput, Usuario> mapperUsuario;

@@ -21,6 +21,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -128,6 +129,26 @@ public class RestauranteService {
         Restaurante restaurante = this.findById(restauranteId);
         restaurante.inativar();
         repository.saveAndFlush(restaurante);
+    }
+
+    @Transactional
+    public void ativar(List<Long> restauranteIds) {
+        try {
+            restauranteIds.forEach(id -> this.findById(id).ativar());
+            repository.flush();
+        } catch (RepositoryEntityNotFoundException e) {
+            throw new RepositoryEntityUpdateException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void inativar(List<Long> restauranteIds) {
+        try {
+            restauranteIds.forEach(id -> this.findById(id).inativar());
+            repository.flush();
+        } catch (RepositoryEntityNotFoundException e) {
+            throw new RepositoryEntityUpdateException(e.getMessage());
+        }
     }
 
     private void Validate(Restaurante restaurante) {

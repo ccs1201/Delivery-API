@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -130,6 +131,18 @@ public class RestauranteController {
         service.ativar(restauranteId);
     }
 
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@RequestBody List<Long> restauranteIds) {
+        service.ativar(restauranteIds);
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativar(@RequestBody List<Long> restauranteIds) {
+        service.inativar(restauranteIds);
+    }
+
     @DeleteMapping("{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
@@ -164,7 +177,6 @@ public class RestauranteController {
 
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
-
 
     @PatchMapping("{restauranteId}/aberto")
     @ResponseStatus(HttpStatus.NO_CONTENT)

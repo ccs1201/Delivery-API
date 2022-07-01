@@ -3,7 +3,6 @@ package br.com.ccs.delivery.domain.model.entity;
 import br.com.ccs.delivery.domain.model.component.Endereco;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -31,14 +30,26 @@ public class Pedido {
     private OffsetDateTime dataConfirmacao;
     private OffsetDateTime dataCancelamento;
     private OffsetDateTime dataEntrega;
+    @ManyToOne
+    private TipoPagamento tipoPagamento;
 
     @Enumerated(EnumType.STRING)
     private StatusPedido statusPedido;
+
     @Embedded
+    @AttributeOverrides(
+            {
+                    @AttributeOverride(name = "bairro", column = @Column(name = "bairro")),
+                    @AttributeOverride(name = "logradouro", column = @Column(name = "logradouro")),
+                    @AttributeOverride(name = "numero", column = @Column(name = "numero")),
+                    @AttributeOverride(name = "complemento", column = @Column(name = "complemento")),
+                    @AttributeOverride(name = "cep", column = @Column(name = "cep"))
+            }
+    )
     private Endereco enderecoEntrega;
 
     @OneToMany(mappedBy = "pedido", orphanRemoval = true)
-    private Collection<ItemPedido> itemPedidoes = new ArrayList<>();
+    private Collection<ItemPedido> itensPedido = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
