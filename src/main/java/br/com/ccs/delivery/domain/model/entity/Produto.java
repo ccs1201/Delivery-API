@@ -1,7 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;

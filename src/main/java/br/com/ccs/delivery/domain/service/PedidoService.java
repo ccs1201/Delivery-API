@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.domain.service;
 
+import br.com.ccs.delivery.api.model.representation.input.PedidoInput;
 import br.com.ccs.delivery.domain.model.entity.Pedido;
 import br.com.ccs.delivery.domain.repository.PedidoRepository;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
@@ -24,5 +25,10 @@ public class PedidoService {
                         String.format("Pedido ID: %d não encontrado.", id)
                 )
         );
+    }
+
+    public Pedido save(Pedido pedido) {
+
+        return repository.save(pedido);
     }
 }

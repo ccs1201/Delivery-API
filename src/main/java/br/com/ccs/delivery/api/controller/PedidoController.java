@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -37,5 +38,13 @@ public class PedidoController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PedidoResponse add(@RequestBody @Valid PedidoInput pedidoInput) {
+
+        Pedido pedido = service.save(mapper.toEntity(pedidoInput));
+        return mapper.toResponseModel(pedido);
     }
 }
