@@ -43,6 +43,7 @@ public class PedidoController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public PedidoResponse add(@RequestBody @Valid PedidoInput pedidoInput) {
+ // TODO: 01/07/2022 implementar o endpoint para cadastrar um pedido.
 
         Pedido pedido = service.save(mapper.toEntity(pedidoInput));
         return mapper.toResponseModel(pedido);
