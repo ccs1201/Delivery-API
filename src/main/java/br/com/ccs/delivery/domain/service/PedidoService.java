@@ -15,8 +15,7 @@ public class PedidoService {
     private PedidoRepository repository;
 
     public Collection<Pedido> findAllEager() {
-        Collection<Pedido> pedidos= repository.findAllEager();
-        return pedidos;
+        return repository.findAllEager();
     }
 
     public Pedido findById(Long id) {
