@@ -1,0 +1,1 @@
+ALTER TABLE delivery.pedido MODIFY COLUMN cep VARCHAR(9) NOT NULL;

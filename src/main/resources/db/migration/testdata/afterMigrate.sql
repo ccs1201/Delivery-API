@@ -15,6 +15,8 @@ delete from tipo_pagamento;
 delete from usuario;
 delete from usuario_grupos;
 delete from restaurante_usuario;
+delete from pedido;
+delete from item_pedido;
 
 set foreign_key_checks = 1;
 
@@ -86,3 +88,25 @@ insert into usuario (nome, email, senha, data_cadastro) values ('um', 'um@usuari
 insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
 
 insert into restaurante_usuario (restaurante_id, usuario_id) values (1,1),(2,2),(3,3),(4,4),(5,1), (6,2), (7,3), (8,4), (9,1), (10,2);
+
+insert into pedido (id, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
+                    logradouro, numero, complemento, bairro,
+                    status_pedido, data_criacao, sub_total, taxa_entrega, valor_total)
+values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+        'CRIADO', utc_timestamp, 298.90, 10.0, 308.90);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
+values (1, 1, 1, 1, 78.9, 78.9, null);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
+values (2, 1, 2, 2, 110, 220, 'Menos picante, por favor');
+
+
+insert into pedido (id, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
+                    logradouro, numero, complemento, bairro,
+                    status_pedido, data_criacao, sub_total, taxa_entrega, valor_total)
+values (2, 4, 2, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
+        'CRIADO', utc_timestamp, 79, 0, 79);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
+values (3, 2, 6, 1, 79, 79, 'Ao ponto');

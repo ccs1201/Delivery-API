@@ -19,6 +19,8 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Restaurante restaurante;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -30,7 +32,7 @@ public class Pedido {
     private OffsetDateTime dataConfirmacao;
     private OffsetDateTime dataCancelamento;
     private OffsetDateTime dataEntrega;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private TipoPagamento tipoPagamento;
 
     @Enumerated(EnumType.STRING)

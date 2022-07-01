@@ -1,0 +1,1 @@
+ALTER TABLE delivery.pedido MODIFY COLUMN taxa_entrega DECIMAL(5,2) NOT NULL;

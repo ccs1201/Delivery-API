@@ -17,7 +17,7 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
     @NotNull
@@ -27,7 +27,7 @@ public class ItemPedido {
     @NotNull
     private BigDecimal valorTotal;
     private String observacao;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 
