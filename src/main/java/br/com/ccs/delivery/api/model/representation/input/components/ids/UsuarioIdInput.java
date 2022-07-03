@@ -8,9 +8,8 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
-public class TipoPagamentoIdInput {
-
-    @NotNull
+public class UsuarioIdInput {
     @Positive
+    @NotNull
     private Long id;
 }
