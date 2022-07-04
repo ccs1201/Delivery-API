@@ -29,6 +29,8 @@ alter table permissao auto_increment =1;
 alter table produto auto_increment =1;
 alter table tipo_pagamento auto_increment =1;
 alter table usuario auto_increment =1;
+alter table pedido auto_increment =1;
+alter table item_pedido auto_increment =1;
 
 
 INSERT INTO cozinha VALUES (6,'Alemã'),(8,'Alienigena'),(3,'Brasileira'),(7,'Francesa'),(2,'Indiana'),(5,'Italiana'),(4,'Portuguesa'),(1,'Tailandesa');

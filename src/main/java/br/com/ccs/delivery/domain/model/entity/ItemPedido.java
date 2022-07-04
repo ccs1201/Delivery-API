@@ -2,11 +2,11 @@ package br.com.ccs.delivery.domain.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 @Getter
@@ -30,6 +30,22 @@ public class ItemPedido {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
+
+    public void calcularValorTotal(){
+        this.valorTotal = valorUnitario
+                .multiply(
+                        new BigDecimal(quantidade)
+                                .setScale(2, RoundingMode.HALF_UP));
+    }
+
+    public void setProduto(Produto produto){
+        this.produto = produto;
+        valorUnitario = produto.getValor();
+    }
+
+    public BigDecimal getValorTotal(){
+        return this.valorTotal.setScale(2, RoundingMode.HALF_UP);
+    }
 
     @Override
     public boolean equals(Object o) {

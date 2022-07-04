@@ -32,19 +32,13 @@ public class PedidoController {
     @GetMapping("{pedidoId}")
     @ResponseStatus(HttpStatus.OK)
     public PedidoResponse findById(@PathVariable Long pedidoId) {
-        try {
-            return mapper.toResponseModel(service.findById(pedidoId));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return mapper.toResponseModel(service.findById(pedidoId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public PedidoResponse add(@RequestBody @Valid PedidoInput pedidoInput) {
- // TODO: 01/07/2022 implementar o endpoint para cadastrar um pedido.
-
         Pedido pedido = mapper.toEntity(pedidoInput);
-        return mapper.toResponseModel(pedido);
+        return mapper.toResponseModel(service.cadastarPedido(pedido));
     }
 }

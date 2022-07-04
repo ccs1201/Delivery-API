@@ -3,9 +3,11 @@ package br.com.ccs.delivery.domain.model.entity;
 import br.com.ccs.delivery.domain.model.component.Endereco;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +27,10 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Usuario cliente;
-    private BigDecimal subTotal;
+    private BigDecimal subTotal = BigDecimal.ZERO;
     private BigDecimal taxaEntrega;
-    private BigDecimal valorTotal;
+    private BigDecimal valorTotal= BigDecimal.ZERO;
+    @CreationTimestamp
     private OffsetDateTime dataCriacao;
     private OffsetDateTime dataConfirmacao;
     private OffsetDateTime dataCancelamento;
@@ -50,8 +53,37 @@ public class Pedido {
     )
     private Endereco enderecoEntrega;
 
-    @OneToMany(mappedBy = "pedido", orphanRemoval = true)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Collection<ItemPedido> itensPedido = new ArrayList<>();
+
+    public void calcularSubTotal() {
+
+        itensPedido.forEach(itemPedido -> {
+            itemPedido.calcularValorTotal();
+            itemPedido.setPedido(this);
+            subTotal = this.subTotal.add(itemPedido.getValorTotal());
+        });
+        subTotal = subTotal.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal getSubTotal() {
+        if (subTotal == null || subTotal.intValue() == 0) {
+            this.calcularSubTotal();
+        }
+        return subTotal.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void calcularTotal(){
+        valorTotal = subTotal.add(taxaEntrega);
+    }
+
+    public BigDecimal getValorTotal() {
+        if (subTotal == null || subTotal.intValue() == 0) {
+            calcularSubTotal();
+        }
+        valorTotal = subTotal.add(taxaEntrega);
+        return valorTotal.setScale(2, RoundingMode.HALF_UP);
+    }
 
     @Override
     public boolean equals(Object o) {

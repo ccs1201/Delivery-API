@@ -108,7 +108,7 @@ public class Restaurante {
         this.produtos.add(produto);
     }
 
-    public void addUsuario(Usuario usuario){
+    public void addUsuario(Usuario usuario) {
         this.getUsuarios().add(usuario);
     }
 
@@ -125,8 +125,11 @@ public class Restaurante {
         return Objects.hash(id);
     }
 
-    public void removeUsuario(Usuario usuario){
+    public void removeUsuario(Usuario usuario) {
         this.getUsuarios().remove(usuario);
     }
 
+    public boolean validarTipoPagamento(TipoPagamento tipoPagamento) {
+        return tiposPagamento.contains(tipoPagamento);
+    }
 }

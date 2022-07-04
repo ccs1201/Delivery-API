@@ -18,7 +18,7 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
     List<Restaurante> findAllEager();
 
 
-    @Query("select r from Restaurante r join fetch r.cozinha join fetch r.tiposPagamento join fetch r.endereco.municipio m join fetch m.estado where r.id= :id")
+    @Query("select distinct r from Restaurante r join fetch r.cozinha join fetch r.endereco.municipio m join fetch m.estado where r.id= :id")
     Optional<Restaurante> findByIdEager(Long id);
 
     @Query("select r from Restaurante r join fetch r.cozinha c where c.nome like %:nomeCozinha% ")

@@ -1,11 +1,17 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.api.model.representation.input.PedidoInput;
+import br.com.ccs.delivery.domain.model.entity.ItemPedido;
 import br.com.ccs.delivery.domain.model.entity.Pedido;
+import br.com.ccs.delivery.domain.model.entity.StatusPedido;
 import br.com.ccs.delivery.domain.repository.PedidoRepository;
+import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
+import br.com.ccs.delivery.domain.service.exception.TipoPagamentoException;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -14,6 +20,12 @@ import java.util.Collection;
 public class PedidoService {
 
     private PedidoRepository repository;
+    @Lazy
+    private ProdutoService produtoService;
+    @Lazy
+    private RestauranteService restauranteService;
+    @Lazy
+    private TipoPagamentoService tipoPagamentoService;
 
     public Collection<Pedido> findAllEager() {
         return repository.findAllEager();
@@ -27,8 +39,53 @@ public class PedidoService {
         );
     }
 
+    @Transactional
     public Pedido save(Pedido pedido) {
+        try {
+            return repository.saveAndFlush(pedido);
+        } catch (DataIntegrityViolationException e) {
+            throw new RepositoryDataIntegrityViolationException("Erro ao cadastrar Pedido", e);
+        }
+    }
 
-        return repository.save(pedido);
+    @Transactional
+    public Pedido cadastarPedido(Pedido pedido) {
+            this.getTipoPagamento(pedido);
+
+            this.getRestaurante(pedido);
+
+            if (!pedido.getRestaurante().validarTipoPagamento(pedido.getTipoPagamento())) {
+                throw new TipoPagamentoException(
+                        String.format("Tipo de pagamento %s, não é aceito pelo restaurante.", pedido.getTipoPagamento().getNome())
+                );
+            }
+            pedido.setTaxaEntrega(pedido.getRestaurante().getTaxaEntrega());
+            pedido.setStatusPedido(StatusPedido.CRIADO);
+
+            this.getProduto(pedido.getItensPedido());
+
+            pedido.calcularSubTotal();
+            pedido.calcularTotal();
+            pedido = this.save(pedido);
+            return this.findById(pedido.getId());
+
+    }
+
+    private void getTipoPagamento(Pedido pedido) {
+        pedido.setTipoPagamento(
+                tipoPagamentoService.findById(pedido.getTipoPagamento().getId())
+        );
+    }
+
+    private void getProduto(Collection<ItemPedido> itensPedido) {
+
+        itensPedido.forEach(itemPedido -> itemPedido
+                .setProduto(produtoService
+                        .findById(itemPedido.getProduto().getId())));
+    }
+
+    private void getRestaurante(Pedido pedido) {
+        pedido.setRestaurante(
+                restauranteService.findTiposPagamentoRestaurante(pedido.getRestaurante().getId()));
     }
 }

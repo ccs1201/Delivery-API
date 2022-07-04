@@ -9,6 +9,7 @@ import org.springframework.data.rest.core.RepositoryConstraintViolationException
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 
 @Service
@@ -82,5 +83,10 @@ public class ProdutoService {
         produto.ativar();
 
         repository.saveAndFlush(produto);
+    }
+
+    public BigDecimal getValorProduto(Long id) {
+
+        return this.findById(id).getValor();
     }
 }
