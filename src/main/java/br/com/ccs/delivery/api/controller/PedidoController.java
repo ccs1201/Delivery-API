@@ -37,7 +37,6 @@ public class PedidoController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     @PostMapping
