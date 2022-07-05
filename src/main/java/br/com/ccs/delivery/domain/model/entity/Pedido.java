@@ -4,6 +4,7 @@ import br.com.ccs.delivery.domain.model.component.Endereco;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@DynamicUpdate
 public class Pedido {
 
     @Id
@@ -74,12 +76,13 @@ public class Pedido {
     /**
      * <p>
      * Efetua os cálculos dos valores do pedido.
-     *</p>
+     * </p>
      * Calculando o subtotal e total (subtotal + taxa Entrega)
-     *
+     * <p>
      * RETURN void
      */
     public void calcularPedido() {
+        this.taxaEntrega = this.getRestaurante().getTaxaEntrega();
         this.calcularSubTotal();
         this.calcularTotal();
     }
@@ -91,7 +94,7 @@ public class Pedido {
      * do pedido.
      * </p>
      *
-     *<ul>
+     * <ul>
      *      Garante também que o relacionamento
      *      entre  {@link Pedido} {@link ItemPedido}
      *      esteja estabelecido, para que não ocorram
@@ -112,8 +115,6 @@ public class Pedido {
     /**
      * <p>Calcula o valor total do pedido
      * somando valorTotal + taxaEntrega</p>
-     *
-     * @return void
      */
     private void calcularTotal() {
         valorTotal = subTotal.add(taxaEntrega);

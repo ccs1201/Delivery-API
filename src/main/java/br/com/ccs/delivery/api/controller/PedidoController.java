@@ -41,4 +41,21 @@ public class PedidoController {
         Pedido pedido = mapper.toEntity(pedidoInput);
         return mapper.toResponseModel(service.cadastrarPedido(pedido));
     }
+
+    @PatchMapping("{pedidoId}/cancelamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelarPedido(@PathVariable Long pedidoId) {
+        service.cancelarPedido(pedidoId);
+    }
+
+    @PatchMapping("{pedidoId}/confirmacao")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void confirmarPedido(@PathVariable Long pedidoId){
+        service.confirmarPedido(pedidoId);
+    }
+    @PatchMapping("{pedidoId}/entregue")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void confirmarEntregaPedido(@PathVariable Long pedidoId){
+        service.confirmarEntregaPedido(pedidoId);
+    }
 }

@@ -5,18 +5,17 @@ import br.com.ccs.delivery.domain.model.entity.Pedido;
 import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.StatusPedido;
 import br.com.ccs.delivery.domain.repository.PedidoRepository;
-import br.com.ccs.delivery.domain.service.exception.ProdutoNaoExisteNoCardapioDoRestauranteException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
-import br.com.ccs.delivery.domain.service.exception.TipoPagamentoException;
+import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -59,26 +58,42 @@ public class PedidoService {
      * no banco de dados.
      * </p>
      *
-     * <ul>
-     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}</li>
-     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Restaurante}</li>
-     *     <li>Verifica se o {@link br.com.ccs.delivery.domain.model.entity.Restaurante}
-     *     aceita {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}
-     *     informado no {@link Pedido}</li>
-     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Municipio}</li>
-     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Produto}(s)
-     *     ao ItemPedido da {@link Collection<ItemPedido>} </li>
-     *     <li>Seta a taxa de entrega do pedido pelo valor da TaxaEntrega do {@link br.com.ccs.delivery.domain.model.entity.Restaurante}</li>
-     *     <li>Seta o {@link StatusPedido} do {@link Pedido} como CRIADO </li>
-     *     <li>Calcula os valores do {@link Pedido}</li>
-     *     <li>Salva o {@link Pedido}</li>
-     * </ul>
-     *
      * @param pedido O pedido a ser cadastrado.
      * @return Pedido — O pedido cadastrado.
      */
     @Transactional
     public Pedido cadastrarPedido(Pedido pedido) {
+
+        this.validarPedido(pedido);
+
+        pedido.setStatusPedido(StatusPedido.CRIADO);
+
+        pedido = this.save(pedido);
+        return this.findById(pedido.getId());
+
+    }
+
+    /**
+     * <p>Valida um Pedido</p>
+     * <p>
+     * Valida um pedido para que possa ser
+     * salvo no Banco de Dados.
+     *
+     * <ul>
+     *           <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}</li>
+     *           <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Restaurante}</li>
+     *           <li>Verifica se o {@link br.com.ccs.delivery.domain.model.entity.Restaurante}
+     *           aceita {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}
+     *           informado no {@link Pedido}</li>
+     *           <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Municipio}</li>
+     *           <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Produto}(s)
+     *           ao ItemPedido da {@link Collection<ItemPedido>} </li>
+     *           <li>Calcula os valores do {@link Pedido}</li>
+     * </ul>
+     *
+     * @param pedido O pedido que será validado.
+     */
+    private void validarPedido(Pedido pedido) {
         this.getTipoPagamento(pedido);
 
         this.getRestaurante(pedido);
@@ -96,19 +111,26 @@ public class PedidoService {
 
         this.validarItensPedido(pedido);
 
-        pedido.setTaxaEntrega(pedido.getRestaurante().getTaxaEntrega());
-        pedido.setStatusPedido(StatusPedido.CRIADO);
-
         pedido.calcularPedido();
-
-        pedido = this.save(pedido);
-        return this.findById(pedido.getId());
 
     }
 
+    /**
+     * <p>Valida os Itens do Pedido</p>
+     * <br />
+     * Garante que o produtos contidos na
+     * {@link Collection} @param pedido.itensPedido
+     * contenha somente produtos que constam no
+     * cardápio do restaurante a que o pedido se refere.
+     * <br />
+     *
+     * @param pedido O pedido que terá seus Itens validados.
+     * @throws ProdutoNaoExisteNoCardapioDoRestauranteException se algum dos
+     *                                                          produtos não pertencer ao cardápio do {@link br.com.ccs.delivery.domain.model.entity.Restaurante}
+     */
     private void validarItensPedido(Pedido pedido) {
 
-        HashSet<Produto> produtosInvalidos = new HashSet<>();
+        Set<Produto> produtosInvalidos = new HashSet<>();
 
         pedido.getRestaurante().setProdutos(
                 restauranteService.findComProdutos(
@@ -196,5 +218,87 @@ public class PedidoService {
                 restauranteService
                         .findComTiposPagamento(pedido.getRestaurante().getId())
         );
+    }
+
+    /**
+     * <p>
+     * Cancela um pedido realizado pelo usuário.
+     * </p>
+     * <p>
+     * O cancelamento somente é permitido se
+     * o pedido estiver com {@link StatusPedido} CRIADO.
+     *
+     * @param pedidoId O ID do pedido que será cancelado.
+     */
+    @Transactional
+    public void cancelarPedido(Long pedidoId) {
+        Pedido pedido = this.findById(pedidoId);
+
+        if (pedido.getStatusPedido() != StatusPedido.CRIADO) {
+            throw new StatusPedidoException(
+                    String.format("O pedido já esta %s e não pode ser cancelado.", pedido.getStatusPedido().toString()));
+        }
+
+        pedido.setStatusPedido(StatusPedido.CANCELADO);
+        pedido.setDataCancelamento(OffsetDateTime.now());
+        repository.saveAndFlush(pedido);
+    }
+
+    /**
+     * <p>Atualiza um pedido</p>
+     * <p>
+     * Antes de atualizar o pedido
+     * executa validação dos dados
+     * em {@link #validarPedido(Pedido)}.
+     *
+     * @param pedido A ser atualizado
+     */
+    @Transactional
+    public void update(Pedido pedido) {
+
+        this.validarPedido(pedido);
+        repository.saveAndFlush(pedido);
+    }
+
+    /**
+     * Confirma a aceite de um pedido
+     * pelo Restaurante
+     *
+     * @param pedidoId O ID do pedido que será confirmado.
+     */
+    @Transactional
+    public void confirmarPedido(Long pedidoId) {
+
+        Pedido pedido = this.findById(pedidoId);
+
+        if (pedido.getStatusPedido() != StatusPedido.CRIADO) {
+            throw new StatusPedidoException(
+                    String.format("Pedido não pode ser confirmado pois seu Status é: %s", pedido.getStatusPedido().toString()));
+        }
+
+        pedido.setStatusPedido(StatusPedido.CONFIRMADO);
+        pedido.setDataConfirmacao(OffsetDateTime.now());
+
+        repository.saveAndFlush(pedido);
+    }
+
+    /**
+     * Confirma a entrega de um pedido
+     *
+     * @param pedidoId O ID do pedido que foi entregue.
+     */
+    @Transactional
+    public void confirmarEntregaPedido(Long pedidoId) {
+        Pedido pedido = this.findById(pedidoId);
+
+        if (pedido.getStatusPedido() != StatusPedido.CONFIRMADO) {
+            throw new StatusPedidoException(
+                    String.format("Entrega não pode ser confirmado pois o status do pedido é diferente de CONFIRMADO" +
+                            " O Status atual do Pedido é: %s", pedido.getStatusPedido().toString()));
+        }
+
+        pedido.setStatusPedido(StatusPedido.ENTREGUE);
+        pedido.setDataEntrega(OffsetDateTime.now());
+        repository.saveAndFlush(pedido);
     }
 }

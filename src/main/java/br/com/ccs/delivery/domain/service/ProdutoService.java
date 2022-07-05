@@ -2,10 +2,12 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.repository.ProdutoRepository;
-import br.com.ccs.delivery.domain.service.exception.*;
+import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityUpdateException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.rest.core.RepositoryConstraintViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +46,7 @@ public class ProdutoService {
             return repository.saveAndFlush(produto);
         } catch (DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
-                    String.format("Produto %s, já cadastrado.", produto.getNome())
+                    String.format("Produto %s, já cadastrado para o restaurante informado.", produto.getNome())
             );
         }
     }
