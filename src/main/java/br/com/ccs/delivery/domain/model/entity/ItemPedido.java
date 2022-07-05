@@ -39,8 +39,6 @@ public class ItemPedido {
      * <ul>
      *     <li>valorUnitario x quantidade</li>
      * </ul>
-     *
-     * RETURN void
      */
     public void calcularValorTotal(){
         this.valorTotal = valorUnitario
@@ -53,18 +51,15 @@ public class ItemPedido {
      * <p>
      * Garante que ao adicionar um
      * produto seu valor seja setado
-     * em {@param} valorUnitario
+     * em valorUnitario
      *</p>
-     * @param produto
+     * @param produto {@link Produto} que sera adicionado
+     *                               ao {@link ItemPedido}
      */
     public void setProduto(Produto produto){
         this.produto = produto;
         valorUnitario = produto.getValor();
     }
-
-   /* public BigDecimal getValorTotal(){
-        return this.valorTotal.setScale(2, RoundingMode.HALF_UP);
-    }*/
 
     @Override
     public boolean equals(Object o) {

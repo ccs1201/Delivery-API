@@ -79,7 +79,7 @@ public class Pedido {
      * </p>
      * Calculando o subtotal e total (subtotal + taxa Entrega)
      * <p>
-     * RETURN void
+     *
      */
     public void calcularPedido() {
         this.taxaEntrega = this.getRestaurante().getTaxaEntrega();
@@ -118,7 +118,7 @@ public class Pedido {
      */
     private void calcularTotal() {
         valorTotal = subTotal.add(taxaEntrega);
-        subTotal = subTotal.setScale(2, RoundingMode.HALF_UP);
+        valorTotal = valorTotal.setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override

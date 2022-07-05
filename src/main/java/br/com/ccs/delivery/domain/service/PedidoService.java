@@ -236,7 +236,7 @@ public class PedidoService {
 
         if (pedido.getStatusPedido() != StatusPedido.CRIADO) {
             throw new StatusPedidoException(
-                    String.format("O pedido já esta %s e não pode ser cancelado.", pedido.getStatusPedido().toString()));
+                    String.format("O pedido já esta %s e não pode ser cancelado.", pedido.getStatusPedido().getDescricao()));
         }
 
         pedido.setStatusPedido(StatusPedido.CANCELADO);
@@ -273,7 +273,7 @@ public class PedidoService {
 
         if (pedido.getStatusPedido() != StatusPedido.CRIADO) {
             throw new StatusPedidoException(
-                    String.format("Pedido não pode ser confirmado pois seu Status é: %s", pedido.getStatusPedido().toString()));
+                    String.format("Pedido não pode ser confirmado pois seu Status é: %s", pedido.getStatusPedido().getDescricao()));
         }
 
         pedido.setStatusPedido(StatusPedido.CONFIRMADO);
@@ -294,7 +294,7 @@ public class PedidoService {
         if (pedido.getStatusPedido() != StatusPedido.CONFIRMADO) {
             throw new StatusPedidoException(
                     String.format("Entrega não pode ser confirmado pois o status do pedido é diferente de CONFIRMADO" +
-                            " O Status atual do Pedido é: %s", pedido.getStatusPedido().toString()));
+                            " O Status atual do Pedido é: %s", pedido.getStatusPedido().getDescricao()));
         }
 
         pedido.setStatusPedido(StatusPedido.ENTREGUE);
