@@ -223,7 +223,7 @@ public class RestauranteService {
         TipoPagamento tipoPagamento = tipoPagamentoService.findById(tipoPagamentoId);
 
         if (!restaurante.getTiposPagamento().contains(tipoPagamento)) {
-            throw new ServiceException(
+            throw new RestauranteTipoPagamentoNaoEncontradoException(
                     String.format(TIPO_PAGAMENTO_NAO_ENCONTRADO, tipoPagamento.getNome(), restaurante.getNome()));
         }
         repository.deleteTipoPagamentoByIdFromRestauranteId(restaurante.getId(), tipoPagamentoId);
@@ -255,11 +255,10 @@ public class RestauranteService {
     }
 
     private void checkIfRestauranteExists(Long restauranteId) {
-        repository.findById(restauranteId).orElseThrow(
-                () -> new RepositoryEntityNotFoundException(
+        repository.findById(restauranteId)
+                .orElseThrow(() -> new RepositoryEntityNotFoundException(
                         String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
-                )
-        );
+                ));
     }
 
     @Transactional
