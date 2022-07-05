@@ -29,7 +29,7 @@ public class Pedido {
     private Usuario cliente;
     private BigDecimal subTotal = BigDecimal.ZERO;
     private BigDecimal taxaEntrega;
-    private BigDecimal valorTotal= BigDecimal.ZERO;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
     @CreationTimestamp
     private OffsetDateTime dataCriacao;
     private OffsetDateTime dataConfirmacao;
@@ -56,7 +56,49 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Collection<ItemPedido> itensPedido = new ArrayList<>();
 
-    public void calcularSubTotal() {
+  /*  public BigDecimal getSubTotal() {
+//        if (subTotal == null || subTotal.intValue() == 0) {
+//            this.calcularSubTotal();
+//        }
+        return subTotal.setScale(2, RoundingMode.HALF_UP);
+    }*/
+
+   /* public BigDecimal getValorTotal() {
+//        if (subTotal == null || subTotal.intValue() == 0) {
+//            calcularSubTotal();
+//        }
+//        valorTotal = subTotal.add(taxaEntrega);
+        return valorTotal.setScale(2, RoundingMode.HALF_UP);
+    }*/
+
+    /**
+     * Efetua os cálculos dos valores do pedido.
+     *
+     * Calculando o subtotal e total (subtotal + taxa Entrega)
+     *
+     * RETURN void
+     */
+    public void calcularPedido() {
+        this.calcularSubTotal();
+        this.calcularTotal();
+    }
+
+    /**
+     * <p>
+     * Calcula o subtotal do pedido
+     * pegando o Total de cada item
+     * do pedido.
+     * </p>
+     *
+     *<ul>
+     *      Garante também que o relacionamento
+     *      entre  {@link Pedido} {@link ItemPedido}
+     *      esteja estabelecido, para que não ocorram
+     *      problemas na camada de persistência da JPA
+     *      ao cadastrar um pedido.
+     * </ul>
+     */
+    private void calcularSubTotal() {
 
         itensPedido.forEach(itemPedido -> {
             itemPedido.calcularValorTotal();
@@ -66,23 +108,15 @@ public class Pedido {
         subTotal = subTotal.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public BigDecimal getSubTotal() {
-        if (subTotal == null || subTotal.intValue() == 0) {
-            this.calcularSubTotal();
-        }
-        return subTotal.setScale(2, RoundingMode.HALF_UP);
-    }
-
-    public void calcularTotal(){
+    /**
+     * <p>Calcula o valor total do pedido
+     * somando valorTotal + taxaEntrega</p>
+     *
+     * @return void
+     */
+    private void calcularTotal() {
         valorTotal = subTotal.add(taxaEntrega);
-    }
-
-    public BigDecimal getValorTotal() {
-        if (subTotal == null || subTotal.intValue() == 0) {
-            calcularSubTotal();
-        }
-        valorTotal = subTotal.add(taxaEntrega);
-        return valorTotal.setScale(2, RoundingMode.HALF_UP);
+        subTotal = subTotal.setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override

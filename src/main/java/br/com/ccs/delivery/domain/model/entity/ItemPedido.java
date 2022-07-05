@@ -31,6 +31,14 @@ public class ItemPedido {
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 
+    /**
+     * Calcula o valor total
+     * dos produtos.
+     *
+     * valorUnitario x quantidade.
+     *
+     * RETURN void
+     */
     public void calcularValorTotal(){
         this.valorTotal = valorUnitario
                 .multiply(
@@ -38,14 +46,21 @@ public class ItemPedido {
                                 .setScale(2, RoundingMode.HALF_UP));
     }
 
+    /**
+     * Garante que ao adicionar um
+     * produto seu valor seja setado
+     * em {@param} valorUnitario
+     *
+     * @param produto
+     */
     public void setProduto(Produto produto){
         this.produto = produto;
         valorUnitario = produto.getValor();
     }
 
-    public BigDecimal getValorTotal(){
+   /* public BigDecimal getValorTotal(){
         return this.valorTotal.setScale(2, RoundingMode.HALF_UP);
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

@@ -50,6 +50,31 @@ public class PedidoService {
         }
     }
 
+    /**
+     * <p>
+     *     Prepara um pedido para ser salvo
+     *     no banco de dados.
+     * </p>
+     *
+     * <ul>
+     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}</li>
+     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Restaurante}</li>
+     *     <li>Verifica se o {@link br.com.ccs.delivery.domain.model.entity.Restaurante}
+     *     aceita {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}
+     *     informado no {@link Pedido}</li>
+     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Municipio}</li>
+     *     <li>Associa o {@link br.com.ccs.delivery.domain.model.entity.Produto}(s)
+     *     ao ItemPedido da {@link Collection<ItemPedido>} </li>
+     *     <li>Seta a taxa de entrega do pedido pelo valor da TaxaEntrega do {@link br.com.ccs.delivery.domain.model.entity.Restaurante}</li>
+     *     <li>Seta o {@link StatusPedido} do {@link Pedido} como CRIADO </li>
+     *     <li>Calcula os valores do {@link Pedido}</li>
+     *     <li>Salva o {@link Pedido}</li>
+     * </ul>
+     *
+     * @param pedido O pedido a ser cadastrado.
+     *
+     * @return Pedido — O pedido cadastrado.
+     */
     @Transactional
     public Pedido cadastrarPedido(Pedido pedido) {
         this.getTipoPagamento(pedido);
@@ -69,13 +94,21 @@ public class PedidoService {
         pedido.setTaxaEntrega(pedido.getRestaurante().getTaxaEntrega());
         pedido.setStatusPedido(StatusPedido.CRIADO);
 
-        pedido.calcularSubTotal();
-        pedido.calcularTotal();
+        pedido.calcularPedido();
+
         pedido = this.save(pedido);
         return this.findById(pedido.getId());
 
     }
 
+    /**
+     * <p>
+     *     Busco o município do Endereço de entrega
+     *     para o {@link Pedido} que esta sendo cadastrado.
+     * </p>
+     *
+     * @param pedido O Pedido que esta sendo cadastrado.
+     */
     private void findMunicipio(Pedido pedido) {
         pedido.getEnderecoEntrega().setMunicipio(
                 municipioService
@@ -83,6 +116,14 @@ public class PedidoService {
         );
     }
 
+    /**
+     * <p>
+     * Busca o tipo de pagamento do pedido
+     * pelo ID do {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}.
+     * </p>
+     *
+     * @param pedido O pedido cujo tipo de pagamento deve ser encontrado.
+     */
     private void getTipoPagamento(Pedido pedido) {
         pedido.setTipoPagamento(
                 tipoPagamentoService
@@ -90,6 +131,14 @@ public class PedidoService {
         );
     }
 
+    /**
+     * <p>
+     *     Busca os produtos no Banco de Dados
+     *     pelo seu ID e seta no {@link ItemPedido}
+     * </p>
+     *
+     * @param itensPedido Coleção de itens do Pedido que esta sendo cadastrado.
+     */
     private void getProdutosForItensPedido(Collection<ItemPedido> itensPedido) {
 
         itensPedido.forEach(item -> item
@@ -99,6 +148,14 @@ public class PedidoService {
         );
     }
 
+    /**
+     * <p>
+     *     Busca o restaurante para o
+     *     pedido que esta sendo cadastrado
+     *     pelo seu ID.
+     * </p>
+     * @param pedido O pedido que está sendo cadastrado.
+     */
     private void getRestaurante(Pedido pedido) {
         pedido.setRestaurante(
                 restauranteService

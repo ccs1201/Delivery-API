@@ -36,7 +36,7 @@ public class PedidoController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public PedidoResponse add(@RequestBody @Valid PedidoInput pedidoInput) {
         Pedido pedido = mapper.toEntity(pedidoInput);
         return mapper.toResponseModel(service.cadastrarPedido(pedido));
