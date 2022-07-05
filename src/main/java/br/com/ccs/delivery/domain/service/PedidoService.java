@@ -2,8 +2,10 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.ItemPedido;
 import br.com.ccs.delivery.domain.model.entity.Pedido;
+import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.StatusPedido;
 import br.com.ccs.delivery.domain.repository.PedidoRepository;
+import br.com.ccs.delivery.domain.service.exception.ProdutoNaoExisteNoCardapioDoRestauranteException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryDataIntegrityViolationException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
 import br.com.ccs.delivery.domain.service.exception.TipoPagamentoException;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 @Service
 @AllArgsConstructor
@@ -52,8 +55,8 @@ public class PedidoService {
 
     /**
      * <p>
-     *     Prepara um pedido para ser salvo
-     *     no banco de dados.
+     * Prepara um pedido para ser salvo
+     * no banco de dados.
      * </p>
      *
      * <ul>
@@ -72,7 +75,6 @@ public class PedidoService {
      * </ul>
      *
      * @param pedido O pedido a ser cadastrado.
-     *
      * @return Pedido — O pedido cadastrado.
      */
     @Transactional
@@ -91,6 +93,9 @@ public class PedidoService {
         this.findMunicipio(pedido);
 
         this.getProdutosForItensPedido(pedido.getItensPedido());
+
+        this.validarItensPedido(pedido);
+
         pedido.setTaxaEntrega(pedido.getRestaurante().getTaxaEntrega());
         pedido.setStatusPedido(StatusPedido.CRIADO);
 
@@ -101,10 +106,39 @@ public class PedidoService {
 
     }
 
+    private void validarItensPedido(Pedido pedido) {
+
+        HashSet<Produto> produtosInvalidos = new HashSet<>();
+
+        pedido.getRestaurante().setProdutos(
+                restauranteService.findComProdutos(
+                        pedido.getRestaurante().getId()).getProdutos());
+
+        pedido.getItensPedido().forEach(itemPedido -> {
+
+            if (!pedido.getRestaurante().validarProduto(itemPedido.getProduto())) {
+                produtosInvalidos.add(itemPedido.getProduto());
+            }
+        });
+
+        if (!produtosInvalidos.isEmpty()) {
+            StringBuilder message = new StringBuilder();
+
+            produtosInvalidos.forEach(produto ->
+                    message.append(String
+                            .format("O produto: %s, não é vendido pelo Restaurante: %s. ",
+                                    produto.getNome(), pedido.getRestaurante().getNome())
+                    )
+            );
+
+            throw new ProdutoNaoExisteNoCardapioDoRestauranteException(message.toString());
+        }
+    }
+
     /**
      * <p>
-     *     Busco o município do Endereço de entrega
-     *     para o {@link Pedido} que esta sendo cadastrado.
+     * Busco o município do Endereço de entrega
+     * para o {@link Pedido} que esta sendo cadastrado.
      * </p>
      *
      * @param pedido O Pedido que esta sendo cadastrado.
@@ -133,8 +167,8 @@ public class PedidoService {
 
     /**
      * <p>
-     *     Busca os produtos no Banco de Dados
-     *     pelo seu ID e seta no {@link ItemPedido}
+     * Busca os produtos no Banco de Dados
+     * pelo seu ID e seta no {@link ItemPedido}
      * </p>
      *
      * @param itensPedido Coleção de itens do Pedido que esta sendo cadastrado.
@@ -150,10 +184,11 @@ public class PedidoService {
 
     /**
      * <p>
-     *     Busca o restaurante para o
-     *     pedido que esta sendo cadastrado
-     *     pelo seu ID.
+     * Busca o restaurante para o
+     * pedido que esta sendo cadastrado
+     * pelo seu ID.
      * </p>
+     *
      * @param pedido O pedido que está sendo cadastrado.
      */
     private void getRestaurante(Pedido pedido) {

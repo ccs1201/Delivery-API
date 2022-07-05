@@ -55,6 +55,7 @@ public class RestauranteService {
 
     @Transactional
     public void delete(Long restauranteId) {
+
         try {
             repository.deleteById(restauranteId);
             repository.flush();
@@ -70,15 +71,35 @@ public class RestauranteService {
 
     @Transactional
     public Restaurante save(Restaurante restaurante) {
+
         try {
+            this.validarDadosRestaurante(restaurante);
             return repository.save(restaurante);
-        } catch (DataIntegrityViolationException e) {
+
+        } catch (RepositoryEntityNotFoundException | DataIntegrityViolationException e) {
             throw new RepositoryDataIntegrityViolationException(
                     ERRO_CADASTRAR_RESTAURANTE, e);
         } catch (IllegalArgumentException e) {
             throw new RepositoryEntityPersistException(
                     ERRO_CADASTRAR_RESTAURANTE + e.getMessage());
         }
+    }
+
+    private void validarDadosRestaurante(Restaurante restaurante) {
+        this.validarCozinha(restaurante);
+        this.validarMunicipio(restaurante);
+
+    }
+
+    private void validarMunicipio(Restaurante restaurante) {
+        restaurante.getEndereco().setMunicipio(
+                municipioService.findById(restaurante.getEndereco().getMunicipio().getId())
+        );
+    }
+
+    private void validarCozinha(Restaurante restaurante) {
+        restaurante.setCozinha(cozinhaService
+                .findById(restaurante.getCozinha().getId()));
     }
 
     @Transactional
@@ -190,7 +211,10 @@ public class RestauranteService {
 
         checkIfRestauranteExists(restauranteId);
 
-        return repository.findComTiposPagamento(restauranteId);
+        return repository.findComTiposPagamento(restauranteId).orElseThrow(
+                () ->
+                        new RestauranteTipoPagamentoNaoEncontradoException(
+                                String.format("Nenhum tipo de pagamento cadastrado para o restaurante: %d", restauranteId)));
     }
 
     @Transactional
@@ -223,14 +247,10 @@ public class RestauranteService {
     public Restaurante findComProdutos(Long restauranteId) {
 
         checkIfRestauranteExists(restauranteId);
-        Restaurante restaurante = repository.findComProdutos(restauranteId);
 
-        if (restaurante == null) {
-            throw new RepositoryEntityNotFoundException(
-                    String.format("Nenhum Produto encontrado para o restaurante: %d.", restauranteId));
-        }
-
-        return restaurante;
+        return repository.findComProdutos(restauranteId)
+                .orElseThrow(() -> new RepositoryEntityNotFoundException(
+                        String.format("Nenhum Produto encontrado para o restaurante: %d.", restauranteId)));
 
     }
 

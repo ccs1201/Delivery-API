@@ -132,4 +132,10 @@ public class Restaurante {
     public boolean validarTipoPagamento(TipoPagamento tipoPagamento) {
         return tiposPagamento.contains(tipoPagamento);
     }
+
+    public boolean validarProduto(Produto produto) {
+
+        return this.produtos.contains(produto);
+
+    }
 }

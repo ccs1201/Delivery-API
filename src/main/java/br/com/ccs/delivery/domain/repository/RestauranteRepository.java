@@ -27,10 +27,7 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
     Restaurante findByNomeContaining(String nome);
 
     @Query("select distinct r from Restaurante r join fetch r.tiposPagamento tp where r.id = :restauranteId order by tp.nome asc")
-    Restaurante findComTiposPagamento(Long restauranteId);
-
-    @Query("select r from Restaurante r join fetch r.tiposPagamento tp where r.id=:restauranteId and tp.id =:tipoPagamentoId")
-    Restaurante findByTiposPagamentoIs(Long restauranteId,Long tipoPagamentoId);
+    Optional<Restaurante> findComTiposPagamento(Long restauranteId);
 
     @Modifying
     @Query(value = "delete from restaurante_tipo_pagamento where restaurante_id= :restauranteId and tipo_pagamento_id = :tipoPagamentoId",
@@ -38,7 +35,7 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
     void deleteTipoPagamentoByIdFromRestauranteId(Long restauranteId, Long tipoPagamentoId);
 
     @Query("select r from  Restaurante r join fetch r.produtos where r.id=:id")
-    Restaurante findComProdutos(Long id);
+    Optional<Restaurante> findComProdutos(Long id);
 
     @Query("select r from  Restaurante  r join fetch  r.usuarios where r.id =:restauranteId")
     Optional<Restaurante> findUsuarios(Long restauranteId);

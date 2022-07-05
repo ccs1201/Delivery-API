@@ -153,7 +153,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<TipoPagamentoResponse> getTiposPagamentoRestaurante(@PathVariable Long restauranteId) {
 
-        Restaurante restaurante = service.findById(restauranteId);
+        Restaurante restaurante = service.findComTiposPagamento(restauranteId);
 
         return tipoPagamentoMapper.toCollection(restaurante.getTiposPagamento());
     }
