@@ -186,7 +186,7 @@ public class RestauranteService {
                 .orElseThrow(() -> new EntityNotFoundException("Não foi possível localizar a primeira ocorrência de restaurante."));
     }
 
-    public Restaurante findTiposPagamentoRestaurante(Long restauranteId) {
+    public Restaurante findComTiposPagamento(Long restauranteId) {
 
         checkIfRestauranteExists(restauranteId);
 

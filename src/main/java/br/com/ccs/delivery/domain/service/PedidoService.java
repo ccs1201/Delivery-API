@@ -26,6 +26,8 @@ public class PedidoService {
     private RestauranteService restauranteService;
     @Lazy
     private TipoPagamentoService tipoPagamentoService;
+    @Lazy
+    private MunicipioService municipioService;
 
     public Collection<Pedido> findAllEager() {
         return repository.findAllEager();
@@ -49,43 +51,58 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido cadastarPedido(Pedido pedido) {
-            this.getTipoPagamento(pedido);
+    public Pedido cadastrarPedido(Pedido pedido) {
+        this.getTipoPagamento(pedido);
 
-            this.getRestaurante(pedido);
+        this.getRestaurante(pedido);
 
-            if (!pedido.getRestaurante().validarTipoPagamento(pedido.getTipoPagamento())) {
-                throw new TipoPagamentoException(
-                        String.format("Tipo de pagamento %s, não é aceito pelo restaurante.", pedido.getTipoPagamento().getNome())
-                );
-            }
-            pedido.setTaxaEntrega(pedido.getRestaurante().getTaxaEntrega());
-            pedido.setStatusPedido(StatusPedido.CRIADO);
+        if (!pedido.getRestaurante().validarTipoPagamento(pedido.getTipoPagamento())) {
+            throw new TipoPagamentoException(
+                    String.format(
+                            "Tipo de pagamento %s, não é aceito pelo restaurante.",
+                            pedido.getTipoPagamento().getNome()));
+        }
 
-            this.getProduto(pedido.getItensPedido());
+        this.findMunicipio(pedido);
 
-            pedido.calcularSubTotal();
-            pedido.calcularTotal();
-            pedido = this.save(pedido);
-            return this.findById(pedido.getId());
+        this.getProdutosForItensPedido(pedido.getItensPedido());
+        pedido.setTaxaEntrega(pedido.getRestaurante().getTaxaEntrega());
+        pedido.setStatusPedido(StatusPedido.CRIADO);
 
+        pedido.calcularSubTotal();
+        pedido.calcularTotal();
+        pedido = this.save(pedido);
+        return this.findById(pedido.getId());
+
+    }
+
+    private void findMunicipio(Pedido pedido) {
+        pedido.getEnderecoEntrega().setMunicipio(
+                municipioService
+                        .findById(pedido.getEnderecoEntrega().getMunicipio().getId())
+        );
     }
 
     private void getTipoPagamento(Pedido pedido) {
         pedido.setTipoPagamento(
-                tipoPagamentoService.findById(pedido.getTipoPagamento().getId())
+                tipoPagamentoService
+                        .findById(pedido.getTipoPagamento().getId())
         );
     }
 
-    private void getProduto(Collection<ItemPedido> itensPedido) {
+    private void getProdutosForItensPedido(Collection<ItemPedido> itensPedido) {
 
-        itensPedido.forEach(itemPedido -> itemPedido
-                .setProduto(produtoService
-                        .findById(itemPedido.getProduto().getId())));
+        itensPedido.forEach(item -> item
+                .setProduto(
+                        produtoService
+                                .findById(item.getProduto().getId()))
+        );
     }
 
     private void getRestaurante(Pedido pedido) {
         pedido.setRestaurante(
-                restauranteService.findTiposPagamentoRestaurante(pedido.getRestaurante().getId()));
+                restauranteService
+                        .findComTiposPagamento(pedido.getRestaurante().getId())
+        );
     }
 }

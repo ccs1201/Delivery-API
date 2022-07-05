@@ -41,6 +41,8 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
     private final MessageSource messageSource;
 
+    private static final String INVALID_FIELD_VALUES = "Valor inválido para um ou mais campos, verifique";
+
     @Autowired
     public ApiExceptionHandlerImpl(MessageSource messageSource) {
         this.messageSource = messageSource;
@@ -98,14 +100,14 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = "Exception in business logic.")
     public ResponseEntity<?> businessLogicExceptionHandler(BusinessLogicException e) {
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
     }
 
     @ExceptionHandler(ServiceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = "Exception in business logic.")
     public ResponseEntity<Object> serviceExceptionHandler(ServiceException e){
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
     }
 
     @ExceptionHandler(RepositoryEntityInUseException.class)
@@ -113,21 +115,22 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ApiResponse(responseCode = "409", description = "Record in use and cannot be removed")
     public ResponseEntity<?> entityInUseExceptionHandler(RepositoryEntityInUseException e) {
 
-        return buildResponseEntity(HttpStatus.CONFLICT, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.CONFLICT, e,
+                "Registro em uso, não pode ser removido, considere inativar para que não seja mais exibido");
     }
 
     @ExceptionHandler(RepositoryEntityPersistException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ApiResponse(responseCode = "500", description = "Record cannot be persisted")
     public ResponseEntity<?> entityPersistExceptionHandler(RepositoryEntityPersistException e) {
-        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e, INVALID_FIELD_VALUES);
     }
 
     @ExceptionHandler(GenericEntityUpdateMergerUtilException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = "Cannot merge/update data to persist")
     public ResponseEntity<?> genericEntityUpdateMergerUtilExceptionHandler(GenericEntityUpdateMergerUtilException e) {
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
     }
 
     @ExceptionHandler(RepositoryEntityUpdateException.class)
@@ -146,7 +149,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
             return iInvalidFormatExceptionHandler((InvalidFormatException) rootCause, HttpStatus.BAD_REQUEST);
         }
 
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
     }
 
     @ExceptionHandler(RepositoryDataIntegrityViolationException.class)
@@ -156,14 +159,14 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
         //   Throwable rootCause = ExceptionUtils.getRootCause(e);
 
-        return buildResponseEntity(HttpStatus.CONFLICT, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.CONFLICT, e, INVALID_FIELD_VALUES);
     }
 
     @ExceptionHandler(JsonParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = "Malformed data, check JSON syntax")
     public ResponseEntity<?> jsonParseExceptionHandler(JsonParseException e) {
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, "Invalid value for one or more fields");
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
     }
 
   /*  @ExceptionHandler(NullPointerException.class)
@@ -179,7 +182,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
 
         if (body == null) {
-            return buildResponseEntity(status, ex, "Invalid value for one or more fields");
+            return buildResponseEntity(status, ex, INVALID_FIELD_VALUES);
 
         } else {
             return new ResponseEntity<>(body, headers, status);
@@ -290,7 +293,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     private ResponseEntity<Object> propertyBindingExceptionHandler(PropertyBindingException e, HttpStatus status) {
 
         return buildResponseEntity(status,
-                String.format("Property %s does not exists.", e.getPropertyName()), "Invalid value for one or more fields");
+                String.format("Property %s does not exists.", e.getPropertyName()), INVALID_FIELD_VALUES);
     }
 
     private ResponseEntity<Object> iInvalidFormatExceptionHandler(InvalidFormatException e, HttpStatus status) {
