@@ -72,8 +72,9 @@ public class Pedido {
     }*/
 
     /**
+     * <p>
      * Efetua os cálculos dos valores do pedido.
-     *
+     *</p>
      * Calculando o subtotal e total (subtotal + taxa Entrega)
      *
      * RETURN void

@@ -32,10 +32,13 @@ public class ItemPedido {
     private Pedido pedido;
 
     /**
+     * <p>
      * Calcula o valor total
      * dos produtos.
-     *
-     * valorUnitario x quantidade.
+     *</p>
+     * <ul>
+     *     <li>valorUnitario x quantidade</li>
+     * </ul>
      *
      * RETURN void
      */
@@ -47,10 +50,11 @@ public class ItemPedido {
     }
 
     /**
+     * <p>
      * Garante que ao adicionar um
      * produto seu valor seja setado
      * em {@param} valorUnitario
-     *
+     *</p>
      * @param produto
      */
     public void setProduto(Produto produto){
