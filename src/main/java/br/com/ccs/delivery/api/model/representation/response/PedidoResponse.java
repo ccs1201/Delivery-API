@@ -11,7 +11,7 @@ import java.util.Collection;
 @Setter
 public class PedidoResponse {
 
-    private Long id;
+    private String codigo;
     private ClienteResponse cliente;
     private RestauranteSomenteNomeResponse restaurante;
     private BigDecimal subTotal;

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Setter
 public class ItemPedidoResponse {
 
-    @JsonIgnoreProperties({"id","descricao","ativo"})
+    @JsonIgnoreProperties({"id", "descricao", "ativo", "valor"})
     private ProdutoResponse produto;
     private Integer quantidade;
     private BigDecimal valorUnitario;

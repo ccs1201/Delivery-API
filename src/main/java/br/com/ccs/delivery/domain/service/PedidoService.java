@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PrePersist;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,9 @@ public class PedidoService {
     @Lazy
     private MunicipioService municipioService;
 
+    @Lazy
+    private UsuarioService usuarioService;
+
     public Collection<Pedido> findAllEager() {
         return repository.findAllEager();
     }
@@ -38,6 +42,14 @@ public class PedidoService {
         return repository.findByIdEager(id).orElseThrow(() ->
                 new RepositoryEntityNotFoundException(
                         String.format("Pedido ID: %d não encontrado.", id)
+                )
+        );
+    }
+
+    public Pedido findByCodigo(String codigo) {
+        return repository.findByCodigo(codigo).orElseThrow(
+                () -> new RepositoryEntityNotFoundException(
+                        String.format("Pedido código: %s, não encontrado.", codigo)
                 )
         );
     }
@@ -109,9 +121,17 @@ public class PedidoService {
         this.getProdutosForItensPedido(pedido.getItensPedido());
 
         this.validarItensPedido(pedido);
+        this.ValidarCliente(pedido);
 
         pedido.calcularPedido();
 
+    }
+
+    private void ValidarCliente(Pedido pedido) {
+        pedido.setCliente(
+                usuarioService.findaById(
+                        pedido.getCliente().getId()
+                ));
     }
 
     /**

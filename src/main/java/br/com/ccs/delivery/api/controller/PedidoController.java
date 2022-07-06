@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @RestController
@@ -33,6 +35,11 @@ public class PedidoController {
     @ResponseStatus(HttpStatus.OK)
     public PedidoResponse findById(@PathVariable Long pedidoId) {
         return mapper.toResponseModel(service.findById(pedidoId));
+    }
+    @GetMapping("/codigo")
+    @ResponseStatus(HttpStatus.OK)
+    public PedidoResponse getByCodigo(@RequestParam("pedido") @NotBlank String codigoPedido){
+        return mapper.toResponseModel(service.findByCodigo(codigoPedido));
     }
 
     @PostMapping

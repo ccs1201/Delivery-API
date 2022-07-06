@@ -7,12 +7,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -23,6 +25,10 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
+    private String codigo;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Restaurante restaurante;
 
@@ -79,7 +85,6 @@ public class Pedido {
      * </p>
      * Calculando o subtotal e total (subtotal + taxa Entrega)
      * <p>
-     *
      */
     public void calcularPedido() {
         this.taxaEntrega = this.getRestaurante().getTaxaEntrega();
@@ -121,22 +126,28 @@ public class Pedido {
         valorTotal = valorTotal.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public void cancelar(){
+    public void cancelar() {
         this.dataCancelamento = OffsetDateTime.now();
         this.statusPedido = StatusPedido.CANCELADO;
     }
 
-    public void entregar(){
+    public void entregar() {
         this.dataEntrega = OffsetDateTime.now();
         this.statusPedido = StatusPedido.ENTREGUE;
     }
 
-    public void confirmar(){
+    public void confirmar() {
         this.dataConfirmacao = OffsetDateTime.now();
         this.statusPedido = StatusPedido.CONFIRMADO;
     }
-    public void criar(){
+
+    public void criar() {
         this.statusPedido = StatusPedido.CRIADO;
+    }
+
+    @PrePersist
+    private void gerarCodigo() {
+        this.codigo = UUID.randomUUID().toString();
     }
 
     @Override
