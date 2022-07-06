@@ -121,6 +121,24 @@ public class Pedido {
         valorTotal = valorTotal.setScale(2, RoundingMode.HALF_UP);
     }
 
+    public void cancelar(){
+        this.dataCancelamento = OffsetDateTime.now();
+        this.statusPedido = StatusPedido.CANCELADO;
+    }
+
+    public void entregar(){
+        this.dataEntrega = OffsetDateTime.now();
+        this.statusPedido = StatusPedido.ENTREGUE;
+    }
+
+    public void confirmar(){
+        this.dataConfirmacao = OffsetDateTime.now();
+        this.statusPedido = StatusPedido.CONFIRMADO;
+    }
+    public void criar(){
+        this.statusPedido = StatusPedido.CRIADO;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

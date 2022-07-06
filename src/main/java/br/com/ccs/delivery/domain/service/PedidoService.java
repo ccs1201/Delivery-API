@@ -12,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,7 +65,7 @@ public class PedidoService {
 
         this.validarPedido(pedido);
 
-        pedido.setStatusPedido(StatusPedido.CRIADO);
+        pedido.criar();
 
         pedido = this.save(pedido);
         return this.findById(pedido.getId());
@@ -228,7 +227,7 @@ public class PedidoService {
      * O cancelamento somente é permitido se
      * o pedido estiver com {@link StatusPedido} CRIADO.
      *
-     * @param pedidoId O ID do pedido que será cancelado.
+     * @param pedidoId ID do pedido que será cancelado.
      */
     @Transactional
     public void cancelarPedido(Long pedidoId) {
@@ -239,8 +238,8 @@ public class PedidoService {
                     String.format("O pedido já esta %s e não pode ser cancelado.", pedido.getStatusPedido().getDescricao()));
         }
 
-        pedido.setStatusPedido(StatusPedido.CANCELADO);
-        pedido.setDataCancelamento(OffsetDateTime.now());
+        pedido.cancelar();
+
         repository.saveAndFlush(pedido);
     }
 
@@ -264,7 +263,7 @@ public class PedidoService {
      * Confirma a aceite de um pedido
      * pelo Restaurante
      *
-     * @param pedidoId O ID do pedido que será confirmado.
+     * @param pedidoId ID do pedido que será confirmado.
      */
     @Transactional
     public void confirmarPedido(Long pedidoId) {
@@ -276,8 +275,7 @@ public class PedidoService {
                     String.format("Pedido não pode ser confirmado pois seu Status é: %s", pedido.getStatusPedido().getDescricao()));
         }
 
-        pedido.setStatusPedido(StatusPedido.CONFIRMADO);
-        pedido.setDataConfirmacao(OffsetDateTime.now());
+        pedido.confirmar();
 
         repository.saveAndFlush(pedido);
     }
@@ -285,7 +283,7 @@ public class PedidoService {
     /**
      * Confirma a entrega de um pedido
      *
-     * @param pedidoId O ID do pedido que foi entregue.
+     * @param pedidoId ID do pedido que foi entregue.
      */
     @Transactional
     public void confirmarEntregaPedido(Long pedidoId) {
@@ -297,8 +295,8 @@ public class PedidoService {
                             " O Status atual do Pedido é: %s", pedido.getStatusPedido().getDescricao()));
         }
 
-        pedido.setStatusPedido(StatusPedido.ENTREGUE);
-        pedido.setDataEntrega(OffsetDateTime.now());
+        pedido.entregar();
+
         repository.saveAndFlush(pedido);
     }
 }
