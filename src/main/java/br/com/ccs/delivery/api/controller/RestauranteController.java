@@ -8,6 +8,7 @@ import br.com.ccs.delivery.api.model.representation.mapper.TipoPagamentoMapper;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
 import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
+import br.com.ccs.delivery.api.model.representation.response.view.RestauranteResponseView;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
@@ -17,8 +18,10 @@ import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGr
 import br.com.ccs.delivery.domain.repository.specification.RestauranteNomeLikeSpec;
 import br.com.ccs.delivery.domain.service.ProdutoService;
 import br.com.ccs.delivery.domain.service.RestauranteService;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,10 +48,41 @@ public class RestauranteController {
     @MapperQualifier(MapperQualifierType.USUARIO)
     MapperInterface<UsuarioResponse, UsuarioInput, Usuario> mapperUsuario;
 
+    @GetMapping(value = "/projecao")
+    @ResponseStatus(HttpStatus.OK)
+    public MappingJacksonValue getProjecao(@RequestParam(required = false) String projecao) {
+        Collection<RestauranteResponse> restauranteResponses = this.getAll();
+
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(restauranteResponses);
+
+        if (projecao == null) {
+            return mappingJacksonValue;
+        } else if (projecao.equals("nome")) {
+            mappingJacksonValue.setSerializationView(RestauranteResponseView.SomenteNome.class);
+        } else if (projecao.equals("resumo")) {
+            mappingJacksonValue.setSerializationView(RestauranteResponseView.Resumo.class);
+        }
+        return mappingJacksonValue;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<RestauranteResponse> findAll() {
+    public Collection<RestauranteResponse> getAll() {
         return mapper.toCollection(service.findAll());
+    }
+
+    @GetMapping(params = "projecao=resumo")
+    @ResponseStatus(HttpStatus.OK)
+    @JsonView(RestauranteResponseView.Resumo.class)
+    public Collection<RestauranteResponse> getResumido() {
+        return this.getAll();
+    }
+
+    @GetMapping(params = "projecao=nome")
+    @ResponseStatus(HttpStatus.OK)
+    @JsonView(RestauranteResponseView.SomenteNome.class)
+    public Collection<RestauranteResponse> getsomentenome() {
+        return this.getAll();
     }
 
     @GetMapping("{restauranteId}")

@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.Collection;
 
 @JsonRootName("cozinhas")
-@Data
+@Getter
+@Setter
 public class CozinhaXmlResponse {
 
     @NonNull
@@ -19,7 +22,6 @@ public class CozinhaXmlResponse {
     private Collection<Cozinha> cozinhas;
 
 
-
-
-
+    public CozinhaXmlResponse(Collection<Cozinha> all) {
+    }
 }
