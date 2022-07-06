@@ -75,7 +75,7 @@ public class RestauranteController {
     @GetMapping(params = "projecao=nome")
     @ResponseStatus(HttpStatus.OK)
     @JsonView(RestauranteResponseView.SomenteNome.class)
-    public Collection<RestauranteResponse> getsomentenome() {
+    public Collection<RestauranteResponse> getSomenteNome() {
         return this.getAll();
     }
 
