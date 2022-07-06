@@ -58,7 +58,7 @@ public class RestauranteController {
         if (projecao == null) {
             return mappingJacksonValue;
         } else if (projecao.equals("nome")) {
-            mappingJacksonValue.setSerializationView(RestauranteResponseView.SomenteNome.class);
+            mappingJacksonValue.setSerializationView(RestauranteResponseView.Nome.class);
         } else if (projecao.equals("resumo")) {
             mappingJacksonValue.setSerializationView(RestauranteResponseView.Resumo.class);
         }
@@ -74,8 +74,8 @@ public class RestauranteController {
 
     @GetMapping(params = "projecao=nome")
     @ResponseStatus(HttpStatus.OK)
-    @JsonView(RestauranteResponseView.SomenteNome.class)
-    public Collection<RestauranteResponse> getSomenteNome() {
+    @JsonView(RestauranteResponseView.Nome.class)
+    public Collection<RestauranteResponse> getNome() {
         return this.getAll();
     }
 

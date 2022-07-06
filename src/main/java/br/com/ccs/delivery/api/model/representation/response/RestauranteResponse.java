@@ -13,10 +13,10 @@ import java.math.BigDecimal;
 @Setter
 public class RestauranteResponse {
 
-    @JsonView({RestauranteResponseView.Resumo.class, RestauranteResponseView.SomenteNome.class})
+    @JsonView({RestauranteResponseView.Resumo.class, RestauranteResponseView.Nome.class})
     private Long id;
 
-    @JsonView({RestauranteResponseView.Resumo.class, RestauranteResponseView.SomenteNome.class})
+    @JsonView({RestauranteResponseView.Resumo.class, RestauranteResponseView.Nome.class})
     private String nome;
 
     @JsonView(RestauranteResponseView.Resumo.class)

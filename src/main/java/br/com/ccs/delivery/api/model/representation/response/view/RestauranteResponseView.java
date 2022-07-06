@@ -5,6 +5,6 @@ public interface RestauranteResponseView {
     interface Resumo {
     }
 
-    interface SomenteNome {
+    interface Nome {
     }
 }
