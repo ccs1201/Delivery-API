@@ -67,15 +67,9 @@ public class RestauranteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(RestauranteResponseView.Resumo.class)
     public Collection<RestauranteResponse> getAll() {
         return mapper.toCollection(service.findAll());
-    }
-
-    @GetMapping(params = "projecao=resumo")
-    @ResponseStatus(HttpStatus.OK)
-    @JsonView(RestauranteResponseView.Resumo.class)
-    public Collection<RestauranteResponse> getResumido() {
-        return this.getAll();
     }
 
     @GetMapping(params = "projecao=nome")
