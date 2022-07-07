@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.api.exceptionhandler;
 
+import br.com.ccs.delivery.core.exception.FieldValidationException;
 import br.com.ccs.delivery.core.validations.exceptions.EntityValidationException;
 import br.com.ccs.delivery.domain.model.util.exception.GenericEntityUpdateMergerUtilException;
 import br.com.ccs.delivery.domain.service.exception.*;
@@ -57,7 +58,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ApiResponse(responseCode = "500", description = "An unexpected error occur.")
     public ResponseEntity<Object> unCaughtHandler(Exception e) {
-       // e.printStackTrace();
+        // e.printStackTrace();
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
                 String.format("Uncaught error, please contact SYS Admin Details: %s", e.getMessage()), "An unexpected error occur.");
     }
@@ -65,16 +66,16 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ExceptionHandler(value = {DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     @ApiResponse(responseCode = "409", description = "Data integrity violation.")
-    ResponseEntity<Object> constraintViolationExceptionHandler(ConstraintViolationException e){
+    ResponseEntity<Object> constraintViolationExceptionHandler(ConstraintViolationException e) {
 
         Throwable rootCause = ExceptionUtils.getRootCause(e);
 
-        return buildResponseEntity(HttpStatus.CONFLICT,rootCause.getMessage() ,"Data integrity violation. Check Detail:");
+        return buildResponseEntity(HttpStatus.CONFLICT, rootCause.getMessage(), "Data integrity violation. Check Detail:");
     }
 
     @ExceptionHandler(EntityValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ApiResponse(responseCode = "400", description = "Invalid Value for one or mores fields")
+    @ApiResponse(responseCode = "400", description = INVALID_FIELD_VALUES)
     public ResponseEntity<Object> entityValidationExceptionHandler(EntityValidationException e) {
 
         ApiValidationErrorResponse apiValidationErrorResponse = ApiValidationErrorResponse.builder()
@@ -86,6 +87,14 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiValidationErrorResponse);
+    }
+
+    @ExceptionHandler(FieldValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(responseCode = "400", description = INVALID_FIELD_VALUES)
+    public ResponseEntity<Object> fieldValidationExceptionHandler(FieldValidationException e) {
+        return buildResponseEntity(
+                HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
     }
 
 
@@ -106,7 +115,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ExceptionHandler(ServiceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = "Exception in business logic.")
-    public ResponseEntity<Object> serviceExceptionHandler(ServiceException e){
+    public ResponseEntity<Object> serviceExceptionHandler(ServiceException e) {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
     }
 

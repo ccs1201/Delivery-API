@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.core.validations.implementation;
+package br.com.ccs.delivery.core.validations.annotations.implementation;
 
 import br.com.ccs.delivery.core.validations.annotations.ExemploValidadorDeUmNumeroMultiplo;
 

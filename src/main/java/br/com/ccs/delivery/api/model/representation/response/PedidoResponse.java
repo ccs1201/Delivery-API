@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.api.model.representation.response;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.Collection;
 
 @Getter
 @Setter
+@JsonFilter("pedidoFilter")
 public class PedidoResponse {
 
     private String codigo;

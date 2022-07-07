@@ -1,6 +1,6 @@
 package br.com.ccs.delivery.core.validations.annotations;
 
-import br.com.ccs.delivery.core.validations.implementation.MultiploValidator;
+import br.com.ccs.delivery.core.validations.annotations.implementation.MultiploValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
