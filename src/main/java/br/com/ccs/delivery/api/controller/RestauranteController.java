@@ -8,7 +8,7 @@ import br.com.ccs.delivery.api.model.representation.mapper.TipoPagamentoMapper;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
 import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
-import br.com.ccs.delivery.api.model.representation.response.view.RestauranteResponseView;
+import br.com.ccs.delivery.api.model.representation.response.jsonview.RestauranteResponseView;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;

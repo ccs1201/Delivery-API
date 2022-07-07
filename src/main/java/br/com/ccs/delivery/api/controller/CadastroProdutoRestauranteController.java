@@ -29,8 +29,15 @@ public class CadastroProdutoRestauranteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ProdutoResponse> getProdutos(@PathVariable @Positive Long restauranteId) {
-        Restaurante restaurante = service.findComProdutos(restauranteId);
+    public Collection<ProdutoResponse> getProdutos(@PathVariable @Positive Long restauranteId,
+                                                   @RequestParam(required = false) Boolean ativos) {
+        Restaurante restaurante;
+
+        if (ativos == null) {
+            restaurante = service.findProdutos(restauranteId);
+        } else {
+            restaurante = service.findProdutos(restauranteId, ativos);
+        }
 
         return produtoMapper.toCollection(restaurante.getProdutos());
     }
@@ -48,7 +55,7 @@ public class CadastroProdutoRestauranteController {
 
         produtoService.save(produto);
 
-        return produtoMapper.toCollection(service.findComProdutos(restauranteId).getProdutos());
+        return produtoMapper.toCollection(service.findProdutos(restauranteId, true).getProdutos());
     }
 
     @PutMapping("{produtoId}")

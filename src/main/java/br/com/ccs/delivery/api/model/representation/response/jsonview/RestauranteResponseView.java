@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.api.model.representation.response.view;
+package br.com.ccs.delivery.api.model.representation.response.jsonview;
 
 public interface RestauranteResponseView {
 

@@ -1,5 +1,9 @@
-package br.com.ccs.delivery.api.model.representation.response;
+package br.com.ccs.delivery.api.model.representation.response.filter;
 
+import br.com.ccs.delivery.api.model.representation.response.ClienteResponse;
+import br.com.ccs.delivery.api.model.representation.response.EnderecoResponse;
+import br.com.ccs.delivery.api.model.representation.response.ItemPedidoResponse;
+import br.com.ccs.delivery.api.model.representation.response.RestauranteSomenteNomeResponse;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,10 +11,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Collection;
-
 @Getter
 @Setter
-public class PedidoResponse {
+@JsonFilter("pedidoFilter")
+public class PedidoResponseFilter {
 
     private String codigo;
     private ClienteResponse cliente;
@@ -25,5 +29,4 @@ public class PedidoResponse {
     private String statusPedido;
     private EnderecoResponse enderecoEntrega;
     private Collection<ItemPedidoResponse> itensPedido;
-
 }

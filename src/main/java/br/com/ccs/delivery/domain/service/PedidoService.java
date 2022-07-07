@@ -12,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.PrePersist;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -152,8 +151,8 @@ public class PedidoService {
         Set<Produto> produtosInvalidos = new HashSet<>();
 
         pedido.getRestaurante().setProdutos(
-                restauranteService.findComProdutos(
-                        pedido.getRestaurante().getId()).getProdutos());
+                restauranteService.findProdutos(
+                        pedido.getRestaurante().getId(), true).getProdutos());
 
         pedido.getItensPedido().forEach(itemPedido -> {
 

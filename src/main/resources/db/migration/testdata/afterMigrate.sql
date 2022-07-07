@@ -73,7 +73,7 @@ INSERT INTO restaurante_tipo_pagamento (restaurante_id, tipo_pagamento_id) VALUE
 INSERT INTO restaurante_tipo_pagamento (restaurante_id, tipo_pagamento_id) VALUES (4,1),(4,2),(4,3),(4,4),(4,5),(4,6),(4,7),(5,1),(5,2),(5,3),(5,4),(5,5),(5,6),(5,7),(6,1);
 INSERT INTO restaurante_tipo_pagamento (restaurante_id, tipo_pagamento_id) VALUES (6,2),(6,3),(6,4),(6,5),(6,6),(6,7),(7,1),(7,2),(7,3),(7,4),(7,5),(7,6),(7,7),(8,1),(8,2),(8,3),(8,4),(8,5),(8,6),(8,7);
 INSERT INTO restaurante_tipo_pagamento (restaurante_id, tipo_pagamento_id) VALUES (9,1),(9,2),(9,3),(9,4),(9,5),(9,6),(9,7),(10,2),(10,3),(10,1),(10,4);
-insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Porco com molho agridoce', 'Deliciosa carne suína ao molho especial', 78.90, 1, 1);
+insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Porco com molho agridoce', 'Deliciosa carne suína ao molho especial', 78.90, 0, 1);
 insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Camarão tailandês', '16 camarões grandes ao molho picante', 110, 1, 1);
 insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Salada picante com carne grelhada', 'Salada de folhas com cortes finos de carne bovina grelhada e nosso molho especial de pimenta vermelha', 87.20, 1, 2);
 insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Garlic Naan', 'Pão tradicional indiano com cobertura de alho', 21, 1, 3);

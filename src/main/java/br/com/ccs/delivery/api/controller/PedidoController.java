@@ -2,7 +2,9 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.PedidoInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.api.model.representation.mapper.PedidoResponseFilterMapper;
 import br.com.ccs.delivery.api.model.representation.response.PedidoResponse;
+import br.com.ccs.delivery.api.model.representation.response.filter.PedidoResponseFilter;
 import br.com.ccs.delivery.core.exception.FieldValidationException;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.Arrays;
 import java.util.Collection;
 
 @RestController
@@ -30,14 +31,15 @@ public class PedidoController {
     private PedidoService service;
     @MapperQualifier(MapperQualifierType.PEDIDO)
     private MapperInterface<PedidoResponse, PedidoInput, Pedido> mapper;
-
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public Collection<PedidoResponse> getAll() {
-//        return mapper.toCollection(service.findAllEager());
-//    }
+    private PedidoResponseFilterMapper pedidoResponseFilterMapper;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<PedidoResponse> getAll() {
+        return mapper.toCollection(service.findAllEager());
+    }
+
+    @GetMapping("/fields")
     @ResponseStatus(HttpStatus.OK)
     public MappingJacksonValue getAll(@RequestParam(required = false) String fields) {
 
@@ -46,9 +48,7 @@ public class PedidoController {
         if (StringUtils.isNotBlank(fields)) {
             fieldsArray = fields.split(",");
 
-            while (Arrays.stream(fieldsArray).iterator().hasNext()) {
-
-                String fieldString = Arrays.stream(fieldsArray).iterator().next();
+            for (String fieldString : fieldsArray) {
 
                 if (ReflectionUtils.findField(PedidoResponse.class, fieldString) == null) {
                     throw new FieldValidationException(
@@ -58,10 +58,10 @@ public class PedidoController {
         }
 
 
-        Collection<PedidoResponse> pedidoResponses =
-                mapper.toCollection(service.findAllEager());
+        Collection<PedidoResponseFilter> pedidoResponseFilter =
+                pedidoResponseFilterMapper.toCollection(service.findAllEager());
 
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(pedidoResponses);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(pedidoResponseFilter);
 
         SimpleFilterProvider filter = new SimpleFilterProvider();
 
@@ -81,7 +81,11 @@ public class PedidoController {
 
     @GetMapping("{pedidoId}")
     @ResponseStatus(HttpStatus.OK)
-    public PedidoResponse findById(@PathVariable Long pedidoId) {
+    public PedidoResponse getById(@PathVariable Long pedidoId) {
+
+        SimpleFilterProvider filter = new SimpleFilterProvider();
+        filter.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
+
         return mapper.toResponseModel(service.findById(pedidoId));
     }
 

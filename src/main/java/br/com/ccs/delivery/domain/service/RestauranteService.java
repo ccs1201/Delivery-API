@@ -244,11 +244,19 @@ public class RestauranteService {
         }
     }
 
-    public Restaurante findComProdutos(Long restauranteId) {
+    public Restaurante findProdutos(Long restauranteId, Boolean ativos) {
 
         checkIfRestauranteExists(restauranteId);
 
-        return repository.findComProdutos(restauranteId)
+        return repository.findProdutos(restauranteId, ativos)
+                .orElseThrow(() -> new RepositoryEntityNotFoundException(
+                        String.format("Nenhum Produto encontrado para o restaurante: %d.", restauranteId)));
+
+    }
+
+    public Restaurante findProdutos(Long restauranteId) {
+
+        return repository.findProdutos(restauranteId)
                 .orElseThrow(() -> new RepositoryEntityNotFoundException(
                         String.format("Nenhum Produto encontrado para o restaurante: %d.", restauranteId)));
 

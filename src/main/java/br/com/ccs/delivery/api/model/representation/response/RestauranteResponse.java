@@ -1,8 +1,7 @@
 package br.com.ccs.delivery.api.model.representation.response;
 
-import br.com.ccs.delivery.api.model.representation.response.view.RestauranteResponseView;
+import br.com.ccs.delivery.api.model.representation.response.jsonview.RestauranteResponseView;
 import br.com.ccs.delivery.domain.model.component.Endereco;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;

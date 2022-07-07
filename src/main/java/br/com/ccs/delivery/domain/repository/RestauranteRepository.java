@@ -34,9 +34,13 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
             nativeQuery = true)
     void deleteTipoPagamentoByIdFromRestauranteId(Long restauranteId, Long tipoPagamentoId);
 
-    @Query("select r from  Restaurante r join fetch r.produtos where r.id=:id")
-    Optional<Restaurante> findComProdutos(Long id);
+    @Query("select r from  Restaurante r join fetch r.produtos p where r.id=:id")
+    Optional<Restaurante> findProdutos(Long id);
+    @Query("select r from  Restaurante r join fetch r.produtos p where r.id=:id and p.ativo=:ativo ")
+    Optional<Restaurante> findProdutos(Long id, Boolean ativo);
 
     @Query("select r from  Restaurante  r join fetch  r.usuarios where r.id =:restauranteId")
     Optional<Restaurante> findUsuarios(Long restauranteId);
+
+
 }
