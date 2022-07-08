@@ -1,7 +1,10 @@
 package br.com.ccs.delivery.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -17,7 +20,8 @@ public final class ApiValidationErrorResponse {
     private OffsetDateTime timestamp = OffsetDateTime.now();
     private int status;
     private String type;
-    private final String title = "One or more fields are not valid. Please check...";
+    @Setter(AccessLevel.NONE)
+    private final String title = "Um ou mais campos não são válidos, por favor verifique...";
     @Builder.Default
     private Collection<FieldValidationError> details = new LinkedList<>();
 

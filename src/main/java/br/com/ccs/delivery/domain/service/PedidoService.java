@@ -281,7 +281,7 @@ public class PedidoService {
     }
 
     /**
-     * Confirma a aceite de um pedido
+     * Confirma o aceite de um pedido
      * pelo Restaurante
      *
      * @param pedidoId ID do pedido que será confirmado.

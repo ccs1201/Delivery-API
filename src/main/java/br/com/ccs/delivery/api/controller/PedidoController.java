@@ -42,7 +42,7 @@ public class PedidoController {
 
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<PedidoResponse> filter(@Valid PedidoFilter pedidoFilter){
+    public Collection<PedidoResponse> filter(PedidoFilter pedidoFilter){
         return mapper.toCollection(service.filter(pedidoFilter));
     }
 

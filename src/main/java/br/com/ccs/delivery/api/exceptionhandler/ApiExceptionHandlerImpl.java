@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,16 +41,13 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler implements ApiExceptionHandlerInterface {
 
-    private final MessageSource messageSource;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final String INVALID_FIELD_VALUES = "Valor inválido para um ou mais campos, verifique";
 
-    @Autowired
-    public ApiExceptionHandlerImpl(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
 
-    /*
+    /**
      * Handler Genérico para capturar
      * exceções não tratadas ou não
      * previstas pela nossa classe Handler
@@ -346,6 +344,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         e.forEach(error -> {
 
             if (error instanceof FieldError fieldError) {
+
                 apiValidationErrorResponse.getDetails().add(
                         ApiValidationErrorResponse.FieldValidationError
                                 .builder()
@@ -363,5 +362,24 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                                 .build());
             }
         });
+    }
+
+
+    @Override
+    protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return this.bindExceptionHandler(ex);
+    }
+
+    private ResponseEntity<Object> bindExceptionHandler(BindException e) {
+
+        ApiValidationErrorResponse apiValidationErrorResponse = ApiValidationErrorResponse.builder()
+                .type(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+        getBindingResults(e.getBindingResult().getAllErrors(), apiValidationErrorResponse);
+
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiValidationErrorResponse);
     }
 }
