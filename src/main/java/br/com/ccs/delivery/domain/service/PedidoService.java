@@ -5,6 +5,8 @@ import br.com.ccs.delivery.domain.model.entity.Pedido;
 import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.StatusPedido;
 import br.com.ccs.delivery.domain.repository.PedidoRepository;
+import br.com.ccs.delivery.domain.repository.specification.PedidoSpecs;
+import br.com.ccs.delivery.domain.repository.specification.filter.PedidoFilter;
 import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
@@ -317,5 +319,15 @@ public class PedidoService {
         pedido.entregar();
 
         repository.saveAndFlush(pedido);
+    }
+
+    public Collection<Pedido> filter(PedidoFilter pedidoFilter) {
+        Collection<Pedido> pedidos = repository.findAll(PedidoSpecs.applyFilter(pedidoFilter));
+
+        if (pedidos.isEmpty()) {
+            throw new RepositoryEntityNotFoundException("Nenhum registro localizado com os parâmetros informados.");
+        }
+
+        return pedidos;
     }
 }

@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
 
+@SuppressWarnings("MVCPathVariableInspection")
 @RestController
 @RequestMapping("/api/restaurantes/{restauranteId}/produtos")
 @AllArgsConstructor
