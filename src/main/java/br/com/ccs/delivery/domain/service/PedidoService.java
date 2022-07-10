@@ -11,6 +11,8 @@ import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,10 @@ public class PedidoService {
 
     @Lazy
     private UsuarioService usuarioService;
+
+    public Page<Pedido> findAllEager(Pageable pageable) {
+        return repository.findAllEagerPageable(pageable);
+    }
 
     public Collection<Pedido> findAllEager() {
         return repository.findAllEager();
@@ -323,6 +329,14 @@ public class PedidoService {
 
     public Collection<Pedido> filter(PedidoFilter pedidoFilter) {
         Collection<Pedido> pedidos = repository.findAll(PedidoSpecs.applyFilter(pedidoFilter));
+
+        if (pedidos.isEmpty()) {
+            throw new RepositoryEntityNotFoundException("Nenhum registro localizado com os parâmetros informados.");
+        }
+
+        return pedidos;
+    } public Page<Pedido> filter(PedidoFilter pedidoFilter, Pageable pageable) {
+        Page<Pedido> pedidos = repository.findAll(PedidoSpecs.applyFilter(pedidoFilter), pageable);
 
         if (pedidos.isEmpty()) {
             throw new RepositoryEntityNotFoundException("Nenhum registro localizado com os parâmetros informados.");

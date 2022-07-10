@@ -15,6 +15,9 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.util.ReflectionUtils;
@@ -36,14 +39,14 @@ public class PedidoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<PedidoResponse> getAll() {
-        return mapper.toCollection(service.findAllEager());
+    public Collection<PedidoResponse> getAll(Pageable pageable) {
+        return mapper.toCollection(service.findAllEager(pageable));
     }
 
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<PedidoResponse> filter(PedidoFilter pedidoFilter){
-        return mapper.toCollection(service.filter(pedidoFilter));
+    public Page<PedidoResponse> filter(PedidoFilter pedidoFilter, @PageableDefault(size = 5) Pageable pageable){
+        return mapper.toPage(service.filter(pedidoFilter, pageable));
     }
 
     @GetMapping("/fields")
