@@ -1,17 +1,20 @@
 package br.com.ccs.delivery.api.controller;
 
+import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
+import br.com.ccs.delivery.api.model.representation.input.TipoPagamentoInput;
 import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
 import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
-import br.com.ccs.delivery.api.model.representation.mapper.ProdutoMapper;
-import br.com.ccs.delivery.api.model.representation.mapper.TipoPagamentoMapper;
+import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
 import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
 import br.com.ccs.delivery.api.model.representation.response.jsonview.RestauranteResponseView;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
+import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
+import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
 import br.com.ccs.delivery.domain.repository.specification.RestauranteComFreteGratisSpec;
@@ -20,6 +23,9 @@ import br.com.ccs.delivery.domain.service.ProdutoService;
 import br.com.ccs.delivery.domain.service.RestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +48,11 @@ public class RestauranteController {
     @MapperQualifier(MapperQualifierType.RESTAURANTE)
     MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> mapper;
 
-    TipoPagamentoMapper tipoPagamentoMapper;
-    ProdutoMapper produtoMapper;
+    @MapperQualifier(MapperQualifierType.TIPOPAGAMENTO)
+    MapperInterface<TipoPagamentoResponse, TipoPagamentoInput, TipoPagamento> tipoPagamentoMapper;
+
+    @MapperQualifier(MapperQualifierType.PRODUTO)
+    MapperInterface<ProdutoResponse, ProdutoInput, Produto> produtoMapper;
 
     @MapperQualifier(MapperQualifierType.USUARIO)
     MapperInterface<UsuarioResponse, UsuarioInput, Usuario> mapperUsuario;
@@ -51,7 +60,7 @@ public class RestauranteController {
     @GetMapping(value = "/projecao")
     @ResponseStatus(HttpStatus.OK)
     public MappingJacksonValue getProjecao(@RequestParam(required = false) String projecao) {
-        Collection<RestauranteResponse> restauranteResponses = this.getAll();
+        Collection<RestauranteResponse> restauranteResponses = mapper.toCollection(service.findAll());
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(restauranteResponses);
 
@@ -67,16 +76,18 @@ public class RestauranteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @JsonView(RestauranteResponseView.Resumo.class)
-    public Collection<RestauranteResponse> getAll() {
-        return mapper.toCollection(service.findAll());
+    // @JsonView(RestauranteResponseView.Resumo.class) //não funciona com page
+    public Page<RestauranteResponse> getAll(@PageableDefault(size = 5) Pageable pageable) {
+        Page<Restaurante> restaurantePage = service.findAll(pageable);
+
+        return mapper.toPage(restaurantePage);
     }
 
     @GetMapping(params = "projecao=nome")
     @ResponseStatus(HttpStatus.OK)
     @JsonView(RestauranteResponseView.Nome.class)
     public Collection<RestauranteResponse> getNome() {
-        return this.getAll();
+        return mapper.toCollection(service.findAll());
     }
 
     @GetMapping("{restauranteId}")

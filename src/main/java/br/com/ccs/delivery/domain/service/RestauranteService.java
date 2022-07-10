@@ -12,6 +12,8 @@ import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -45,6 +47,10 @@ public class RestauranteService {
 
     public Collection<Restaurante> findAll() {
         return repository.findAllEager();
+    }
+
+    public Page<Restaurante> findAll(Pageable pageable) {
+        return repository.findAllEagerPageable(pageable);
     }
 
     public Restaurante findById(Long id) {
