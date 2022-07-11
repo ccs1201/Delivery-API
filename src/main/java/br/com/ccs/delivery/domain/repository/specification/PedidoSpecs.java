@@ -1,9 +1,11 @@
 package br.com.ccs.delivery.domain.repository.specification;
 
 import br.com.ccs.delivery.domain.model.entity.Pedido;
+import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.repository.specification.filter.PedidoFilter;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 
@@ -12,8 +14,8 @@ public class PedidoSpecs {
 
     public static Specification<Pedido> applyFilter(PedidoFilter pedidoFilter) {
         return (root, query, builder) -> {
-            /**
-             *Se o retorna da query for um pedido
+            /*
+             *Se o retorno da query for um pedido
              * faz o fetch, caso contrário não faz
              * o fetch.
              *
@@ -22,22 +24,18 @@ public class PedidoSpecs {
              * nosso filtro, dado que count não pode conter fetch
              */
             if (Pedido.class.equals(query.getResultType())) {
+                root.fetch("cliente");
+
                 root.fetch("tipoPagamento");
 
-                root.fetch("itensPedido")
-                        .fetch("produto");
+                root.fetch("itensPedido").fetch("produto");
 
                 root.fetch("enderecoEntrega")
                         .fetch("municipio")
                         .fetch("estado");
 
-                root.fetch("cliente");
-
                 root.fetch("restaurante");
             }
-
-            query.distinct(true);
-
 
             var predicates = new ArrayList<Predicate>();
 

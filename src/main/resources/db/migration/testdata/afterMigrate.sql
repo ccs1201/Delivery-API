@@ -94,7 +94,7 @@ insert into restaurante_usuario (restaurante_id, usuario_id) values (1,1),(2,2),
 insert into pedido (id, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
                     logradouro, numero, complemento, bairro,
                     status_pedido, data_criacao, sub_total, taxa_entrega, valor_total, codigo)
-values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+values (1, 1, 1, 1, 499, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
         'CRIADO', utc_timestamp, 298.90, 10.0, 308.90, 'b46c7aee-fd4a-11ec-957d-0242ac110002');
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
