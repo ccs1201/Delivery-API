@@ -327,15 +327,7 @@ public class PedidoService {
         repository.saveAndFlush(pedido);
     }
 
-    public Collection<Pedido> filter(PedidoFilter pedidoFilter) {
-        Collection<Pedido> pedidos = repository.findAll(PedidoSpecs.applyFilter(pedidoFilter));
-
-        if (pedidos.isEmpty()) {
-            throw new RepositoryEntityNotFoundException("Nenhum registro localizado com os parâmetros informados.");
-        }
-
-        return pedidos;
-    } public Page<Pedido> filter(PedidoFilter pedidoFilter, Pageable pageable) {
+    public Page<Pedido> filter(PedidoFilter pedidoFilter, Pageable pageable) {
         Page<Pedido> pedidos = repository.findAll(PedidoSpecs.applyFilter(pedidoFilter), pageable);
 
         if (pedidos.isEmpty()) {

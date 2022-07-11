@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 
-//@JsonComponent
+@JsonComponent
 public class PageJsonSerializer extends JsonSerializer<Page<?>> {
     @Override
     public void serialize(Page<?> page, JsonGenerator jsonGenerator,
