@@ -1,6 +1,5 @@
 package br.com.ccs.delivery.api.model.representation.response;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +13,7 @@ public class PedidoResponse {
 
     private String codigo;
     private ClienteResponse cliente;
+    //private String clienteNome;
     private RestauranteSomenteNomeResponse restaurante;
     private BigDecimal subTotal;
     private BigDecimal taxaEntrega;

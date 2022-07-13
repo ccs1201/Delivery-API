@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.domain.repository.specification;
+package br.com.ccs.delivery.domain.model.specification;
 
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import org.springframework.data.jpa.domain.Specification;

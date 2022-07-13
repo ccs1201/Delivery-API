@@ -9,7 +9,7 @@ import br.com.ccs.delivery.core.exception.FieldValidationException;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Pedido;
-import br.com.ccs.delivery.domain.repository.specification.filter.PedidoFilter;
+import br.com.ccs.delivery.domain.model.specification.filter.PedidoFilter;
 import br.com.ccs.delivery.domain.service.PedidoService;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -39,8 +39,8 @@ public class PedidoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<PedidoResponse> getAll(Pageable pageable) {
-        return mapper.toCollection(service.findAllEager(pageable));
+    public Page<PedidoResponse> getAll(Pageable pageable) {
+        return mapper.toPage(service.findAllEager(pageable));
     }
 
     @GetMapping("/filter")

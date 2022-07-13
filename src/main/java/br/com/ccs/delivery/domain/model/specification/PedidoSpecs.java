@@ -1,11 +1,9 @@
-package br.com.ccs.delivery.domain.repository.specification;
+package br.com.ccs.delivery.domain.model.specification;
 
 import br.com.ccs.delivery.domain.model.entity.Pedido;
-import br.com.ccs.delivery.domain.model.entity.Produto;
-import br.com.ccs.delivery.domain.repository.specification.filter.PedidoFilter;
+import br.com.ccs.delivery.domain.model.specification.filter.PedidoFilter;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 
@@ -19,11 +17,12 @@ public class PedidoSpecs {
              * faz o fetch, caso contrário não faz
              * o fetch.
              *
-             * Isso evita uma @link org.{@link org.hibernate.QueryException}
+             * Isso evita uma {@link org.hibernate.QueryException}
              * quando o hibernate tenta fazer um select count() usando
              * nosso filtro, dado que count não pode conter fetch
              */
             if (Pedido.class.equals(query.getResultType())) {
+
                 root.fetch("cliente");
 
                 root.fetch("tipoPagamento");

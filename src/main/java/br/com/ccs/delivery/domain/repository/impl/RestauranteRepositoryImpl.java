@@ -3,7 +3,7 @@ package br.com.ccs.delivery.domain.repository.impl;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.repository.RestauranteRepositoryQueries;
-import br.com.ccs.delivery.domain.repository.specification.RestauranteSpecs;
+import br.com.ccs.delivery.domain.model.specification.RestauranteSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;

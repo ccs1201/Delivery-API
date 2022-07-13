@@ -20,7 +20,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>, JpaSpecif
     Collection<Pedido> findAllEager();
 
     @Query(value = "select distinct p from Pedido p join fetch p.tipoPagamento join fetch p.itensPedido itens join fetch p.enderecoEntrega.municipio m join fetch p.cliente " +
-            "join fetch itens.produto join fetch m.estado join fetch p.restaurante",
+            "join fetch itens.produto prod join fetch m.estado join fetch p.restaurante",
             countQuery = "select count (p) from Pedido p")
     Page<Pedido> findAllEagerPageable(Pageable pageable);
 

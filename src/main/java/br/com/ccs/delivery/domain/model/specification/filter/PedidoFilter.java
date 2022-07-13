@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.domain.repository.specification.filter;
+package br.com.ccs.delivery.domain.model.specification.filter;
 
 import lombok.Getter;
 import lombok.Setter;
