@@ -7,5 +7,5 @@ import java.util.Collection;
 
 public interface VendaQueryService {
 
-    Collection<VendaDiaria> findVendasDiarias(VendaDiariaFilter vendaDiariaFilter);
+    Collection<VendaDiaria> findVendasDiarias(VendaDiariaFilter vendaDiariaFilter, String timeOffSet);
 }

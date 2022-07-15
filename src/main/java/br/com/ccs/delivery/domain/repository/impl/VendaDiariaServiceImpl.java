@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -22,19 +23,24 @@ public class VendaDiariaServiceImpl implements VendaQueryService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public Collection<VendaDiaria> findVendasDiarias(VendaDiariaFilter vendaDiariaFilter) {
+    public Collection<VendaDiaria> findVendasDiarias(VendaDiariaFilter vendaDiariaFilter, String timeOffset) {
 
 
         var builder = entityManager.getCriteriaBuilder();
         var query = builder.createQuery(VendaDiaria.class);
         var root = query.from(Pedido.class);
 
-        var functionData = builder.function(
-                "date", Date.class, root.get("dataCriacao"));
+        //função do MySQL para conversão de offSetDateTime
+        var functionConverteTimeZone = builder.function(
+            "convert_tz", Date.class, root.get("dataCriacao"), builder.literal("+00:00"), builder.literal(timeOffset));
+
+        //Função do MySQL para converter um DateTime para Date
+        var functionConvertDateTimeToDate = builder.function(
+                "date", Date.class, functionConverteTimeZone);
 
         var selection = builder.construct(
                 VendaDiaria.class,
-                functionData,
+                functionConvertDateTimeToDate,
                 builder.count(root.get("id")),
                 builder.sum(root.get("valorTotal")));
 
@@ -55,7 +61,7 @@ public class VendaDiariaServiceImpl implements VendaQueryService {
         }
 
         query.select(selection);
-        query.groupBy(functionData);
+        query.groupBy(functionConvertDateTimeToDate);
         query.where(predicates.toArray(new Predicate[0]));
 
         return entityManager.createQuery(query).getResultList();

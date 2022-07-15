@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.Arrays;
 import java.util.Collection;
 
 @RestController
@@ -45,7 +46,7 @@ public class PedidoController {
 
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public Page<PedidoResponse> filter(PedidoFilter pedidoFilter, @PageableDefault(size = 1) Pageable pageable){
+    public Page<PedidoResponse> filter(PedidoFilter pedidoFilter, @PageableDefault(size = 1) Pageable pageable) {
         return mapper.toPage(service.filter(pedidoFilter, pageable));
     }
 
@@ -58,13 +59,12 @@ public class PedidoController {
         if (StringUtils.isNotBlank(fields)) {
             fieldsArray = fields.split(",");
 
-            for (String fieldString : fieldsArray) {
-
-                if (ReflectionUtils.findField(PedidoResponse.class, fieldString) == null) {
+            Arrays.stream(fieldsArray).forEach(field -> {
+                if (ReflectionUtils.findField(PedidoResponse.class, field) == null) {
                     throw new FieldValidationException(
-                            String.format("Field %s, invalida", fieldString));
+                            String.format("Field %s, inválida", field));
                 }
-            }
+            });
         }
 
 

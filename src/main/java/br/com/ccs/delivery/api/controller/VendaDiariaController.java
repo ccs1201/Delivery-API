@@ -5,11 +5,7 @@ import br.com.ccs.delivery.domain.model.specification.filter.VendaDiariaFilter;
 import br.com.ccs.delivery.domain.service.VendaQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -22,7 +18,8 @@ public class VendaDiariaController {
 
     @GetMapping("/vendas-diarias")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<VendaDiaria> getVendasDiarias(VendaDiariaFilter vendaDiariaFilter) {
-        return vendaQueryService.findVendasDiarias(vendaDiariaFilter);
+    public Collection<VendaDiaria> getVendasDiarias(VendaDiariaFilter vendaDiariaFilter,
+                                                    @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
+        return vendaQueryService.findVendasDiarias(vendaDiariaFilter, timeOffset);
     }
 }
