@@ -4,6 +4,7 @@ import br.com.ccs.delivery.core.exception.FieldValidationException;
 import br.com.ccs.delivery.core.validations.exceptions.EntityValidationException;
 import br.com.ccs.delivery.domain.model.util.exception.GenericEntityUpdateMergerUtilException;
 import br.com.ccs.delivery.domain.service.exception.*;
+import br.com.ccs.delivery.domain.service.reports.exception.RelatorioJasperException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -174,6 +175,12 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ApiResponse(responseCode = "400", description = "Malformed data, check JSON syntax")
     public ResponseEntity<?> jsonParseExceptionHandler(JsonParseException e) {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, e, INVALID_FIELD_VALUES);
+    }
+
+    @ExceptionHandler(RelatorioJasperException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> relatorioJasperExceptionHandler(RelatorioJasperException e) {
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e, "Erro ao gerar relatório");
     }
 
   /*  @ExceptionHandler(NullPointerException.class)

@@ -7,7 +7,6 @@ import br.com.ccs.delivery.domain.service.exception.EmailJaCadastradoException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;

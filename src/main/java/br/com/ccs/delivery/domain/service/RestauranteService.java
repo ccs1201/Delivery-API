@@ -4,10 +4,10 @@ import br.com.ccs.delivery.core.validations.exceptions.EntityValidationException
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import br.com.ccs.delivery.domain.model.entity.Usuario;
-import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
-import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.model.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.model.specification.RestauranteNomeLikeSpec;
+import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
+import br.com.ccs.delivery.domain.repository.RestauranteRepository;
 import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

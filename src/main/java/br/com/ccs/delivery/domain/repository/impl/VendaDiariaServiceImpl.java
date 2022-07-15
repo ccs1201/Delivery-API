@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Predicate;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
