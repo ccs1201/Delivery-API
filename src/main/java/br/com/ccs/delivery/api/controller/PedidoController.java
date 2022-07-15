@@ -46,7 +46,7 @@ public class PedidoController {
 
     @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public Page<PedidoResponse> filter(PedidoFilter pedidoFilter, @PageableDefault(size = 1) Pageable pageable) {
+    public Page<PedidoResponse> filter(PedidoFilter pedidoFilter, @PageableDefault(size = 5) Pageable pageable) {
         return mapper.toPage(service.filter(pedidoFilter, pageable));
     }
 

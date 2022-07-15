@@ -91,11 +91,12 @@ insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 
 
 insert into restaurante_usuario (restaurante_id, usuario_id) values (1,1),(2,2),(3,3),(4,4),(5,1), (6,2), (7,3), (8,4), (9,1), (10,2);
 
-insert into pedido (id, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
+insert into pedido (id, codigo, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
                     logradouro, numero, complemento, bairro,
-                    status_pedido, data_criacao, sub_total, taxa_entrega, valor_total, codigo)
-values (1, 1, 1, 1, 499, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
-        'CONFIRMADO', utc_timestamp, 298.90, 10.0, 308.90, 'b46c7aee-fd4a-11ec-957d-0242ac110002');
+                    status_pedido, data_criacao, sub_total, taxa_entrega, valor_total)
+values (1, 'f9981ca4-5a5e-4da3-af04-933861df3e55', 1, 1, 1, 1, '38400-000',
+        'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+        'CONFIRMADO', utc_timestamp, 298.90, 10, 308.90);
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
 values (1, 1, 1, 1, 78.9, 78.9, null);
@@ -104,11 +105,23 @@ insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, 
 values (2, 1, 2, 2, 110, 220, 'Menos picante, por favor');
 
 
-insert into pedido (id, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
+insert into pedido (id, codigo, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
                     logradouro, numero, complemento, bairro,
-                    status_pedido, data_criacao, sub_total, taxa_entrega, valor_total, codigo)
-values (2, 4, 2, 2, 1, '38400-111', 'Rua Acre', '300', 'Casa 2', 'Centro',
-        'CONFIRMADO', utc_timestamp, 79, 0, 79, 'a46c7aee-fd4a-11ec-957d-0242ac110002');
+                    status_pedido, data_criacao, sub_total, taxa_entrega, valor_total)
+values (2, 'd178b637-a785-4768-a3cb-aa1ce5a8cdab', 4, 1, 2, 1, '38400-111',
+        'Rua Acre', '300', 'Casa 2', 'Centro',
+        'CONFIRMADO', utc_timestamp, 79, 0, 79);
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
 values (3, 2, 6, 1, 79, 79, 'Ao ponto');
+
+
+insert into pedido (id, codigo, restaurante_id, cliente_id, tipo_pagamento_id, municipio_id, cep,
+                    logradouro, numero, complemento, bairro,
+                    status_pedido, data_criacao, data_confirmacao, data_entrega, sub_total, taxa_entrega, valor_total)
+values (3, 'b5741512-8fbc-47fa-9ac1-b530354fc0ff', 1, 1, 1, 1, '38400-222',
+        'Rua Natal', '200', '', 'Brasil',
+        'ENTREGUE', '2022-07-10 21:10:00', '2022-07-10 21:10:45', '2022-07-10 21:55:44', 110, 10, 120);
+
+insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
+values (4, 3, 2, 1, 110, 110, null);
