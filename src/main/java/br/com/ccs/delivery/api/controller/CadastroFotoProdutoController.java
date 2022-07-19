@@ -37,7 +37,7 @@ public class CadastroFotoProdutoController {
         Produto produto = produtoService.findByRestauranteIdAndProdutoId(restauranteId,produtoId);
 
         var foto =  FotoProduto.builder()
-                .produtoId(produto.getId())
+                //.produtoId(produto.getId())
                 .produto(produto)
                 .descricao(fotoProdutoInput.getDescricao())
                 .tamanho(fotoProdutoInput.getFile().getSize())

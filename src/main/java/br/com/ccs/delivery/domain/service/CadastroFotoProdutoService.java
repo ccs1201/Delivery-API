@@ -13,8 +13,17 @@ public class CadastroFotoProdutoService {
     private ProdutoRepository repository;
 
     @Transactional
-    public FotoProduto save(FotoProduto fotoProduto){
-        return repository.saveFotoProduto(fotoProduto);
-    }
+    public FotoProduto save(FotoProduto fotoProduto) {
 
+        var foto = repository
+                .findFotoById(fotoProduto.getProduto().getRestaurante().getId(),
+                        fotoProduto.getProduto().getId());
+
+       foto.ifPresent(fotoPresente -> repository.deleteFoto(fotoPresente));
+
+        return repository.saveFotoProduto(fotoProduto);
+
+    }
 }
+
+

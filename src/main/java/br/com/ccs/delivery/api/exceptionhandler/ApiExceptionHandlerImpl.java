@@ -163,11 +163,11 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ExceptionHandler(RepositoryDataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ApiResponse(responseCode = "409", description = "A constraint violation occurred")
-    public ResponseEntity<?> dataIntegrityViolationExceptionHandler(RepositoryDataIntegrityViolationException e) {
+    public ResponseEntity<?> repositoryDataIntegrityViolationExceptionHandler(RepositoryDataIntegrityViolationException e) {
 
         //   Throwable rootCause = ExceptionUtils.getRootCause(e);
 
-        return buildResponseEntity(HttpStatus.CONFLICT, e, INVALID_FIELD_VALUES);
+        return buildResponseEntity(HttpStatus.CONFLICT, e.getMessage(), INVALID_FIELD_VALUES);
     }
 
     @ExceptionHandler(JsonParseException.class)

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
 @Repository
 public class ProdutoRepositoryImpl implements ProdutoRepositoryQueries {
@@ -17,7 +18,13 @@ public class ProdutoRepositoryImpl implements ProdutoRepositoryQueries {
     @Override
     @Transactional
     public FotoProduto saveFotoProduto(FotoProduto fotoProduto) {
+
         return entityManager.merge(fotoProduto);
+
     }
 
+    @Override
+    public void deleteFoto(FotoProduto foto) {
+        entityManager.remove(foto);
+    }
 }
