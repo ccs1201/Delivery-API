@@ -11,7 +11,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 
 @Service
@@ -25,17 +24,18 @@ public class ProdutoService {
     }
 
     public Produto findById(Long id) {
-        return repository.findById(id).orElseThrow(() ->
-                new RepositoryEntityNotFoundException(String.format("Produto ID: %d não encontrado", id)));
+        return repository.findById(id).orElseThrow(() -> new RepositoryEntityNotFoundException(String.format("Produto ID: %d não encontrado", id)));
+    }
+
+    public Produto findByRestauranteIdAndProdutoId(Long restauranteId, Long produtoId) {
+        return repository.findByRestauranteIdAndId(restauranteId, produtoId).orElseThrow(() -> new RepositoryEntityNotFoundException(String.format("Produto id: %d, não encontrado para o Restaurante id: %d.", produtoId, restauranteId)));
     }
 
     public Collection<Produto> findByName(String nome) {
         Collection<Produto> produtos = repository.findByNomeContaining(nome);
 
         if (produtos.isEmpty()) {
-            throw new RepositoryEntityNotFoundException(
-                    String.format("Nenhum produto com nome: %s encontrado.", nome)
-            );
+            throw new RepositoryEntityNotFoundException(String.format("Nenhum produto com nome: %s encontrado.", nome));
         }
         return produtos;
     }
@@ -45,9 +45,7 @@ public class ProdutoService {
         try {
             return repository.saveAndFlush(produto);
         } catch (DataIntegrityViolationException e) {
-            throw new RepositoryDataIntegrityViolationException(
-                    String.format("Produto %s, já cadastrado para o restaurante informado.", produto.getNome())
-            );
+            throw new RepositoryDataIntegrityViolationException(String.format("Produto %s, já cadastrado para o restaurante informado.", produto.getNome()));
         }
     }
 
@@ -57,8 +55,7 @@ public class ProdutoService {
             repository.deleteById(produto.getId());
             repository.flush();
         } catch (DataIntegrityViolationException e) {
-            throw new RepositoryEntityInUseException(
-                    String.format("Produto ID: %d Nome: %s, não pode ser removido pois está em uso.", produto.getId(), produto.getNome()));
+            throw new RepositoryEntityInUseException(String.format("Produto ID: %d Nome: %s, não pode ser removido pois está em uso.", produto.getId(), produto.getNome()));
         }
     }
 
@@ -85,10 +82,5 @@ public class ProdutoService {
         produto.ativar();
 
         repository.saveAndFlush(produto);
-    }
-
-    public BigDecimal getValorProduto(Long id) {
-
-        return this.findById(id).getValor();
     }
 }

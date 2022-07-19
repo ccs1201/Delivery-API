@@ -14,7 +14,6 @@ public class CadastroFotoProdutoService {
 
     @Transactional
     public FotoProduto save(FotoProduto fotoProduto){
-        //todo implementar repositorio
         return repository.saveFotoProduto(fotoProduto);
     }
 
