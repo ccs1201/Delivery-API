@@ -19,7 +19,7 @@ public class CadastroFotoProdutoService {
                 .findFotoById(fotoProduto.getProduto().getRestaurante().getId(),
                         fotoProduto.getProduto().getId());
 
-       foto.ifPresent(fotoPresente -> repository.deleteFoto(fotoPresente));
+       foto.ifPresent(f -> repository.deleteFotoProduto(f));
 
         return repository.saveFotoProduto(fotoProduto);
 

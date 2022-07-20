@@ -45,7 +45,6 @@ public class CadastroFotoProdutoController {
                 .contentType(fotoProdutoInput.getFile().getContentType())
                 .build();
 
-
         foto = service.save(foto);
 
         return mapper.toResponseModel(foto);
