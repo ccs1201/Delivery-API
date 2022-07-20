@@ -20,7 +20,6 @@ public class FotoProduto {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     private Produto produto;
-
     private String nomeArquivo;
     private String descricao;
     private String contentType;

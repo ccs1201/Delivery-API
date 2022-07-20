@@ -72,6 +72,13 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         return buildResponseEntity(HttpStatus.CONFLICT, rootCause.getMessage(), "Data integrity violation. Check Detail:");
     }
 
+    @ExceptionHandler(StorageServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ApiResponse(responseCode = "500", description = "Fail to store file")
+    ResponseEntity<Object> storageServiceExceptionHandler(StorageServiceException e) {
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e, "Falha ao gravar arquivos.");
+    }
+
     @ExceptionHandler(EntityValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(responseCode = "400", description = INVALID_FIELD_VALUES)

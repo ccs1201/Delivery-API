@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -31,33 +32,24 @@ public class CadastroFotoProdutoController {
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public FotoProdutoResponse atualizarFoto(@PathVariable @Positive Long restauranteId, @PathVariable @Positive Long produtoId,
-                                             @Valid FotoProdutoInput fotoProdutoInput) {
+                                             @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
 
 
-        Produto produto = produtoService.findByRestauranteIdAndProdutoId(restauranteId,produtoId);
+        Produto produto = produtoService.findByRestauranteIdAndProdutoId(restauranteId, produtoId);
 
-        var foto =  FotoProduto.builder()
+        var foto = FotoProduto.builder()
                 //.produtoId(produto.getId())
                 .produto(produto)
                 .descricao(fotoProdutoInput.getDescricao())
-                .tamanho(fotoProdutoInput.getFile().getSize())
-                .nomeArquivo(fotoProdutoInput.getFile().getOriginalFilename())
-                .contentType(fotoProdutoInput.getFile().getContentType())
+                .tamanho(fotoProdutoInput.getMultipartFile().getSize())
+                .nomeArquivo(fotoProdutoInput.getMultipartFile().getOriginalFilename())
+                .contentType(fotoProdutoInput.getMultipartFile().getContentType())
                 .build();
 
-        foto = service.save(foto);
+        foto = service.save(foto, fotoProdutoInput.getMultipartFile().getInputStream());
+
 
         return mapper.toResponseModel(foto);
-
-//        var fileName = UUID.randomUUID() + "_" + fotoProdutoInput.getFile().getOriginalFilename();
-//
-//        var path = Path.of("/home/csouza/Pictures/delivery_API_Fotos_Produtos", fileName);
-//
-//        try {
-//            fotoProdutoInput.getFile().transferTo(path);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
     }
 }

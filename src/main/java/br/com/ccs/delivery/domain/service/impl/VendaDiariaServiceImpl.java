@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.domain.repository.impl;
+package br.com.ccs.delivery.domain.service.impl;
 
 import br.com.ccs.delivery.domain.model.dto.VendaDiaria;
 import br.com.ccs.delivery.domain.model.entity.Pedido;
