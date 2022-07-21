@@ -73,7 +73,7 @@ public class CadastroFotoProdutoController {
             this.checkMediaType(mediaTypes, fotoProduto);
 
             return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
+                    .contentType(MediaType.valueOf(fotoProduto.getContentType()))
                     .body(new InputStreamResource(file));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
