@@ -68,7 +68,9 @@ public class CadastroFotoProdutoController {
 
         var file = service.getFotoFromStorage(restauranteId, produtoId);
 
-        return ResponseEntity.ok().body(new InputStreamResource(file));
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(new InputStreamResource(file));
 
     }
 
