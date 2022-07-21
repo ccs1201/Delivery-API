@@ -3,7 +3,6 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.repository.ProdutoRepository;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
-import br.com.ccs.delivery.domain.service.exception.ServiceException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,15 +77,9 @@ public class CadastroFotoProdutoService {
                         String.format("Nenhuma foto encontrada para o Produto ID: %d", produtoId)));
     }
 
-    public InputStream getFotoFromStorage(Long restauranteId, Long produtoId) {
+    public InputStream getFotoFromStorage(FotoProduto fotoProduto) {
 
-        try {
-            var fotoProduto = this.findFotoProduto(restauranteId, produtoId);
-
-            return fotoStorageService.getFileFromStorage(fotoProduto.getNomeArquivo());
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
+        return fotoStorageService.getFileFromStorage(fotoProduto.getNomeArquivo());
     }
 }
 

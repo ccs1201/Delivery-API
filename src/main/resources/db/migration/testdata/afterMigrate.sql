@@ -125,3 +125,6 @@ values (3, 'b5741512-8fbc-47fa-9ac1-b530354fc0ff', 1, 1, 1, 1, '38400-222',
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
 values (4, 3, 2, 1, 110, 110, null);
+
+insert into foto_produto(produto_id, nome_arquivo, descricao, content_type, tamanho)
+VALUES (1,'7893ccba-6f66-47bf-ba6d-a331010ef027_Bife-Ancho.jpg', 'ao ponto','image/jpeg', 384589);

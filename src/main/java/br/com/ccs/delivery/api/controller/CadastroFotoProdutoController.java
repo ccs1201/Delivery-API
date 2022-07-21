@@ -14,11 +14,13 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -33,19 +35,13 @@ public class CadastroFotoProdutoController {
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public FotoProdutoResponse atualizarFoto(@PathVariable @Positive Long restauranteId, @PathVariable @Positive Long produtoId,
-                                             @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
+    public FotoProdutoResponse atualizarFoto(@PathVariable @Positive Long restauranteId, @PathVariable @Positive Long produtoId, @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
 
         Produto produto = produtoService.findByRestauranteIdAndProdutoId(restauranteId, produtoId);
 
         var foto = FotoProduto.builder()
                 //.produtoId(produto.getId())
-                .produto(produto)
-                .descricao(fotoProdutoInput.getDescricao())
-                .tamanho(fotoProdutoInput.getMultipartFile().getSize())
-                .nomeArquivo(fotoProdutoInput.getMultipartFile().getOriginalFilename())
-                .contentType(fotoProdutoInput.getMultipartFile().getContentType())
-                .build();
+                .produto(produto).descricao(fotoProdutoInput.getDescricao()).tamanho(fotoProdutoInput.getMultipartFile().getSize()).nomeArquivo(fotoProdutoInput.getMultipartFile().getOriginalFilename()).contentType(fotoProdutoInput.getMultipartFile().getContentType()).build();
 
         foto = service.save(foto, fotoProdutoInput.getMultipartFile().getInputStream());
 
@@ -62,16 +58,38 @@ public class CadastroFotoProdutoController {
 
     @GetMapping(produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<InputStreamResource> getFotoFromStorage(@PathVariable @Positive Long restauranteId,
-                                                                  @PathVariable @Positive Long produtoId) {
+    public ResponseEntity<?> getFotoFromStorage(@PathVariable @Positive Long restauranteId,
+                                                @PathVariable @Positive Long produtoId,
+                                                @RequestHeader(name = "accept") String headerAccept) {
 
+        try {
 
-        var file = service.getFotoFromStorage(restauranteId, produtoId);
+            var fotoProduto = service.findFotoProduto(restauranteId, produtoId);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(new InputStreamResource(file));
+            var file = service.getFotoFromStorage(fotoProduto);
 
+            List<MediaType> mediaTypes = MediaType.parseMediaTypes(headerAccept);
+
+            this.checkMediaType(mediaTypes, fotoProduto);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(new InputStreamResource(file));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    private void checkMediaType(List<MediaType> mediaTypes, FotoProduto fotoProduto) throws HttpMediaTypeNotAcceptableException {
+
+        if (mediaTypes.stream().noneMatch(
+                mediaType ->
+                        mediaType.isCompatibleWith(
+                                MediaType.valueOf(fotoProduto.getContentType()))
+        )) {
+            throw new HttpMediaTypeNotAcceptableException(mediaTypes);
+        }
     }
 
 }
