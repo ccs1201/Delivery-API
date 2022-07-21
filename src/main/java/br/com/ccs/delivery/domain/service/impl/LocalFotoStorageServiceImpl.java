@@ -20,7 +20,6 @@ public class LocalFotoStorageServiceImpl implements FotoStorageService {
     @Override
     public void store(InputStream fileStream, FotoProduto fotoProduto) {
 
-
         var path = Path.of(localFotosPath.toString(), fotoProduto.getNomeArquivo());
 
         try {
@@ -34,6 +33,7 @@ public class LocalFotoStorageServiceImpl implements FotoStorageService {
     public void delete(String fileName) {
 
         var path = Path.of(localFotosPath.toString(), fileName);
+
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
