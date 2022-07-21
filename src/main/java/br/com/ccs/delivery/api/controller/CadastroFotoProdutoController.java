@@ -10,8 +10,10 @@ import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.service.CadastroFotoProdutoService;
 import br.com.ccs.delivery.domain.service.ProdutoService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,4 +51,25 @@ public class CadastroFotoProdutoController {
 
         return mapper.toResponseModel(foto);
     }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public FotoProdutoResponse getFotoProduto(@PathVariable @Positive Long restauranteId,
+                                              @PathVariable @Positive Long produtoId) {
+        return mapper.toResponseModel(service.findFotoProduto(restauranteId, produtoId));
+
+    }
+
+    @GetMapping(produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<InputStreamResource> getFotoFromStorage(@PathVariable @Positive Long restauranteId,
+                                                                  @PathVariable @Positive Long produtoId) {
+
+
+        var file = service.getFotoFromStorage(restauranteId, produtoId);
+
+        return ResponseEntity.ok().body(new InputStreamResource(file));
+
+    }
+
 }

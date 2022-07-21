@@ -40,4 +40,16 @@ public class LocalFotoStorageServiceImpl implements FotoStorageService {
             throw new StorageServiceException("Não foi possível excluir a foto atual " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public InputStream getFileFromStorage(String fileName) {
+
+        var path = Path.of(localFotosPath.toString(), fileName);
+
+        try {
+            return Files.newInputStream(path);
+        } catch (IOException e) {
+            throw new StorageServiceException("Não foi possível recuperar a foto do produto.", e);
+        }
+    }
 }

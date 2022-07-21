@@ -14,4 +14,6 @@ public interface FotoStorageService {
     void store(InputStream fileStream, FotoProduto fotoProduto);
 
     void delete(String fileName);
+
+    InputStream getFileFromStorage(String fileName);
 }

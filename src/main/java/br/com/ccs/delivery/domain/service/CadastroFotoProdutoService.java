@@ -2,6 +2,8 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.repository.ProdutoRepository;
+import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
+import br.com.ccs.delivery.domain.service.exception.ServiceException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,23 +30,13 @@ public class CadastroFotoProdutoService {
     @Transactional
     public FotoProduto save(FotoProduto fotoProduto, InputStream fileStream) {
 
-        //Busca no banco a foto já cadastrada caso exista
-        var foto = repository
-                .findFotoById(fotoProduto.getProduto().getRestaurante().getId(),
-                        fotoProduto.getProduto().getId());
-
         //Se existir uma foto então temos que remover o
         //registro do banco de dados e o arquivo da foto anterior
         //do armazenamento
-        foto.ifPresent(f -> {
-            repository.deleteFotoProduto(f);
-            fotoStorageService.delete(f.getNomeArquivo());
-        });
+        this.checkIfExists(fotoProduto);
 
         //seta o nome do arquivo com UUID para armazenar
-        fotoProduto.setNomeArquivo(
-                fotoStorageService.generateUuidFileName(
-                        fotoProduto.getNomeArquivo()));
+        fotoProduto.setNomeArquivo(fotoStorageService.generateUuidFileName(fotoProduto.getNomeArquivo()));
 
         //salva a entidade no banco de dados
         fotoProduto = repository.saveFotoProduto(fotoProduto);
@@ -54,6 +46,47 @@ public class CadastroFotoProdutoService {
         fotoStorageService.store(fileStream, fotoProduto);
 
         return fotoProduto;
+    }
+
+    /**
+     * Verifica se uma entidade {@link FotoProduto} já esta cadastrada
+     * no banco de dados.
+     * <p>
+     * Caso exista remove o arquivo da foto do armazenamento
+     * e seta o id da {@link FotoProduto} existente no fotoProduto
+     * recebido como parâmetro.
+     *
+     * @param fotoProduto {@link FotoProduto} entidade que será verificada
+     */
+    private void checkIfExists(FotoProduto fotoProduto) {
+
+        //Busca no banco a foto já cadastrada caso exista
+        var foto = repository.findFotoById(fotoProduto.getProduto().getRestaurante().getId(), fotoProduto.getProduto().getId());
+
+        //caso exista seta o id na nova entidade a ser persistida
+        //para fazer um update
+        foto.ifPresent(f -> {
+            fotoProduto.setProdutoId(f.getProdutoId());
+            fotoStorageService.delete(f.getNomeArquivo());
+        });
+    }
+
+    public FotoProduto findFotoProduto(Long restauranteId, Long produtoId) {
+
+        return repository.findFotoById(restauranteId, produtoId).orElseThrow(() ->
+                new RepositoryEntityNotFoundException(
+                        String.format("Nenhuma foto encontrada para o Produto ID: %d", produtoId)));
+    }
+
+    public InputStream getFotoFromStorage(Long restauranteId, Long produtoId) {
+
+        try {
+            var fotoProduto = this.findFotoProduto(restauranteId, produtoId);
+
+            return fotoStorageService.getFileFromStorage(fotoProduto.getNomeArquivo());
+        } catch (Exception e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 }
 
