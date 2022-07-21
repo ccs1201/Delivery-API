@@ -34,7 +34,6 @@ public class CadastroFotoProdutoController {
     public FotoProdutoResponse atualizarFoto(@PathVariable @Positive Long restauranteId, @PathVariable @Positive Long produtoId,
                                              @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
 
-
         Produto produto = produtoService.findByRestauranteIdAndProdutoId(restauranteId, produtoId);
 
         var foto = FotoProduto.builder()
@@ -48,8 +47,6 @@ public class CadastroFotoProdutoController {
 
         foto = service.save(foto, fotoProdutoInput.getMultipartFile().getInputStream());
 
-
         return mapper.toResponseModel(foto);
-
     }
 }
