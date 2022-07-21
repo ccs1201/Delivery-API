@@ -1,6 +1,7 @@
 package br.com.ccs.delivery.domain.model.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@DynamicUpdate
 public class FotoProduto {
     @Id
     @Column(name = "produto_id")
