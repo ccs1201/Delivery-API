@@ -78,7 +78,12 @@ public class CadastroFotoProdutoController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFotoProduto(@PathVariable @Positive Long restauranteId, @PathVariable @Positive Long produtoId){
+        service.deleteFotoProduto(restauranteId, produtoId);
     }
 
     private void checkMediaType(List<MediaType> mediaTypes, FotoProduto fotoProduto) throws HttpMediaTypeNotAcceptableException {

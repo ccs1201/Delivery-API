@@ -81,6 +81,14 @@ public class CadastroFotoProdutoService {
 
         return fotoStorageService.getFileFromStorage(fotoProduto.getNomeArquivo());
     }
+
+    public void deleteFotoProduto(Long restauranteId, Long produtoId) {
+
+        var foto = this.findFotoProduto(restauranteId, produtoId);
+        repository.deleteFotoProduto(foto);
+        fotoStorageService.delete(foto.getNomeArquivo());
+
+    }
 }
 
 
