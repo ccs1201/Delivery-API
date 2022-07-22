@@ -96,5 +96,4 @@ public class CadastroFotoProdutoController {
             throw new HttpMediaTypeNotAcceptableException(mediaTypes);
         }
     }
-
 }

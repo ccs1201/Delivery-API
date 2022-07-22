@@ -1,9 +1,11 @@
-package br.com.ccs.delivery.domain.service.impl;
+package br.com.ccs.delivery.domain.service.storage.local;
 
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
-import br.com.ccs.delivery.domain.service.FotoStorageService;
 import br.com.ccs.delivery.domain.service.exception.StorageServiceException;
-import org.springframework.beans.factory.annotation.Value;
+import br.com.ccs.delivery.domain.service.storage.FotoStorageService;
+import br.com.ccs.delivery.domain.service.storage.StorageProperties;
+import br.com.ccs.delivery.domain.service.storage.StorageServiceQualifierType;
+import br.com.ccs.delivery.domain.service.storage.annotation.StorageQualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,15 +14,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
+@StorageQualifier(StorageServiceQualifierType.LOCAL)
 public class LocalFotoStorageServiceImpl implements FotoStorageService {
 
-    @Value("${delivery-api.storage.local.fotos}")
-    private Path localFotosPath;
+    private final StorageProperties storageProperties;
+//    @Value("${delivery-api.storage.local.diretorio_fotos}")
+//    private Path localFotosPath;
+
+    public LocalFotoStorageServiceImpl(StorageProperties storageProperties) {
+        this.storageProperties = storageProperties;
+    }
 
     @Override
     public void store(InputStream fileStream, FotoProduto fotoProduto) {
 
-        var path = Path.of(localFotosPath.toString(), fotoProduto.getNomeArquivo());
+        var path = Path.of(storageProperties.getLocal().getDiretorio_fotos().toString(), fotoProduto.getNomeArquivo());
 
         try {
             fileStream.transferTo(Files.newOutputStream(path));
@@ -32,7 +40,7 @@ public class LocalFotoStorageServiceImpl implements FotoStorageService {
     @Override
     public void delete(String fileName) {
 
-        var path = Path.of(localFotosPath.toString(), fileName);
+        var path = Path.of(storageProperties.getLocal().getDiretorio_fotos().toString(), fileName);
 
         try {
             Files.deleteIfExists(path);
@@ -44,7 +52,7 @@ public class LocalFotoStorageServiceImpl implements FotoStorageService {
     @Override
     public InputStream getFileFromStorage(String fileName) {
 
-        var path = Path.of(localFotosPath.toString(), fileName);
+        var path = Path.of(storageProperties.getLocal().getDiretorio_fotos().toString(), fileName);
 
         try {
             return Files.newInputStream(path);

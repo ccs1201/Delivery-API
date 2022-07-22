@@ -3,18 +3,20 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.repository.ProdutoRepository;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
-import lombok.AllArgsConstructor;
+import br.com.ccs.delivery.domain.service.storage.s3.S3FotoStorageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 
 @Service
-@AllArgsConstructor
 public class CadastroFotoProdutoService {
 
     private ProdutoRepository repository;
-    private FotoStorageService fotoStorageService;
+    //    @StorageQualifier(StorageServiceQualifierType.AMAZON_S3)
+    //    private FotoStorageService fotoStorageService;
+
+    private S3FotoStorageImpl fotoStorageService;
 
     /**
      * Salva os dados da foto produto no banco de dados
@@ -82,6 +84,7 @@ public class CadastroFotoProdutoService {
         return fotoStorageService.getFileFromStorage(fotoProduto.getNomeArquivo());
     }
 
+    @Transactional
     public void deleteFotoProduto(Long restauranteId, Long produtoId) {
 
         var foto = this.findFotoProduto(restauranteId, produtoId);

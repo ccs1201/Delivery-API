@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.domain.service;
+package br.com.ccs.delivery.domain.service.storage;
 
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 
