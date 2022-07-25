@@ -63,7 +63,6 @@ public class CadastroFotoProdutoController {
     }
 
     @GetMapping//(produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getFotoFromStorage(@PathVariable @Positive Long restauranteId,
                                                 @PathVariable @Positive Long produtoId,
                                                 @RequestHeader(name = "accept") String headerAccept) {
@@ -72,20 +71,20 @@ public class CadastroFotoProdutoController {
 
             var fotoProduto = service.findFotoProduto(restauranteId, produtoId);
 
-            var file = service.getFotoFromStorage(fotoProduto);
+            var fotoResource = service.getFotoFromStorage(fotoProduto);
 
             List<MediaType> mediaTypes = MediaType.parseMediaTypes(headerAccept);
 
             this.checkMediaType(mediaTypes, fotoProduto);
 
-            if (file.isUrlPresent()) {
+            if (fotoResource.isUrlPresent()) {
                 return ResponseEntity.status(HttpStatus.FOUND)
-                        .header(HttpHeaders.LOCATION, file.getUrl())
+                        .header(HttpHeaders.LOCATION, fotoResource.getUrl())
                         .build();
             } else {
                 return ResponseEntity.ok()
                         .contentType(MediaType.valueOf(fotoProduto.getContentType()))
-                        .body(new InputStreamResource(file.getInputStream()));
+                        .body(new InputStreamResource(fotoResource.getInputStream()));
             }
 
         } catch (Exception e) {

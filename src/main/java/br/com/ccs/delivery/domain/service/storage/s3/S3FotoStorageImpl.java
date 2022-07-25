@@ -31,6 +31,8 @@ public class S3FotoStorageImpl implements FotoStorageService {
     public void store(InputStream fileStream, FotoProduto fotoProduto) {
 
         var objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(fotoProduto.getContentType());
+        objectMetaData.setContentDisposition(String.format("attachment; filename=\"%s\"", fotoProduto.getNomeArquivo()));
 
         try {
             var putObjectRequest =
