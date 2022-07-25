@@ -3,6 +3,7 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.repository.ProdutoRepository;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
+import br.com.ccs.delivery.domain.service.storage.FotoStorageService;
 import br.com.ccs.delivery.domain.service.storage.annotation.StorageQualifier;
 import br.com.ccs.delivery.domain.service.storage.annotation.StorageServiceQualifierType;
 import br.com.ccs.delivery.domain.service.storage.s3.S3FotoStorageImpl;
@@ -82,7 +83,7 @@ public class CadastroFotoProdutoService {
                         String.format("Nenhuma foto encontrada para o Produto ID: %d", produtoId)));
     }
 
-    public InputStream getFotoFromStorage(FotoProduto fotoProduto) {
+    public FotoStorageService.FotoResource getFotoFromStorage(FotoProduto fotoProduto) {
 
         return fotoStorageService.getFileFromStorage(fotoProduto.getNomeArquivo());
     }

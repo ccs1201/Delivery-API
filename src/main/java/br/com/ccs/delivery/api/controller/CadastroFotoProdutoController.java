@@ -11,6 +11,7 @@ import br.com.ccs.delivery.domain.service.CadastroFotoProdutoService;
 import br.com.ccs.delivery.domain.service.ProdutoService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,12 @@ public class CadastroFotoProdutoController {
 
         var foto = FotoProduto.builder()
                 //.produtoId(produto.getId())
-                .produto(produto).descricao(fotoProdutoInput.getDescricao()).tamanho(fotoProdutoInput.getMultipartFile().getSize()).nomeArquivo(fotoProdutoInput.getMultipartFile().getOriginalFilename()).contentType(fotoProdutoInput.getMultipartFile().getContentType()).build();
+                .produto(produto)
+                .descricao(fotoProdutoInput.getDescricao())
+                .tamanho(fotoProdutoInput.getMultipartFile().getSize())
+                .nomeArquivo(fotoProdutoInput.getMultipartFile().getOriginalFilename())
+                .contentType(fotoProdutoInput.getMultipartFile().getContentType())
+                .build();
 
         foto = service.save(foto, fotoProdutoInput.getMultipartFile().getInputStream());
 
@@ -56,7 +62,7 @@ public class CadastroFotoProdutoController {
 
     }
 
-    @GetMapping(produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @GetMapping//(produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getFotoFromStorage(@PathVariable @Positive Long restauranteId,
                                                 @PathVariable @Positive Long produtoId,
@@ -72,9 +78,16 @@ public class CadastroFotoProdutoController {
 
             this.checkMediaType(mediaTypes, fotoProduto);
 
-            return ResponseEntity.ok()
-                    .contentType(MediaType.valueOf(fotoProduto.getContentType()))
-                    .body(new InputStreamResource(file));
+            if (file.isUrlPresent()) {
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, file.getUrl())
+                        .build();
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.valueOf(fotoProduto.getContentType()))
+                        .body(new InputStreamResource(file.getInputStream()));
+            }
+
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
@@ -82,7 +95,7 @@ public class CadastroFotoProdutoController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFotoProduto(@PathVariable @Positive Long restauranteId, @PathVariable @Positive Long produtoId){
+    public void deleteFotoProduto(@PathVariable @Positive Long restauranteId, @PathVariable @Positive Long produtoId) {
         service.deleteFotoProduto(restauranteId, produtoId);
     }
 

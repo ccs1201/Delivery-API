@@ -50,12 +50,15 @@ public class LocalFotoStorageServiceImpl implements FotoStorageService {
     }
 
     @Override
-    public InputStream getFileFromStorage(String fileName) {
+    public FotoResource getFileFromStorage(String fileName) {
 
         var path = Path.of(storageProperties.getLocal().getDiretorio_fotos().toString(), fileName);
 
         try {
-            return Files.newInputStream(path);
+            return FotoResource
+                    .builder()
+                    .inputStream(Files.newInputStream(path))
+                    .build();
         } catch (IOException e) {
             throw new StorageServiceException("Não foi possível recuperar a foto do produto.", e);
         }
