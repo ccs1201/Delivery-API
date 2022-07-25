@@ -29,7 +29,7 @@ public class StorageProperties {
     public final class S3 {
 
         private String bucket;
-        private String idcCaveAcesso;
+        private String idChaveAcesso;
         private String secretAccessKey;
         private Regions region;
         private String folder;

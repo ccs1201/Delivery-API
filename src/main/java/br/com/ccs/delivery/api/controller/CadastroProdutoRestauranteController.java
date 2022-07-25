@@ -1,7 +1,7 @@
 package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
-import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.core.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;

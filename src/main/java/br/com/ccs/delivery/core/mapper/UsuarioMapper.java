@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.api.model.representation.mapper;
+package br.com.ccs.delivery.core.mapper;
 
 import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
 import br.com.ccs.delivery.api.model.representation.input.UsuarioUpdateInput;

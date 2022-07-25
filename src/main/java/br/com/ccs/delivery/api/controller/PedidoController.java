@@ -1,8 +1,8 @@
 package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.PedidoInput;
-import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
-import br.com.ccs.delivery.api.model.representation.mapper.PedidoResponseFilterMapper;
+import br.com.ccs.delivery.core.mapper.MapperInterface;
+import br.com.ccs.delivery.core.mapper.PedidoResponseFilterMapper;
 import br.com.ccs.delivery.api.model.representation.response.PedidoResponse;
 import br.com.ccs.delivery.api.model.representation.response.filter.PedidoResponseFilter;
 import br.com.ccs.delivery.core.exception.FieldValidationException;

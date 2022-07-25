@@ -4,7 +4,7 @@ import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.input.TipoPagamentoInput;
 import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
-import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.core.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;

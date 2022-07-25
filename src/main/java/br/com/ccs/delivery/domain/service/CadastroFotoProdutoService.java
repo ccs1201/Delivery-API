@@ -3,19 +3,21 @@ package br.com.ccs.delivery.domain.service;
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.repository.ProdutoRepository;
 import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
+import br.com.ccs.delivery.domain.service.storage.annotation.StorageQualifier;
+import br.com.ccs.delivery.domain.service.storage.annotation.StorageServiceQualifierType;
 import br.com.ccs.delivery.domain.service.storage.s3.S3FotoStorageImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 
 @Service
+@AllArgsConstructor
 public class CadastroFotoProdutoService {
 
     private ProdutoRepository repository;
-    //    @StorageQualifier(StorageServiceQualifierType.AMAZON_S3)
-    //    private FotoStorageService fotoStorageService;
-
+    @StorageQualifier(StorageServiceQualifierType.AMAZON_S3)
     private S3FotoStorageImpl fotoStorageService;
 
     /**
@@ -62,7 +64,8 @@ public class CadastroFotoProdutoService {
     private void checkIfExists(FotoProduto fotoProduto) {
 
         //Busca no banco a foto já cadastrada caso exista
-        var foto = repository.findFotoById(fotoProduto.getProduto().getRestaurante().getId(), fotoProduto.getProduto().getId());
+        var foto = repository
+                .findFotoById(fotoProduto.getProduto().getRestaurante().getId(), fotoProduto.getProduto().getId());
 
         //caso exista seta o id na nova entidade a ser persistida
         //para fazer um update

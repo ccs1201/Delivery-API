@@ -3,7 +3,7 @@ package br.com.ccs.delivery.api.controller;
 import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
 import br.com.ccs.delivery.api.model.representation.input.UsuarioSenhaInput;
 import br.com.ccs.delivery.api.model.representation.input.UsuarioUpdateInput;
-import br.com.ccs.delivery.api.model.representation.mapper.UsuarioMapper;
+import br.com.ccs.delivery.core.mapper.UsuarioMapper;
 import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;

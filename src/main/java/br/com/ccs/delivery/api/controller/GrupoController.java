@@ -2,7 +2,7 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.GrupoInput;
 import br.com.ccs.delivery.api.model.representation.input.PermissaoInput;
-import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.core.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.GrupoResponse;
 import br.com.ccs.delivery.api.model.representation.response.PermissaoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;

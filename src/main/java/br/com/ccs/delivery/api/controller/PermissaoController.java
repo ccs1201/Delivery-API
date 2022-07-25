@@ -1,7 +1,7 @@
 package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.PermissaoInput;
-import br.com.ccs.delivery.api.model.representation.mapper.MapperInterface;
+import br.com.ccs.delivery.core.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.PermissaoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;

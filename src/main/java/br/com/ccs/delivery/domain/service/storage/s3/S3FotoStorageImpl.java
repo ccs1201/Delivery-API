@@ -4,22 +4,23 @@ import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.service.exception.StorageServiceException;
 import br.com.ccs.delivery.domain.service.storage.FotoStorageService;
 import br.com.ccs.delivery.domain.service.storage.StorageProperties;
-import br.com.ccs.delivery.domain.service.storage.StorageServiceQualifierType;
 import br.com.ccs.delivery.domain.service.storage.annotation.StorageQualifier;
+import br.com.ccs.delivery.domain.service.storage.annotation.StorageServiceQualifierType;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 
-@Service
+
 @StorageQualifier(StorageServiceQualifierType.AMAZON_S3)
 @AllArgsConstructor
+@Component
 public class S3FotoStorageImpl implements FotoStorageService {
 
-    private StorageProperties properties;
+    private final StorageProperties properties;
     private final AmazonS3 s3;
 
 

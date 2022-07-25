@@ -4,26 +4,26 @@ import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.service.exception.StorageServiceException;
 import br.com.ccs.delivery.domain.service.storage.FotoStorageService;
 import br.com.ccs.delivery.domain.service.storage.StorageProperties;
-import br.com.ccs.delivery.domain.service.storage.StorageServiceQualifierType;
 import br.com.ccs.delivery.domain.service.storage.annotation.StorageQualifier;
-import org.springframework.stereotype.Service;
+import br.com.ccs.delivery.domain.service.storage.annotation.StorageServiceQualifierType;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Service
+
 @StorageQualifier(StorageServiceQualifierType.LOCAL)
+@AllArgsConstructor
+@Component
 public class LocalFotoStorageServiceImpl implements FotoStorageService {
 
     private final StorageProperties storageProperties;
 //    @Value("${delivery-api.storage.local.diretorio_fotos}")
 //    private Path localFotosPath;
 
-    public LocalFotoStorageServiceImpl(StorageProperties storageProperties) {
-        this.storageProperties = storageProperties;
-    }
 
     @Override
     public void store(InputStream fileStream, FotoProduto fotoProduto) {
