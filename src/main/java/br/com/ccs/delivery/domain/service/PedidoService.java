@@ -1,9 +1,6 @@
 package br.com.ccs.delivery.domain.service;
 
-import br.com.ccs.delivery.domain.model.entity.ItemPedido;
-import br.com.ccs.delivery.domain.model.entity.Pedido;
-import br.com.ccs.delivery.domain.model.entity.Produto;
-import br.com.ccs.delivery.domain.model.entity.StatusPedido;
+import br.com.ccs.delivery.domain.model.entity.*;
 import br.com.ccs.delivery.domain.model.specification.PedidoSpecs;
 import br.com.ccs.delivery.domain.model.specification.filter.PedidoFilter;
 import br.com.ccs.delivery.domain.repository.PedidoRepository;
@@ -13,6 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +31,10 @@ public class PedidoService {
     private TipoPagamentoService tipoPagamentoService;
     @Lazy
     private MunicipioService municipioService;
-
     @Lazy
     private UsuarioService usuarioService;
+    @Lazy
+    private MailService mailService;
 
     public Page<Pedido> findAllEager(Pageable pageable) {
         return repository.findAllEagerPageable(pageable);
@@ -87,6 +86,8 @@ public class PedidoService {
         pedido.criar();
 
         pedido = this.save(pedido);
+
+        this.sendEmail(pedido);
         return this.findById(pedido.getId());
 
     }
@@ -185,7 +186,7 @@ public class PedidoService {
 
     /**
      * <p>
-     * Busco o município do Endereço de entrega
+     * Busca o município do Endereço de entrega
      * para o {@link Pedido} que esta sendo cadastrado.
      * </p>
      *
@@ -201,7 +202,7 @@ public class PedidoService {
     /**
      * <p>
      * Busca o tipo de pagamento do pedido
-     * pelo ID do {@link br.com.ccs.delivery.domain.model.entity.TipoPagamento}.
+     * pelo ID do {@link TipoPagamento}.
      * </p>
      *
      * @param pedido O pedido cujo tipo de pagamento deve ser encontrado.
@@ -268,6 +269,8 @@ public class PedidoService {
         pedido.cancelar();
 
         repository.saveAndFlush(pedido);
+
+        this.sendEmail(pedido);
     }
 
     /**
@@ -283,7 +286,10 @@ public class PedidoService {
     public void update(Pedido pedido) {
 
         this.validarPedido(pedido);
+
         repository.saveAndFlush(pedido);
+
+        this.sendEmail(pedido);
     }
 
     /**
@@ -297,6 +303,8 @@ public class PedidoService {
 
         Pedido pedido = this.findById(pedidoId);
 
+
+
         if (pedido.getStatusPedido() != StatusPedido.CRIADO) {
             throw new StatusPedidoException(
                     String.format("Pedido não pode ser confirmado pois seu Status é: %s", pedido.getStatusPedido().getDescricao()));
@@ -305,7 +313,11 @@ public class PedidoService {
         pedido.confirmar();
 
         repository.saveAndFlush(pedido);
+
+       this.sendEmail(pedido);
     }
+
+
 
     /**
      * Confirma a entrega de um pedido
@@ -325,6 +337,19 @@ public class PedidoService {
         pedido.entregar();
 
         repository.saveAndFlush(pedido);
+
+        this.sendEmail(pedido);
+    }
+
+    private void sendEmail(Pedido pedido) {
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+        mailMessage.setSubject(pedido.getRestaurante().getNome() + "Pedido:" + pedido.getStatusPedido());
+        mailMessage.setText(mailService.buildEmailBody(pedido));
+        mailMessage.setTo(pedido.getCliente().getEmail());
+
+        mailService.send(mailMessage);
     }
 
     public Page<Pedido> filter(PedidoFilter pedidoFilter, Pageable pageable) {

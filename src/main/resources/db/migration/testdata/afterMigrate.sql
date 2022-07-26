@@ -96,7 +96,7 @@ insert into pedido (id, codigo, restaurante_id, cliente_id, tipo_pagamento_id, m
                     status_pedido, data_criacao, sub_total, taxa_entrega, valor_total)
 values (1, 'f9981ca4-5a5e-4da3-af04-933861df3e55', 1, 1, 1, 1, '38400-000',
         'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
-        'CONFIRMADO', utc_timestamp, 298.90, 10, 308.90);
+        'CRIADO', utc_timestamp, 298.90, 10, 308.90);
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
 values (1, 1, 1, 1, 78.9, 78.9, null);
@@ -110,7 +110,7 @@ insert into pedido (id, codigo, restaurante_id, cliente_id, tipo_pagamento_id, m
                     status_pedido, data_criacao, sub_total, taxa_entrega, valor_total)
 values (2, 'd178b637-a785-4768-a3cb-aa1ce5a8cdab', 4, 1, 2, 1, '38400-111',
         'Rua Acre', '300', 'Casa 2', 'Centro',
-        'CONFIRMADO', utc_timestamp, 79, 0, 79);
+        'CRIADO', utc_timestamp, 79, 0, 79);
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
 values (3, 2, 6, 1, 79, 79, 'Ao ponto');
@@ -121,7 +121,7 @@ insert into pedido (id, codigo, restaurante_id, cliente_id, tipo_pagamento_id, m
                     status_pedido, data_criacao, data_confirmacao, data_entrega, sub_total, taxa_entrega, valor_total)
 values (3, 'b5741512-8fbc-47fa-9ac1-b530354fc0ff', 1, 1, 1, 1, '38400-222',
         'Rua Natal', '200', '', 'Brasil',
-        'ENTREGUE', '2022-07-10 21:10:00', '2022-07-10 21:10:45', '2022-07-10 21:55:44', 110, 10, 120);
+        'CRIADO', '2022-07-10 21:10:00', '2022-07-10 21:10:45', '2022-07-10 21:55:44', 110, 10, 120);
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, valor_unitario, valor_total, observacao)
 values (4, 3, 2, 1, 110, 110, null);
