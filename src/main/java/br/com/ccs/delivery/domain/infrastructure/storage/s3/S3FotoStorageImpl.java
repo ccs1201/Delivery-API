@@ -1,9 +1,9 @@
-package br.com.ccs.delivery.domain.service.storage.s3;
+package br.com.ccs.delivery.domain.infrastructure.storage.s3;
 
+import br.com.ccs.delivery.domain.infrastructure.storage.StorageProperties;
+import br.com.ccs.delivery.domain.service.FotoStorageService;
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.service.exception.StorageServiceException;
-import br.com.ccs.delivery.domain.service.storage.FotoStorageService;
-import br.com.ccs.delivery.domain.service.storage.StorageProperties;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

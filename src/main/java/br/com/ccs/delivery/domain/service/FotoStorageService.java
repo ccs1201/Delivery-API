@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.domain.service.storage;
+package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import lombok.Builder;

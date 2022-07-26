@@ -1,4 +1,4 @@
-package br.com.ccs.delivery.domain.service.storage;
+package br.com.ccs.delivery.domain.infrastructure.storage;
 
 import com.amazonaws.regions.Regions;
 import lombok.Getter;
