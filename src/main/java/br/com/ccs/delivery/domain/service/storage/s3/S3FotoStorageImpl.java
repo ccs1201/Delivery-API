@@ -4,28 +4,22 @@ import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.service.exception.StorageServiceException;
 import br.com.ccs.delivery.domain.service.storage.FotoStorageService;
 import br.com.ccs.delivery.domain.service.storage.StorageProperties;
-import br.com.ccs.delivery.domain.service.storage.annotation.StorageQualifier;
-import br.com.ccs.delivery.domain.service.storage.annotation.StorageServiceQualifierType;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.InputStream;
 
 
-@StorageQualifier(StorageServiceQualifierType.AMAZON_S3)
-@AllArgsConstructor
-@Component
 public class S3FotoStorageImpl implements FotoStorageService {
-
-    private final StorageProperties properties;
-    private final AmazonS3 s3;
-
+    @Autowired
+    private StorageProperties properties;
+    @Autowired
+    private AmazonS3 s3;
 
     @Override
     public void store(InputStream fileStream, FotoProduto fotoProduto) {
@@ -64,7 +58,7 @@ public class S3FotoStorageImpl implements FotoStorageService {
     @Override
     public FotoResource getFileFromStorage(String fileName) {
 
-        var url =s3.getUrl(properties.getS3().getBucket(), this.getPath(fileName));
+        var url = s3.getUrl(properties.getS3().getBucket(), this.getPath(fileName));
 
         return FotoResource
                 .builder()

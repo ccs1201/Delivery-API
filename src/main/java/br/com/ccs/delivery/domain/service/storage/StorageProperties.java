@@ -16,6 +16,11 @@ public class StorageProperties {
 
     private Local local = new Local();
     private S3 s3 = new S3();
+    private StorageServiceType storageType = StorageServiceType.LOCAL;
+
+    public enum StorageServiceType {
+        LOCAL, AMAZON_S3
+    }
 
     @Getter
     @Setter
