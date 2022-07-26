@@ -31,7 +31,6 @@ public class CadastroFotoProdutoController {
     @MapperQualifier(MapperQualifierType.FOTOPRODUTO)
     MapperInterface<FotoProdutoResponse, FotoProdutoInput, FotoProduto> mapper;
     CadastroFotoProdutoService service;
-
     ProdutoService produtoService;
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
