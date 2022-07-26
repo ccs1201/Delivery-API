@@ -85,7 +85,7 @@ insert into produto (nome, descricao, valor, ativo, restaurante_id) values ('Esp
 
 insert into  grupo (nome) values ('Gerentes'), ('Vendedores'), ('Secretarias'),('Cadastradores');
 
-insert into usuario (nome, email, senha, data_cadastro) values ('um', 'um@usuario.com', '12345', utc_timestamp), ('dois', 'dois@usuario.com', '12345', utc_timestamp), ('três', 'três@usuario.com', '12345', utc_timestamp), ('quatro', 'quatro@usuario.com', '12345', utc_timestamp);
+insert into usuario (nome, email, senha, data_cadastro) values ('um', 'ccs1201+um@gmail.com', '12345', utc_timestamp), ('dois', 'ccs1201+dois@gmail.com', '12345', utc_timestamp), ('três', 'ccs1201+três@gmail.com', '12345', utc_timestamp), ('quatro', 'ccs1201+quatro@gmail.com', '12345', utc_timestamp);
 
 insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
 
