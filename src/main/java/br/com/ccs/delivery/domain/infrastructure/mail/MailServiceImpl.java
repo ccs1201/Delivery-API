@@ -47,7 +47,7 @@ public class MailServiceImpl implements MailService {
 
             return mimeMessage;
         } catch (MessagingException e) {
-            throw new EmailSendException("Erro ao criar mensagem, " + e.getMessage(), e);
+            throw new EmailSendException("Falha ao criar mensagem, " + e.getMessage(), e);
         }
     }
 
@@ -60,7 +60,7 @@ public class MailServiceImpl implements MailService {
             return FreeMarkerTemplateUtils.processTemplateIntoString(template,pedido);
 
         } catch (Exception e) {
-            throw new EmailSendException("Erro ao gerar template do E-mail. " + e.getMessage(), e);
+            throw new EmailSendException("Falha ao gerar template do E-mail. " + e.getMessage(), e);
         }
 
     }

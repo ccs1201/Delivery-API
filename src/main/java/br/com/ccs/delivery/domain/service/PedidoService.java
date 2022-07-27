@@ -361,4 +361,10 @@ public class PedidoService {
 
         return pedidos;
     }
+
+    public String getReciboHtml(Long pedidoId) {
+        var pedido = this.findById(pedidoId);
+
+        return mailService.buildHtmlEmailBody(pedido);
+    }
 }

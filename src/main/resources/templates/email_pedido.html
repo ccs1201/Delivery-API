@@ -3,9 +3,18 @@
 <h1 style="font-size: 26px; color: coral">Pedido ${statusPedido}</h1>
 <p>
     Número do Pedido: ${codigo} <br>
-    Restaurante: ${restaurante.nome}<br>
+    Restaurante: <strong> ${restaurante.nome}</strong><br>
     Data Pedido: ${dataCriacao}<br>
-    Valor Total: ${valorTotal}<br>
+    Valor Total: ${valorTotal?string.currency}<br>
+<p>
+    <strong>Itens do Pedido:</strong> <br>
+
+<#list itensPedido as item>
+<p>
+    ${item.produto.nome} x ${item.quantidade} <br>
+</p>
+</#list>
+</p>
 </p>
 </body>
 </html>
