@@ -6,6 +6,8 @@ import br.com.ccs.delivery.domain.model.entity.Pedido;
 import br.com.ccs.delivery.domain.service.MailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,7 +17,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-
+@Getter(AccessLevel.PACKAGE)
 public class SmtpMailServiceImpl implements MailService {
 
     @Autowired

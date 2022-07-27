@@ -27,6 +27,8 @@ public class EmailProperties {
     @NotNull
     private String sender;
     private Implementacao impl;
+    private boolean sandBox = false;
+    private String destinationSandBox;
 
     public enum Implementacao {
         DESENVOLVIMENTO, PRODUCAO
