@@ -1,8 +1,8 @@
 package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
 import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
+import br.com.ccs.delivery.core.mapper.MapperInterface;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Usuario;

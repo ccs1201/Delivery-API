@@ -1,8 +1,8 @@
 package br.com.ccs.delivery.domain.infrastructure.storage.local;
 
 import br.com.ccs.delivery.domain.infrastructure.storage.StorageProperties;
-import br.com.ccs.delivery.domain.service.FotoStorageService;
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
+import br.com.ccs.delivery.domain.service.FotoStorageService;
 import br.com.ccs.delivery.domain.service.exception.StorageServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 

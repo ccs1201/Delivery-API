@@ -1,9 +1,9 @@
 package br.com.ccs.delivery.core.configurations;
 
-import br.com.ccs.delivery.domain.service.FotoStorageService;
 import br.com.ccs.delivery.domain.infrastructure.storage.StorageProperties;
 import br.com.ccs.delivery.domain.infrastructure.storage.local.LocalFotoStorageServiceImpl;
 import br.com.ccs.delivery.domain.infrastructure.storage.s3.S3FotoStorageImpl;
+import br.com.ccs.delivery.domain.service.FotoStorageService;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;

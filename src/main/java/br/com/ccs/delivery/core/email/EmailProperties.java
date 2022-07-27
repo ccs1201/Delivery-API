@@ -12,7 +12,11 @@ import javax.validation.constraints.NotNull;
  * Classe utilitária para carregar
  * o e-mail do remetente do arquivo
  * application.properties na propriedade
- * $delivery-api.mail.sender
+ * $delivery-api.mail.sender e
+ * o tipo de implementação do
+ * {@link br.com.ccs.delivery.domain.service.MailService}
+ * que pode deve DESENVOLVIMENTO ou PRODUCAO
+ * na propriedade $delivery-api.mail.impl
  */
 @Validated // Necessário para que o spring valide as anotações no startup da aplicação
 @ConfigurationProperties("delivery-api.mail")
@@ -22,4 +26,9 @@ import javax.validation.constraints.NotNull;
 public class EmailProperties {
     @NotNull
     private String sender;
+    private Implementacao impl;
+
+    public enum Implementacao {
+        DESENVOLVIMENTO, PRODUCAO
+    }
 }

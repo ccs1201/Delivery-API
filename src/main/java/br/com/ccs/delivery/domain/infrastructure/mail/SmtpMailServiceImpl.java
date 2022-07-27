@@ -6,22 +6,23 @@ import br.com.ccs.delivery.domain.model.entity.Pedido;
 import br.com.ccs.delivery.domain.service.MailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-@Service
-@AllArgsConstructor
-public class MailServiceImpl implements MailService {
 
+public class SmtpMailServiceImpl implements MailService {
+
+    @Autowired
     private JavaMailSender mailSender;
+    @Autowired
     private EmailProperties properties;
+    @Autowired
     private Configuration freeMakerConfiguration;
 
     @Override
@@ -57,7 +58,7 @@ public class MailServiceImpl implements MailService {
         try {
 
             Template template = freeMakerConfiguration.getTemplate("email_pedido.html");
-            return FreeMarkerTemplateUtils.processTemplateIntoString(template,pedido);
+            return FreeMarkerTemplateUtils.processTemplateIntoString(template, pedido);
 
         } catch (Exception e) {
             throw new EmailSendException("Falha ao gerar template do E-mail. " + e.getMessage(), e);
