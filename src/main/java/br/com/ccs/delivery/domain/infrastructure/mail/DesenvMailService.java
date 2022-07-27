@@ -2,6 +2,7 @@ package br.com.ccs.delivery.domain.infrastructure.mail;
 
 import br.com.ccs.delivery.domain.model.entity.Pedido;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
 
@@ -14,8 +15,12 @@ public class DesenvMailService extends SmtpMailServiceImpl {
             var message = super.buildMimeMailMessage(pedido);
 
             try {
-                message.setFrom(super.getProperties().getDestinationSandBox());
+                MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+
+                helper.setTo(super.getProperties().getDestinationSandBox());
+
                 super.getMailSender().send(message);
+
             } catch (MessagingException e) {
                 System.out.println(this.getClass().getName());
                 e.printStackTrace();
