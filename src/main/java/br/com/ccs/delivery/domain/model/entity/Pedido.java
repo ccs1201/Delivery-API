@@ -1,10 +1,13 @@
 package br.com.ccs.delivery.domain.model.entity;
 
+import br.com.ccs.delivery.domain.event.PedidoConfirmadoEvent;
 import br.com.ccs.delivery.domain.model.component.Endereco;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,15 +16,16 @@ import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @DynamicUpdate
-public class Pedido {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -139,6 +143,8 @@ public class Pedido {
     public void confirmar() {
         this.dataConfirmacao = OffsetDateTime.now();
         this.statusPedido = StatusPedido.CONFIRMADO;
+
+        registerEvent(new PedidoConfirmadoEvent(this));
     }
 
     public void criar() {
@@ -150,16 +156,5 @@ public class Pedido {
         this.codigo = UUID.randomUUID().toString();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pedido pedido = (Pedido) o;
-        return id.equals(pedido.id);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

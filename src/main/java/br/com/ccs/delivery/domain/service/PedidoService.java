@@ -86,7 +86,6 @@ public class PedidoService {
 
         pedido = this.save(pedido);
 
-        this.sendEmail(pedido);
         return this.findById(pedido.getId());
 
     }
@@ -269,7 +268,6 @@ public class PedidoService {
 
         repository.saveAndFlush(pedido);
 
-        this.sendEmail(pedido);
     }
 
     /**
@@ -288,7 +286,6 @@ public class PedidoService {
 
         repository.saveAndFlush(pedido);
 
-        this.sendEmail(pedido);
     }
 
     /**
@@ -314,8 +311,6 @@ public class PedidoService {
         pedido.confirmar();
 
         repository.saveAndFlush(pedido);
-
-        this.sendEmail(pedido);
     }
 
 
@@ -338,19 +333,18 @@ public class PedidoService {
 
         repository.saveAndFlush(pedido);
 
-        this.sendEmail(pedido);
     }
-
-    /**
-     * Envia um email para cliente com as
-     * atualizações do seu pedido.
-     *
-     * @param pedido pedido cujo cliente deve ser notificado
-     */
-    private void sendEmail(Pedido pedido) {
-
-        mailService.send(pedido);
-    }
+//
+//    /**
+//     * Envia um email para cliente com as
+//     * atualizações do seu pedido.
+//     *
+//     * @param pedido pedido cujo cliente deve ser notificado
+//     */
+//    private void sendEmail(Pedido pedido) {
+//
+//        mailService.send(pedido);
+//    }
 
     public Page<Pedido> filter(PedidoFilter pedidoFilter, Pageable pageable) {
         Page<Pedido> pedidos = repository.findAll(PedidoSpecs.applyFilter(pedidoFilter), pageable);
