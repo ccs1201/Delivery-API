@@ -59,7 +59,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     public ResponseEntity<Object> unCaughtHandler(Exception e) {
         // e.printStackTrace();
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
-                String.format("Uncaught error, please contact SYS Admin Details: %s", e.getMessage()), "An unexpected error occur.");
+                String.format("Uncaught error, please contact SYS Admin. Details: %s", e.getMessage()), "An unexpected error occur.");
     }
 
     @ExceptionHandler(value = {DataIntegrityViolationException.class})

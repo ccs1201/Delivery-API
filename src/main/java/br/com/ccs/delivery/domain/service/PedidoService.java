@@ -310,9 +310,8 @@ public class PedidoService {
 
         pedido.confirmar();
 
-        repository.saveAndFlush(pedido);
+        repository.save(pedido);
     }
-
 
     /**
      * Confirma a entrega de um pedido
