@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class A_EmailController {
 
-
     PedidoService pedidoService;
     private MailService mailService;
 
