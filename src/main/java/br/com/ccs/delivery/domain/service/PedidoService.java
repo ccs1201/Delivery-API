@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -303,7 +302,9 @@ public class PedidoService {
 
         Pedido pedido = this.findById(pedidoId);
 
-
+        if (pedido.getStatusPedido().equals(StatusPedido.CONFIRMADO)) {
+            throw new StatusPedidoException("Pedido já confirmado.");
+        }
 
         if (pedido.getStatusPedido() != StatusPedido.CRIADO) {
             throw new StatusPedidoException(
@@ -314,9 +315,8 @@ public class PedidoService {
 
         repository.saveAndFlush(pedido);
 
-       this.sendEmail(pedido);
+        this.sendEmail(pedido);
     }
-
 
 
     /**
@@ -341,15 +341,15 @@ public class PedidoService {
         this.sendEmail(pedido);
     }
 
+    /**
+     * Envia um email para cliente com as
+     * atualizações do seu pedido.
+     *
+     * @param pedido pedido cujo cliente deve ser notificado
+     */
     private void sendEmail(Pedido pedido) {
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-
-        mailMessage.setSubject(pedido.getRestaurante().getNome() + "Pedido:" + pedido.getStatusPedido());
-        mailMessage.setText(mailService.buildEmailBody(pedido));
-        mailMessage.setTo(pedido.getCliente().getEmail());
-
-        mailService.send(mailMessage);
+        mailService.send(pedido);
     }
 
     public Page<Pedido> filter(PedidoFilter pedidoFilter, Pageable pageable) {

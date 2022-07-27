@@ -2,13 +2,19 @@ package br.com.ccs.delivery.domain.infrastructure.mail;
 
 import br.com.ccs.delivery.core.email.EmailProperties;
 import br.com.ccs.delivery.domain.infrastructure.exception.EmailSendException;
+import br.com.ccs.delivery.domain.model.entity.Pedido;
 import br.com.ccs.delivery.domain.service.MailService;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 @Service
 @AllArgsConstructor
@@ -16,27 +22,46 @@ public class MailServiceImpl implements MailService {
 
     private JavaMailSender mailSender;
     private EmailProperties properties;
+    private Configuration freeMakerConfiguration;
 
     @Override
-    public void send(SimpleMailMessage mailMessage) {
-
+    public void send(Pedido pedido) {
         try {
-            mailMessage.setFrom(properties.getSender());
-            mailSender.send(mailMessage);
+            var message = this.buildMimeMailMessage(pedido);
+
+            mailSender.send(message);
         } catch (MailException e) {
             throw new EmailSendException(
                     String.format("Erro ao enviar E-mail: %s", e.getMessage()), e);
         }
     }
 
-    @Override
-    public void send(MimeMailMessage mailMessage) {
+    public MimeMessage buildMimeMailMessage(Pedido pedido) {
         try {
-            mailMessage.setFrom(properties.getSender());
-            mailSender.send(mailMessage.getMimeMessage());
-        } catch (MailException e) {
-            throw new EmailSendException(
-                    String.format("Erro ao enviar E-mail: %s", e.getMessage()), e);
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+            helper.setFrom(properties.getSender());
+            helper.setTo(pedido.getCliente().getEmail());
+            helper.setSubject("Seu pedido em: " + pedido.getRestaurante().getNome() + " foi " + pedido.getStatusPedido());
+            helper.setText(buildHtmlEmailBody(pedido));
+
+            return mimeMessage;
+        } catch (MessagingException e) {
+            throw new EmailSendException("Erro ao criar mensagem, " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public String buildHtmlEmailBody(Pedido pedido) {
+
+        try {
+
+            Template template = freeMakerConfiguration.getTemplate("email_pedido.html");
+            return FreeMarkerTemplateUtils.processTemplateIntoString(template,pedido);
+
+        } catch (Exception e) {
+            throw new EmailSendException("Erro ao gerar template do E-mail. " + e.getMessage(), e);
+        }
+
     }
 }

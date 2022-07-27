@@ -128,6 +128,13 @@
         </dependency>
         <!-- AWS S3 SDK -->
 
+        <!-- Apache FreeMarker -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <!-- Apache FreeMarker -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
