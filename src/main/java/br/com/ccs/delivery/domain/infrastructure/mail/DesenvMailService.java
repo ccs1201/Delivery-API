@@ -25,14 +25,10 @@ public class DesenvMailService extends SmtpMailServiceImpl {
                 System.out.println(this.getClass().getName());
                 e.printStackTrace();
             }
-
         } else {
             var message = super.buildHtmlEmailBody(pedido);
 
             log.info("[FAKE E-MAIL] Para: {}\n{}", pedido.getCliente().getEmail(), message);
         }
-
-
     }
-
 }
