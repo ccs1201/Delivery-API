@@ -16,8 +16,8 @@ public class PedidoConfirmadoListener {
      * Envia um e-mail ao cliente durante um evento
      * de confirmação de pedido.
      *<p>
-     * A anotação <b>{@code @TransactionalEventListener}</b> com <b>phase</b>
-     * <b>{@code TransactionPhase.BEFORE_COMMIT} </b>faz com que o e-mail seja enviado
+     * A anotação <b>{@code @TransactionalEventListener}</b> com <b>phase</b>=
+     * <b>{@code TransactionPhase.BEFORE_COMMIT} </b> faz com que o e-mail seja enviado
      * antes do commit no banco de dados e caso seja lançada alguma
      * exceção durante a tentativa de envio do e-mail, será efetuado
      * o rollback da transação no banco de dados.
