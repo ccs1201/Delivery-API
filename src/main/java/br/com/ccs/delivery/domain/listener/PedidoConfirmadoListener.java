@@ -13,8 +13,8 @@ public class PedidoConfirmadoListener {
     private MailService mailService;
 
     /**
-     * Envia um e-mail ao cliente durante um evento
-     * de confirmação de pedido.
+     * <b>Envia um e-mail ao cliente durante um evento
+     * de confirmação de pedido.</b>
      *<p>
      * A anotação <b>{@code @TransactionalEventListener}</b> com <b>phase</b>=
      * <b>{@code TransactionPhase.BEFORE_COMMIT} </b> faz com que o e-mail seja enviado
