@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.domain.model.entity;
 
+import br.com.ccs.delivery.domain.event.PedidoCanceladoEvent;
 import br.com.ccs.delivery.domain.event.PedidoConfirmadoEvent;
 import br.com.ccs.delivery.domain.model.component.Endereco;
 import lombok.EqualsAndHashCode;
@@ -133,6 +134,7 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     public void cancelar() {
         this.dataCancelamento = OffsetDateTime.now();
         this.statusPedido = StatusPedido.CANCELADO;
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 
     public void entregar() {

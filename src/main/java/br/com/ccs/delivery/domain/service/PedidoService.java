@@ -266,7 +266,7 @@ public class PedidoService {
 
         pedido.cancelar();
 
-        repository.saveAndFlush(pedido);
+        repository.save(pedido);
 
     }
 
