@@ -2,10 +2,7 @@ package br.com.ccs.delivery.domain.service;
 
 import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import br.com.ccs.delivery.domain.repository.TipoPagamentoRepository;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityUpdateException;
+import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -47,6 +44,8 @@ public class TipoPagamentoService {
         try {
             return repository.saveAndFlush(tipoPagamento);
 
+        } catch (DataIntegrityViolationException e) {
+            throw new RepositoryDataIntegrityViolationException("Tipo de pagamento já cadastrado", e);
         } catch (IllegalArgumentException e) {
             throw new RepositoryEntityPersistException("Erro ao cadastrar tipo de pagamento", e);
         }

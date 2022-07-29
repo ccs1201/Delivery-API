@@ -277,7 +277,7 @@ public class RestauranteService {
 
     @Transactional
     public void abrir(Long restauranteId) {
-        Restaurante restaurante =  repository.findById(restauranteId).orElseThrow(
+        Restaurante restaurante = repository.findById(restauranteId).orElseThrow(
                 () -> new RepositoryEntityNotFoundException(
                         String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
                 )
@@ -288,7 +288,7 @@ public class RestauranteService {
 
     @Transactional
     public void fechar(Long restauranteId) {
-        Restaurante restaurante =  repository.findById(restauranteId).orElseThrow(
+        Restaurante restaurante = repository.findById(restauranteId).orElseThrow(
                 () -> new RepositoryEntityNotFoundException(
                         String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
                 )

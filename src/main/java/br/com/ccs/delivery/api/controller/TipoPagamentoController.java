@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping(value = "/api/tipos-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
