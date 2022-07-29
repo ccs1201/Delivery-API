@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.Collection;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -55,7 +56,7 @@ public class TipoPagamentoController {
 
     @DeleteMapping("{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(Long tipoPagamentoId) {
+    public void delete(@PathVariable @Positive Long tipoPagamentoId) {
         service.delete(tipoPagamentoId);
     }
 

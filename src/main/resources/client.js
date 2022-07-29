@@ -61,19 +61,48 @@ function getTiposPagamento() {
     });
 }
 
-function preencherTabela(formasPagamento) {
+function preencherTabela(tiposPagamento) {
     $("#tabela tbody tr").remove();
 
-    $.each(formasPagamento, function (i, formaPagamento) {
+    $.each(tiposPagamento, function (i, pagamento) {
         var linha = $("<tr>");
 
+        var linkAcao = $("<a href='#'>")
+            .text("Excluir")
+            .click(function (event) {
+                event.preventDefault();
+                excluirTipoPagamento(pagamento);
+            });
+
         linha.append(
-            $("<td>").text(formaPagamento.id),
-            $("<td>").text(formaPagamento.nome)
+            $("<td>").text(pagamento.id),
+            $("<td>").text(pagamento.nome),
+            $("<td>").append(linkAcao)
         );
 
         linha.appendTo("#tabela");
     });
+}
+
+function excluirTipoPagamento(pagamento) {
+    $.ajax({
+        url: "http://localhost:8080/api/tipos-pagamento/" + pagamento.id,
+        type: "delete",
+
+        success: function (response) {
+            getTiposPagamento();
+            alert("Tipo de pagamento removido com sucesso.")
+        },
+
+        error: function (error) {
+            if (error.status >= 400 && error.status <= 499) {
+                var problem = JSON.parse(error.responseText);
+                alert(problem.detail);
+            } else {
+                alert("Erro desconhecido.");
+            }
+        }
+    })
 }
 
 function cadastrarTipoPagamento() {
@@ -90,16 +119,16 @@ function cadastrarTipoPagamento() {
         contentType: "application/json",
 
         success: function (response) {
-            alert("Forma de pagamento adicionada!");
-            consultar();
+            alert("Tipo de pagamento adicionada!");
+            getTiposPagamento();
         },
 
         error: function (error) {
-            if (error.status == 409) {
+            if (error.status >= 400 && error.status <= 499) {
                 var problem = JSON.parse(error.responseText);
                 alert(problem.detail);
             } else {
-                alert("Erro ao cadastrar forma de pagamento!");
+                alert("Erro ao cadastrar tipo de pagamento!");
             }
         }
     });
