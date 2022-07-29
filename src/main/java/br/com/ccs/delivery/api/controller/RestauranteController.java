@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/restaurantes")
 @AllArgsConstructor
@@ -77,10 +79,17 @@ public class RestauranteController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     // @JsonView(RestauranteResponseView.Resumo.class) //não funciona com page
-    public Page<RestauranteResponse> getAll(@PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Page<RestauranteResponse>> getAll(@PageableDefault(size = 5) Pageable pageable) {
         Page<Restaurante> restaurantePage = service.findAll(pageable);
 
-        return mapper.toPage(restaurantePage);
+        var pageResponse =  mapper.toPage(restaurantePage);
+
+        return ResponseEntity.ok(pageResponse);
+
+        //Habilita o CORS somente para este método
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:8081")
+//                .body(pageResponse);
     }
 
     @GetMapping(params = "projecao=nome")
