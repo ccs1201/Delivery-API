@@ -20,8 +20,8 @@ function fecharRestaurante() {
             clearConteudo();
         },
 
-        "statusCode":{
-            404: function (response){
+        "statusCode": {
+            404: function (response) {
                 alert("Não foi possível fechar o restaurante.");
                 $("#conteudo").text(JSON.stringify(response));
             }
@@ -40,8 +40,8 @@ function abrirRestaurante() {
             clearConteudo();
 
         },
-        "statusCode":{
-            404: function (response){
+        "statusCode": {
+            404: function (response) {
                 alert("Não foi possível abrir o restaurante.");
                 $("#conteudo").text(JSON.stringify(response));
             }
@@ -50,13 +50,12 @@ function abrirRestaurante() {
 }
 
 
-
 function getTiposPagamento() {
     $.ajax({
         url: "http://localhost:8080/api/tipos-pagamento",
         type: "get",
 
-        success: function(response) {
+        success: function (response) {
             preencherTabela(response);
         }
     });
@@ -65,7 +64,7 @@ function getTiposPagamento() {
 function preencherTabela(formasPagamento) {
     $("#tabela tbody tr").remove();
 
-    $.each(formasPagamento, function(i, formaPagamento) {
+    $.each(formasPagamento, function (i, formaPagamento) {
         var linha = $("<tr>");
 
         linha.append(
@@ -90,12 +89,12 @@ function cadastrarTipoPagamento() {
         data: formaPagamentoJson,
         contentType: "application/json",
 
-        success: function(response) {
+        success: function (response) {
             alert("Forma de pagamento adicionada!");
             consultar();
         },
 
-        error: function(error) {
+        error: function (error) {
             if (error.status == 409) {
                 var problem = JSON.parse(error.responseText);
                 alert(problem.detail);
@@ -106,7 +105,7 @@ function cadastrarTipoPagamento() {
     });
 }
 
-function clearConteudo(){
+function clearConteudo() {
     $("#conteudo").text("");
 }
 
