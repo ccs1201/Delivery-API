@@ -277,14 +277,22 @@ public class RestauranteService {
 
     @Transactional
     public void abrir(Long restauranteId) {
-        Restaurante restaurante = this.findById(restauranteId);
+        Restaurante restaurante =  repository.findById(restauranteId).orElseThrow(
+                () -> new RepositoryEntityNotFoundException(
+                        String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
+                )
+        );
         restaurante.abrir();
         repository.saveAndFlush(restaurante);
     }
 
     @Transactional
     public void fechar(Long restauranteId) {
-        Restaurante restaurante = this.findById(restauranteId);
+        Restaurante restaurante =  repository.findById(restauranteId).orElseThrow(
+                () -> new RepositoryEntityNotFoundException(
+                        String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)
+                )
+        );
         restaurante.fechar();
         repository.saveAndFlush(restaurante);
     }
