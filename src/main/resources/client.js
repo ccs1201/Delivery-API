@@ -15,7 +15,7 @@ function fecharRestaurante() {
         "url": "http://localhost:8080/api/restaurantes/1/fechado",
         "type": "patch",
 
-        "success": function (response) {
+        "success": function () {
             alert("Restaurante Fechado com sucesso.");
             clearConteudo();
         },
@@ -35,7 +35,7 @@ function abrirRestaurante() {
         url: "http://localhost:8080/api/restaurantes/1/aberto",
         type: "patch",
 
-        success: function (response) {
+        success: function () {
             alert("Restaurante Aberto com sucesso");
             clearConteudo();
 
