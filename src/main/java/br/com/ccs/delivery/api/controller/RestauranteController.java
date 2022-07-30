@@ -38,7 +38,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:8081", maxAge = 10)
+//@CrossOrigin(origins = "http://localhost:8081", maxAge = 10)
 @RestController
 @RequestMapping("/api/restaurantes")
 @AllArgsConstructor

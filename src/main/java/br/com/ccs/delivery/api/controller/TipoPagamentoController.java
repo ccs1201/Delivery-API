@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
 
-@CrossOrigin(origins = "http://localhost:8081")
+//@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping(value = "/api/tipos-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
