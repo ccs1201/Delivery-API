@@ -229,7 +229,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
         return apiValidationErrorResponse;
     }
 
-    /*
+    /**
      * Do not touch in if() sequences, the order matters. ;)
      */
     @Override
