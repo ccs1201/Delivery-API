@@ -29,7 +29,7 @@ public final class ApiValidationErrorResponse {
     @Setter
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class FieldValidationError {
+    public static final class FieldValidationError {
         private String field;
         private String fieldValidationMessage;
         private String rejectedValue;

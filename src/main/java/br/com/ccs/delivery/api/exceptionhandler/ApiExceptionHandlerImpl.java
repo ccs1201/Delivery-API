@@ -69,7 +69,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
         Throwable rootCause = ExceptionUtils.getRootCause(e);
 
-        return buildResponseEntity(HttpStatus.CONFLICT, rootCause.getMessage(), "Data integrity violation. Check Detail:");
+        return buildResponseEntity(HttpStatus.CONFLICT, rootCause.getMessage(), "Violação de integridade de dados. Verifique os detalhes:");
     }
 
     @ExceptionHandler(StorageServiceException.class)
@@ -108,7 +108,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ApiResponse(responseCode = "404", description = "No record found for the given parameter")
     public ResponseEntity<?> entityNotFoundExceptionHandler(RepositoryEntityNotFoundException e) {
-        return buildResponseEntity(HttpStatus.NOT_FOUND, e, "No record found for the given parameter");
+        return buildResponseEntity(HttpStatus.NOT_FOUND, e, "Nenhum registro localizado com os parâmetros informados.");
     }
 
     @ExceptionHandler(BusinessLogicException.class)
@@ -131,7 +131,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     public ResponseEntity<?> entityInUseExceptionHandler(RepositoryEntityInUseException e) {
 
         return buildResponseEntity(HttpStatus.CONFLICT, e,
-                "Registro em uso, não pode ser removido, considere inativar para que não seja mais exibido");
+                "Registro em uso e não pode ser removido, considere inativar para que não seja mais exibido");
     }
 
     @ExceptionHandler(RepositoryEntityPersistException.class)
@@ -186,6 +186,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
     @ExceptionHandler(RelatorioJasperException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ApiResponse(responseCode = "500", description = "Report generation error")
     public ResponseEntity<?> relatorioJasperExceptionHandler(RelatorioJasperException e) {
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, e, "Erro ao gerar relatório");
     }
@@ -272,7 +273,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        String detail = String.format("The requested resource %s does not exists.", ex.getRequestURL());
+        String detail = String.format("O recurso solicitado: %s, não existe.", ex.getRequestURL());
 
         return buildResponseEntity(status, detail, "Resource not found.");
 
@@ -280,7 +281,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
 
     private ResponseEntity<Object> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException e, HttpStatus status) {
         String detail =
-                String.format("Invalid URL parameter %s. Requires %s found %s",
+                String.format("Parâmetro %s inválido. Esperado %s recebido %s",
                         e.getName(), Objects.requireNonNull(e.getRequiredType()).getSimpleName(),
                         Objects.requireNonNull(e.getValue()).getClass().getSimpleName());
 
@@ -325,7 +326,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                 .add(ApiValidationErrorResponse.FieldValidationError
                         .builder()
                         .field(path.getFieldName())
-                        .fieldValidationMessage(String.format("Requires %s Found %s", e.getTargetType().getSimpleName(), e.getValue().getClass().getSimpleName()))
+                        .fieldValidationMessage(String.format("Esperado %s recebido %s", e.getTargetType().getSimpleName(), e.getValue().getClass().getSimpleName()))
                         .rejectedValue((String) e.getValue())
                         .build()));
 

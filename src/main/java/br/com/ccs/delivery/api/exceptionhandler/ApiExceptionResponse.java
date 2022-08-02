@@ -67,10 +67,10 @@ import java.time.OffsetDateTime;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiExceptionResponse {
+public final class ApiExceptionResponse {
 
     @Builder.Default
-    private OffsetDateTime dateTime = OffsetDateTime.now();
+    private OffsetDateTime timeStamp = OffsetDateTime.now();
     private int status;
     private String type; //Type serve para passarmos A URL do help caso exista.
     private String title;
