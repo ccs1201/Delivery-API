@@ -8,13 +8,16 @@ import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import br.com.ccs.delivery.domain.service.TipoPagamentoService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 //@CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -30,8 +33,12 @@ public class TipoPagamentoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<TipoPagamentoResponse> getAll() {
-        return mapper.toCollection(service.findAll());
+    public ResponseEntity<Collection<TipoPagamentoResponse>> getAll() {
+        var tiposPagamento = mapper.toCollection(service.findAll());
+        return ResponseEntity.ok()
+                //habilita o cache para esta URI
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(tiposPagamento);
     }
 
     @PostMapping
@@ -42,8 +49,12 @@ public class TipoPagamentoController {
 
     @GetMapping("{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.OK)
-    public TipoPagamentoResponse getById(@PathVariable Long tipoPagamentoId) {
-        return mapper.toResponseModel(service.findById(tipoPagamentoId));
+    public ResponseEntity<TipoPagamentoResponse> getById(@PathVariable Long tipoPagamentoId) {
+        var tipoPagamento = mapper.toResponseModel(service.findById(tipoPagamentoId));
+
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(tipoPagamento);
     }
 
     @PutMapping("{tipoPagamentoId}")
