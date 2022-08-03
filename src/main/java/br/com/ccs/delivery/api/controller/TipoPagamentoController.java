@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 //@CrossOrigin(origins = "http://localhost:8081")
+@SuppressWarnings("NonAsciiCharacters")
 @RestController
 @RequestMapping(value = "/api/tipos-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
@@ -36,8 +37,16 @@ public class TipoPagamentoController {
     public ResponseEntity<Collection<TipoPagamentoResponse>> getAll() {
         var tiposPagamento = mapper.toCollection(service.findAll());
         return ResponseEntity.ok()
-                //habilita o cache para esta URI
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                // Habilita o cache para esta URI //cachePrivate garante que somente o cliente possa fazer cache
+                // e não em cache compartilhado (ex. servidores proxy intermediários)
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+
+                // noCache faz com que todas as requisições sejam validadas com etag no servidor
+                // e não que não seja feito cache como o nome sugere.
+                //.cacheControl(CacheControl.noCache())
+
+                // noStore realmente impede que o cliente faça cache da resposta
+                // .cacheControl(CacheControl.noStore())
                 .body(tiposPagamento);
     }
 
