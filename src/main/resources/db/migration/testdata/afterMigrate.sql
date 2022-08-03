@@ -34,10 +34,12 @@ alter table item_pedido auto_increment =1;
 
 
 INSERT INTO cozinha VALUES (6,'Alemã'),(8,'Alienigena'),(3,'Brasileira'),(7,'Francesa'),(2,'Indiana'),(5,'Italiana'),(4,'Portuguesa'),(1,'Tailandesa');
+
 insert into permissao (nome, descricao) values ('ADMINISTRADOR', 'Administradores do Sistema');
 insert into permissao (nome, descricao) values ('USUARIO', 'Usuários do Sistema, aqueles que são restaurantes');
 insert into permissao (nome, descricao) values ('CLIENTE', 'Clientes do Sistema, aqueles que fazem pedidos para os Restaurantes');
-insert into tipo_pagamento (id, nome) values (1,'DINHEIRO'), (2,'CARTÃO CRÉDITO'), (3,'CARTÃO DÉBITO'), (4,'PIX'),(5,'BOLETO'), (6,'VOUCHER'), (7,'CUPOM DESCONTO');
+
+insert into tipo_pagamento (id, nome,last_update) values (1,'DINHEIRO',utc_timestamp), (2,'CARTÃO CRÉDITO',utc_timestamp), (3,'CARTÃO DÉBITO',utc_timestamp), (4,'PIX',utc_timestamp),(5,'BOLETO',utc_timestamp), (6,'VOUCHER',utc_timestamp), (7,'CUPOM DESCONTO',utc_timestamp);
 
 INSERT INTO estado (id, nome, sigla) VALUES(1, 'Acre', 'AC');
 INSERT INTO estado (id, nome, sigla) VALUES(2, 'Alagoas', 'AL');

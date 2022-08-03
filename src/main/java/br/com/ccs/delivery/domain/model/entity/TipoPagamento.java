@@ -2,8 +2,10 @@ package br.com.ccs.delivery.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -21,6 +23,10 @@ public class TipoPagamento {
 
     @Column(nullable = false, length = 30)
     private String nome;
+
+    @UpdateTimestamp
+    private OffsetDateTime lastUpdate;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "tiposPagamento")
     private Collection<Restaurante> restaurantes;
