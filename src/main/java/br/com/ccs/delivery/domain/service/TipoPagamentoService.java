@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.Collection;
 
 @Service
@@ -59,5 +60,9 @@ public class TipoPagamentoService {
             throw new RepositoryEntityUpdateException(
                     String.format("Erro ao atualizar tipo de pagamento ID: %d", tipoPagamento.getId()), e);
         }
+    }
+
+    public OffsetDateTime getLastUpdate(){
+        return repository.findLastUpdate();
     }
 }
