@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +35,10 @@ import java.util.Collection;
 public class PedidoController {
 
     private PedidoService service;
-    @MapperQualifier(MapperQualifierType.PEDIDO)
-    private MapperInterface<PedidoResponse, PedidoInput, Pedido> mapper;
+   @MapperQualifier(MapperQualifierType.PEDIDO)
+   private MapperInterface<PedidoResponse, PedidoInput, Pedido> mapper;
+
+//    private PedidoMapper mapper;
     private PedidoResponseFilterMapper pedidoResponseFilterMapper;
 
     @GetMapping
@@ -48,6 +51,18 @@ public class PedidoController {
     @ResponseStatus(HttpStatus.OK)
     public Page<PedidoResponse> filter(PedidoFilter pedidoFilter, @PageableDefault(size = 5) Pageable pageable) {
         return mapper.toPage(service.filter(pedidoFilter, pageable));
+    }
+    @Transactional
+    @GetMapping("/byExample")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<PedidoResponse> findByExample(PedidoInput pedidoInput, @PageableDefault(size = 5) Pageable pageable){
+        var pedido = mapper.toEntity(pedidoInput);
+        pedido.setSubTotal(null);
+        pedido.setValorTotal(null);
+        pedido.setId(null);
+        pedido.setCliente(null);
+        
+        return mapper.toPage(service.findByExample(pedido, pageable));
     }
 
     @GetMapping("/fields")

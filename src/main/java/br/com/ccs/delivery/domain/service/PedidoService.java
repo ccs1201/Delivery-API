@@ -8,6 +8,8 @@ import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -359,5 +361,23 @@ public class PedidoService {
         var pedido = this.findById(pedidoId);
 
         return mailService.buildHtmlEmailBody(pedido);
+    }
+
+    public Page<Pedido> findByExample(Pedido pedido, Pageable pageable) {
+
+        ExampleMatcher exampleMatcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase("restaurante.nome")
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example<Pedido> example = Example.of(pedido, exampleMatcher);
+
+
+        var pedidos = repository.findAll(example, pageable);
+
+
+        return pedidos;
+
     }
 }

@@ -8,7 +8,7 @@ import java.lang.reflect.ParameterizedType;
 public abstract class AbstractMapper<RESPONSEMODEL, INPUTMODEL, ENTITY> implements MapperInterface<RESPONSEMODEL, INPUTMODEL, ENTITY> {
 
     @Autowired
-    private ModelMapper mapper;
+    protected ModelMapper mapper;
     private final Class<RESPONSEMODEL> responseModelClass;
     private final Class<ENTITY> entityClass;
 

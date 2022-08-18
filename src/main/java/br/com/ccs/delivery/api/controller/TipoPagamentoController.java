@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 //@CrossOrigin(origins = "http://localhost:8081")
 @SuppressWarnings("NonAsciiCharacters")
 @RestController
-@RequestMapping(value = "/api/tipos-pagamento", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/tipos-pagamento", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 @AllArgsConstructor
 public class TipoPagamentoController {
 
