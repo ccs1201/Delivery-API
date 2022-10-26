@@ -23,6 +23,7 @@ public class Cozinha {
     @NotNull(groups = ValidationGroups.CozinhaId.class)
     private Long id;
 
+//    @Access(null)
     //@JsonProperty(value = "Categoria Cozinha")
     @Column(unique = true, nullable = false)
     @NotBlank

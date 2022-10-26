@@ -146,7 +146,8 @@ public class RestauranteController {
 
     @GetMapping("/find")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<RestauranteResponse> anyCriteria(String nomeRestaurante, BigDecimal taxaEntregaMin, BigDecimal taxaEntregaMax, String nomeCozinha) {
+    public Collection<RestauranteResponse> anyCriteria(String nomeRestaurante, BigDecimal taxaEntregaMin,
+                                                       BigDecimal taxaEntregaMax, String nomeCozinha) {
 
         return mapper.toCollection(service.anyCriteria(nomeRestaurante, taxaEntregaMin, taxaEntregaMax, nomeCozinha));
 

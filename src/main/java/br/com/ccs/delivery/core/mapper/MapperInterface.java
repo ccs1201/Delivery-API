@@ -17,18 +17,11 @@ public interface MapperInterface<RESPONSEMODEL, INPUTMODEL, ENTITY> {
         return page.map(this::toResponseModel);
     }
 
-
     default Collection<RESPONSEMODEL> toCollection(Page<ENTITY> page) {
 
         return this.toCollection(page.getContent());
 
-//        return page.stream()
-//                .toList()
-//                .stream()
-//                .map(this::toResponseModel)
-//                .collect(Collectors.toList());
     }
-
 
     default Collection<RESPONSEMODEL> toCollection(Collection<ENTITY> collection) {
         return collection.stream()

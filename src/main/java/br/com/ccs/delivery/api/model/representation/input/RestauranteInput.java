@@ -20,7 +20,7 @@ public class RestauranteInput {
     @PositiveOrZero
     @NotNull
     private BigDecimal taxaEntrega;
-    @Valid
+//    @Valid
     @NotNull
     private CozinhaIdInput cozinha;
     @Valid
