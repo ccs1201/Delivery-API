@@ -8,7 +8,6 @@ import javax.servlet.Filter;
 
 @Configuration
 public class ShallowEtagFilterConfig {
-
     @Bean
     public Filter shallowEtagHeaderFilter() {
         return new ShallowEtagHeaderFilter();

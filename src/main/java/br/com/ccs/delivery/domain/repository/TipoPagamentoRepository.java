@@ -9,6 +9,6 @@ import java.time.OffsetDateTime;
 
 @Repository
 public interface TipoPagamentoRepository extends JpaRepository<TipoPagamento, Long> {
-    @Query(value = "select max(tp.lastUpdate) from TipoPagamento  tp")
+    @Query(value = "select max(tp.lastUpdate) from TipoPagamento tp")
     OffsetDateTime findLastUpdate();
 }

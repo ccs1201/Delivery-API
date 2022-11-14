@@ -13,46 +13,113 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 //@CrossOrigin(origins = "http://localhost:8081")
-@SuppressWarnings("NonAsciiCharacters")
 @RestController
 @RequestMapping(value = "/api/tipos-pagamento", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 @AllArgsConstructor
 public class TipoPagamentoController {
-
-
     TipoPagamentoService service;
     @MapperQualifier(MapperQualifierType.TIPOPAGAMENTO)
     MapperInterface<TipoPagamentoResponse, TipoPagamentoInput, TipoPagamento> mapper;
 
-
-    @GetMapping
+    @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Collection<TipoPagamentoResponse>> getAll() {
+    public ResponseEntity<Collection<TipoPagamentoResponse>> getAll(ServletWebRequest request) {
+
+        /*
+        Desabilita a implementação de ShallowEtags, para usarmos
+        DeepEtags somente neste método
+         */
+        ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+        var lastUpdate = service.getLastUpdate();
+
+        String eTag = "0";
+
+        /*
+        Se o valor do lastUpdate não é nulo seta na etag
+         */
+        if (lastUpdate != null) {
+            eTag = String.valueOf(lastUpdate.toEpochSecond());
+        }
+
+        /*
+        A eTag é enviada através do header da request no parâmetro If-None-Match:"XXXXX"
+        qdo a idade do cache do cliente expira
+
+        Se a etag recebida na request é a mesma do lastUpdate
+        então não é necessário retornar novos valores ao cliente
+        neste caso retornamos um NOT_MODIFIED
+         */
+        if (request.checkNotModified(eTag)) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                    .cacheControl(CacheControl.maxAge(0, TimeUnit.SECONDS)
+                            .cachePublic())
+                    .eTag(eTag)
+                    .build();
+        }
+
         var tiposPagamento = mapper.toCollection(service.findAll());
+
         return ResponseEntity.ok()
-                // Habilita o cache para esta URI //cachePrivate garante que somente o cliente possa fazer cache
-                // e não em cache compartilhado (ex. servidores proxy intermediários)
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+                /*
+                 Habilita o cache para esta URI //cachePrivate garante que somente o cliente possa fazer cache
+                 e não em cache compartilhado (ex. servidores proxy intermediários)
+                 */
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
 
-                // noCache faz com que todas as requisições sejam validadas com etag no servidor
-                // e não que não seja feito cache como o nome sugere.
-                //.cacheControl(CacheControl.noCache())
+                /*
+                noCache faz com que todas as requisições sejam validadas com etag no servidor
+                 e não que não seja feito cache como o nome sugere.
+                .cacheControl(CacheControl.noCache())
+                */
 
-                // noStore realmente impede que o cliente faça cache da resposta
-                // .cacheControl(CacheControl.noStore())
+                /*
+                 noStore realmente impede que o cliente faça cache da resposta
+                 .cacheControl(CacheControl.noStore())
+                */
+
+                //Adiciona o eTag na response
+                .eTag(eTag)
                 .body(tiposPagamento);
+    }
+
+    @GetMapping("/async")
+    @ResponseStatus(HttpStatus.OK)
+    public CompletableFuture<ResponseEntity<Collection<TipoPagamentoResponse>>> getAllAsync() {
+
+        return CompletableFuture.supplyAsync(() ->
+
+                ResponseEntity.ok()
+                        // Habilita o cache para esta URI //cachePrivate garante que somente o cliente possa fazer cache
+                        // e não em cache compartilhado (ex. servidores proxy intermediários)
+                        .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+
+                        // noCache faz com que todas as requisições sejam validadas com etag no servidor
+                        // e não que não seja feito cache como o nome sugere.
+                        //.cacheControl(CacheControl.noCache())
+
+                        // noStore realmente impede que o cliente faça cache da resposta
+                        // .cacheControl(CacheControl.noStore())
+                        .body(
+                                mapper.toCollection(service.findAll())
+                        )
+        );
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TipoPagamentoResponse save(@RequestBody @Valid TipoPagamentoInput tipoPagamentoInput) {
+
         return mapper.toResponseModel(service.save(mapper.toEntity(tipoPagamentoInput)));
     }
 

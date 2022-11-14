@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ import java.util.Map;
 
 //@CrossOrigin(origins = "http://localhost:8081", maxAge = 10)
 @RestController
-@RequestMapping("/api/restaurantes")
+@RequestMapping(path = "/api/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class RestauranteController {
 
@@ -49,7 +50,6 @@ public class RestauranteController {
     GenericEntityUpdateMergerUtil mergerUtil;
     @MapperQualifier(MapperQualifierType.RESTAURANTE)
     MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> mapper;
-
     @MapperQualifier(MapperQualifierType.TIPOPAGAMENTO)
     MapperInterface<TipoPagamentoResponse, TipoPagamentoInput, TipoPagamento> tipoPagamentoMapper;
 
