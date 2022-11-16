@@ -1,13 +1,9 @@
 package br.com.ccs.delivery.api.controller;
 
-import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
-import br.com.ccs.delivery.domain.model.entity.Produto;
+import br.com.ccs.delivery.core.mapper.ProdutoMapper;
 import br.com.ccs.delivery.domain.service.ProdutoService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +13,13 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/produtos")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProdutoController {
     ProdutoService service;
-    @MapperQualifier(MapperQualifierType.PRODUTO)
-    MapperInterface<ProdutoResponse, ProdutoInput, Produto> mapper;
+    ProdutoMapper mapper;
+
+//    @MapperQualifier(MapperQualifierType.PRODUTO)
+//    MapperInterface<ProdutoResponse, ProdutoInput, Produto> mapper;
 
 
     @GetMapping
@@ -33,7 +31,7 @@ public class ProdutoController {
     @GetMapping("/{ProdutoId}")
     @ResponseStatus(HttpStatus.OK)
     public ProdutoResponse getById(@PathVariable @Positive Long ProdutoId) {
-        return mapper.toResponseModel(service.findById(ProdutoId));
+        return mapper.toModel(service.findById(ProdutoId));
     }
 
     @GetMapping("/nome/{nomeProduto}")

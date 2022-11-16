@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.core.mapper;
 
+import br.com.ccs.delivery.api.controller.RestauranteController;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 @MapperQualifier(MapperQualifierType.RESTAURANTE)
 public class RestauranteMapper extends AbstractMapper<RestauranteResponse, RestauranteInput, Restaurante> {
+
+    public RestauranteMapper() {
+        super(RestauranteController.class, RestauranteResponse.class);
+    }
 
  /*   @Override
     public Restaurante toEntity(RestauranteInput restauranteInput) {

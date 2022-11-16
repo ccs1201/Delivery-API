@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.core.mapper;
 
+import br.com.ccs.delivery.api.controller.PermissaoController;
 import br.com.ccs.delivery.api.model.representation.input.PermissaoInput;
 import br.com.ccs.delivery.api.model.representation.response.PermissaoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
@@ -9,5 +10,9 @@ import org.springframework.stereotype.Component;
 
 @MapperQualifier(MapperQualifierType.PERMISSAO)
 @Component
-public class PermissaoMapper extends AbstractMapper<PermissaoResponse, PermissaoInput, Permissao>{
+public class PermissaoMapper extends AbstractMapper<PermissaoResponse, PermissaoInput, Permissao> {
+
+    public PermissaoMapper() {
+        super(PermissaoController.class, PermissaoResponse.class);
+    }
 }

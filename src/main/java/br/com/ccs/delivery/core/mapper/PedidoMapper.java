@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.core.mapper;
 
+import br.com.ccs.delivery.api.controller.PedidoController;
 import br.com.ccs.delivery.api.model.representation.input.PedidoInput;
 import br.com.ccs.delivery.api.model.representation.response.PedidoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
@@ -11,6 +12,10 @@ import org.springframework.stereotype.Component;
 @Component
 @MapperQualifier(MapperQualifierType.PEDIDO)
 public class PedidoMapper extends AbstractMapper<PedidoResponse, PedidoInput, Pedido> {
+
+    public PedidoMapper() {
+        super(PedidoController.class, PedidoResponse.class);
+    }
 
     public Pedido toEntity(PedidoFilter inputmodel) {
         return mapper.map(inputmodel, Pedido.class);

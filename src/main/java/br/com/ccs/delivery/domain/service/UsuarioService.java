@@ -44,7 +44,7 @@ public class UsuarioService {
     public Usuario update(Usuario usuario) {
         try {
             return repository.saveAndFlush(usuario);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new EmailJaCadastradoException(String.format(EMAIL_JA_CADASTRADO, usuario.getEmail()), e);
         }
 
@@ -76,7 +76,15 @@ public class UsuarioService {
         repository.saveAndFlush(usuario);
     }
 
-    private boolean validarSenha(String senha, String senhaParaValidar){
+    private boolean validarSenha(String senha, String senhaParaValidar) {
         return senha.contentEquals(senhaParaValidar);
+    }
+
+    public Usuario findGrupos(Long usuarioId) {
+
+        return repository.findGrupos(usuarioId).orElseThrow(() ->
+                new RepositoryEntityNotFoundException(
+                        String.format("Usuário id %d não possui nenhum grupo cadastrado.", usuarioId))
+        );
     }
 }

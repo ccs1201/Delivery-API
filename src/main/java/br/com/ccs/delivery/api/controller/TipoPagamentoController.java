@@ -2,12 +2,10 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.TipoPagamentoInput;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
+import br.com.ccs.delivery.core.mapper.TipoPagamentoMapper;
 import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import br.com.ccs.delivery.domain.service.TipoPagamentoService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,11 +23,14 @@ import java.util.concurrent.TimeUnit;
 //@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping(value = "/api/tipos-pagamento", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TipoPagamentoController {
-    TipoPagamentoService service;
-    @MapperQualifier(MapperQualifierType.TIPOPAGAMENTO)
-    MapperInterface<TipoPagamentoResponse, TipoPagamentoInput, TipoPagamento> mapper;
+    private final TipoPagamentoService service;
+
+    private final TipoPagamentoMapper mapper;
+
+//    @MapperQualifier(MapperQualifierType.TIPOPAGAMENTO)
+//    MapperInterface<TipoPagamentoResponse, TipoPagamentoInput, TipoPagamento> mapper;
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
@@ -120,13 +121,13 @@ public class TipoPagamentoController {
     @ResponseStatus(HttpStatus.CREATED)
     public TipoPagamentoResponse save(@RequestBody @Valid TipoPagamentoInput tipoPagamentoInput) {
 
-        return mapper.toResponseModel(service.save(mapper.toEntity(tipoPagamentoInput)));
+        return mapper.toModel(service.save(mapper.toEntity(tipoPagamentoInput)));
     }
 
     @GetMapping("{tipoPagamentoId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TipoPagamentoResponse> getById(@PathVariable Long tipoPagamentoId) {
-        var tipoPagamento = mapper.toResponseModel(service.findById(tipoPagamentoId));
+        var tipoPagamento = mapper.toModel(service.findById(tipoPagamentoId));
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
@@ -138,7 +139,7 @@ public class TipoPagamentoController {
     public TipoPagamentoResponse update(@PathVariable Long tipoPagamentoId, @RequestBody @Valid TipoPagamentoInput tipoPagamentoInput) {
         TipoPagamento tipoPagamento = service.findById(tipoPagamentoId);
         mapper.updateEntity(tipoPagamentoInput, tipoPagamento);
-        return mapper.toResponseModel(service.update(tipoPagamento));
+        return mapper.toModel(service.update(tipoPagamento));
     }
 
     @DeleteMapping("{tipoPagamentoId}")

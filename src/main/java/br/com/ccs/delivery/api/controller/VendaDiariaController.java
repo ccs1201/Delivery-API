@@ -4,7 +4,7 @@ import br.com.ccs.delivery.domain.model.dto.VendaDiaria;
 import br.com.ccs.delivery.domain.model.specification.filter.VendaDiariaFilter;
 import br.com.ccs.delivery.domain.service.VendaQueryService;
 import br.com.ccs.delivery.domain.service.reports.VendasReportService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,11 +15,11 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("api/estatisticas")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VendaDiariaController {
 
-    private VendaQueryService vendaQueryService;
-    private VendasReportService vendasReportService;
+    private final VendaQueryService vendaQueryService;
+    private final VendasReportService vendasReportService;
 
     @GetMapping(value = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)

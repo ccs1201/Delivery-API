@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.core.mapper;
 
+import br.com.ccs.delivery.api.controller.FotoProdutoController;
 import br.com.ccs.delivery.api.model.representation.input.FotoProdutoInput;
 import br.com.ccs.delivery.api.model.representation.response.FotoProdutoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
@@ -10,4 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @MapperQualifier(MapperQualifierType.FOTOPRODUTO)
 public class FotoProdutoMapper extends AbstractMapper<FotoProdutoResponse, FotoProdutoInput, FotoProduto> {
+    public FotoProdutoMapper() {
+        super(FotoProdutoController.class, FotoProdutoResponse.class);
+    }
 }

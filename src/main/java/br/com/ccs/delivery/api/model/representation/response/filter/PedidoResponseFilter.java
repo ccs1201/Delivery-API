@@ -7,6 +7,7 @@ import br.com.ccs.delivery.api.model.representation.response.RestauranteSomenteN
 import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -14,7 +15,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @JsonFilter("pedidoFilter")
-public class PedidoResponseFilter {
+public class PedidoResponseFilter extends RepresentationModel<PedidoResponseFilter> {
 
     private String codigo;
     private ClienteResponse cliente;

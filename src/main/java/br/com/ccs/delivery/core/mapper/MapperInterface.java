@@ -3,30 +3,19 @@ package br.com.ccs.delivery.core.mapper;
 import org.springframework.data.domain.Page;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 public interface MapperInterface<RESPONSEMODEL, INPUTMODEL, ENTITY> {
 
-    RESPONSEMODEL toResponseModel(ENTITY entity);
+    RESPONSEMODEL toModel(ENTITY entity);
 
     ENTITY toEntity(INPUTMODEL inputmodel);
 
     void updateEntity(INPUTMODEL inputmodel, ENTITY entity);
 
-    default Page<RESPONSEMODEL> toPage(Page<ENTITY> page) {
-        return page.map(this::toResponseModel);
-    }
+    Page<RESPONSEMODEL> toPage(Page<ENTITY> page);
 
-    default Collection<RESPONSEMODEL> toCollection(Page<ENTITY> page) {
+     Collection<RESPONSEMODEL> toCollection(Page<ENTITY> page);
 
-        return this.toCollection(page.getContent());
-
-    }
-
-    default Collection<RESPONSEMODEL> toCollection(Collection<ENTITY> collection) {
-        return collection.stream()
-                .map(this::toResponseModel)
-                .collect(Collectors.toList());
-    }
+     Collection<RESPONSEMODEL> toCollection(Collection<ENTITY> collection);
 }
 

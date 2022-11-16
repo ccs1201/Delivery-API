@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.core.mapper;
 
+import br.com.ccs.delivery.api.controller.TipoPagamentoController;
 import br.com.ccs.delivery.api.model.representation.input.TipoPagamentoInput;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
@@ -11,4 +12,7 @@ import org.springframework.stereotype.Component;
 @MapperQualifier(MapperQualifierType.TIPOPAGAMENTO)
 public class TipoPagamentoMapper extends AbstractMapper<TipoPagamentoResponse, TipoPagamentoInput, TipoPagamento> {
 
+    public TipoPagamentoMapper() {
+        super(TipoPagamentoController.class, TipoPagamentoResponse.class);
+    }
 }

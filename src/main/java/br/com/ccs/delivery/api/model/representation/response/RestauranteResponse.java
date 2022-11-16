@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class RestauranteResponse {
+public class RestauranteResponse extends RepresentationModel<RestauranteResponse> {
 
     @JsonView({RestauranteResponseView.Resumo.class, RestauranteResponseView.Nome.class})
     private Long id;

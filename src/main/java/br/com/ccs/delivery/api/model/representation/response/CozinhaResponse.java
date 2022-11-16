@@ -4,10 +4,11 @@ import br.com.ccs.delivery.api.model.representation.response.jsonview.Restaurant
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Setter
-public class CozinhaResponse {
+public class CozinhaResponse extends RepresentationModel<CozinhaResponse> {
 
     private Long id;
     @JsonView(RestauranteResponseView.Resumo.class)

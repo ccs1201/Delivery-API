@@ -2,12 +2,10 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.PermissaoInput;
 import br.com.ccs.delivery.api.model.representation.response.PermissaoResponse;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
+import br.com.ccs.delivery.core.mapper.PermissaoMapper;
 import br.com.ccs.delivery.domain.model.entity.Permissao;
 import br.com.ccs.delivery.domain.service.PermissaoService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +15,16 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/permissoes")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PermissaoController {
 
-    PermissaoService service;
-    @MapperQualifier(MapperQualifierType.PERMISSAO)
-    MapperInterface<PermissaoResponse, PermissaoInput, Permissao> mapper;
+    private final PermissaoService service;
+
+    private final PermissaoMapper mapper;
+
+//    @MapperQualifier(MapperQualifierType.PERMISSAO)
+//    MapperInterface<PermissaoResponse, PermissaoInput, Permissao> mapper;
+
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -33,7 +35,7 @@ public class PermissaoController {
     @GetMapping("{permissaoId}")
     @ResponseStatus(HttpStatus.OK)
     public PermissaoResponse getById(@PathVariable @Positive Long permissaoId) {
-        return mapper.toResponseModel(service.findById(permissaoId));
+        return mapper.toModel(service.findById(permissaoId));
     }
 
     @PostMapping
@@ -41,7 +43,7 @@ public class PermissaoController {
     public PermissaoResponse save(@RequestBody @Valid PermissaoInput permissaoInput) {
         Permissao permissao = mapper.toEntity(permissaoInput);
 
-        return mapper.toResponseModel(service.save(permissao));
+        return mapper.toModel(service.save(permissao));
     }
 
     @PutMapping("{permissaoId}")
@@ -51,12 +53,13 @@ public class PermissaoController {
 
         mapper.updateEntity(permissaoInput, permissao);
 
-        return mapper.toResponseModel(service.update(permissao));
+        return mapper.toModel(service.update(permissao));
     }
 
     @DeleteMapping("{permissaoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long permissaoId) {
+
         service.remove(permissaoId);
     }
 }

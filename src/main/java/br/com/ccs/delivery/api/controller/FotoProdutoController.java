@@ -2,14 +2,12 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.FotoProdutoInput;
 import br.com.ccs.delivery.api.model.representation.response.FotoProdutoResponse;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
+import br.com.ccs.delivery.core.mapper.FotoProdutoMapper;
 import br.com.ccs.delivery.domain.model.entity.FotoProduto;
 import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.service.CadastroFotoProdutoService;
 import br.com.ccs.delivery.domain.service.ProdutoService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,13 +23,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
-@AllArgsConstructor
-public class CadastroFotoProdutoController {
+@RequiredArgsConstructor
+public class FotoProdutoController {
 
-    @MapperQualifier(MapperQualifierType.FOTOPRODUTO)
-    MapperInterface<FotoProdutoResponse, FotoProdutoInput, FotoProduto> mapper;
-    CadastroFotoProdutoService service;
-    ProdutoService produtoService;
+    //    @MapperQualifier(MapperQualifierType.FOTOPRODUTO)
+//    MapperInterface<FotoProdutoResponse, FotoProdutoInput, FotoProduto> mapper;
+   private final CadastroFotoProdutoService service;
+    private final ProdutoService produtoService;
+    private final FotoProdutoMapper mapper;
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -50,14 +49,14 @@ public class CadastroFotoProdutoController {
 
         foto = service.save(foto, fotoProdutoInput.getMultipartFile().getInputStream());
 
-        return mapper.toResponseModel(foto);
+        return mapper.toModel(foto);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public FotoProdutoResponse getFotoProduto(@PathVariable @Positive Long restauranteId,
                                               @PathVariable @Positive Long produtoId) {
-        return mapper.toResponseModel(service.findFotoProduto(restauranteId, produtoId));
+        return mapper.toModel(service.findFotoProduto(restauranteId, produtoId));
 
     }
 

@@ -1,28 +1,17 @@
 package br.com.ccs.delivery.api.controller;
 
-import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.input.RestauranteInput;
-import br.com.ccs.delivery.api.model.representation.input.TipoPagamentoInput;
-import br.com.ccs.delivery.api.model.representation.input.UsuarioInput;
-import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
 import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse;
 import br.com.ccs.delivery.api.model.representation.response.TipoPagamentoResponse;
-import br.com.ccs.delivery.api.model.representation.response.UsuarioResponse;
 import br.com.ccs.delivery.api.model.representation.response.jsonview.RestauranteResponseView;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
-import br.com.ccs.delivery.domain.model.entity.Produto;
+import br.com.ccs.delivery.core.mapper.RestauranteMapper;
+import br.com.ccs.delivery.core.mapper.TipoPagamentoMapper;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
-import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
-import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.model.specification.RestauranteComFreteGratisSpec;
 import br.com.ccs.delivery.domain.model.specification.RestauranteNomeLikeSpec;
-import br.com.ccs.delivery.domain.model.util.GenericEntityUpdateMergerUtil;
-import br.com.ccs.delivery.domain.service.ProdutoService;
 import br.com.ccs.delivery.domain.service.RestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -42,27 +31,25 @@ import java.util.Map;
 //@CrossOrigin(origins = "http://localhost:8081", maxAge = 10)
 @RestController
 @RequestMapping(path = "/api/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RestauranteController {
 
-    RestauranteService service;
-    ProdutoService produtoService;
-    GenericEntityUpdateMergerUtil mergerUtil;
-    @MapperQualifier(MapperQualifierType.RESTAURANTE)
-    MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> mapper;
-    @MapperQualifier(MapperQualifierType.TIPOPAGAMENTO)
-    MapperInterface<TipoPagamentoResponse, TipoPagamentoInput, TipoPagamento> tipoPagamentoMapper;
+    private final RestauranteService service;
+    private final TipoPagamentoMapper tipoPagamentoMapper;
+    private final RestauranteMapper restauranteMapper;
 
-    @MapperQualifier(MapperQualifierType.PRODUTO)
-    MapperInterface<ProdutoResponse, ProdutoInput, Produto> produtoMapper;
-
-    @MapperQualifier(MapperQualifierType.USUARIO)
-    MapperInterface<UsuarioResponse, UsuarioInput, Usuario> mapperUsuario;
+//    private final ProdutoService produtoService;
+//    private final GenericEntityUpdateMergerUtil mergerUtil;
+//    @MapperQualifier(MapperQualifierType.RESTAURANTE)
+//    MapperInterface<RestauranteResponse, RestauranteInput, Restaurante> restauranteMapper;
+//    private final ProdutoMapper produtoMapper;
+//
+//    private final UsuarioMapper mapperUsuario;
 
     @GetMapping(value = "/projecao")
     @ResponseStatus(HttpStatus.OK)
     public MappingJacksonValue getProjecao(@RequestParam(required = false) String projecao) {
-        Collection<RestauranteResponse> restauranteResponses = mapper.toCollection(service.findAll());
+        Collection<RestauranteResponse> restauranteResponses = restauranteMapper.toCollection(service.findAll());
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(restauranteResponses);
 
@@ -82,7 +69,7 @@ public class RestauranteController {
     public ResponseEntity<Page<RestauranteResponse>> getAll(@PageableDefault(size = 5) Pageable pageable) {
         Page<Restaurante> restaurantePage = service.findAll(pageable);
 
-        var pageResponse =  mapper.toPage(restaurantePage);
+        var pageResponse = restauranteMapper.toPage(restaurantePage);
 
         return ResponseEntity.ok(pageResponse);
 
@@ -96,7 +83,8 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.OK)
     @JsonView(RestauranteResponseView.Nome.class)
     public Collection<RestauranteResponse> getNome() {
-        return mapper.toCollection(service.findAll());
+
+        return restauranteMapper.toCollection(service.findAll());
     }
 
     @GetMapping("{restauranteId}")
@@ -104,14 +92,14 @@ public class RestauranteController {
     public RestauranteResponse findById(@PathVariable Long restauranteId) {
         Restaurante restaurante = service.findById(restauranteId);
 
-        return mapper.toResponseModel(restaurante);
+        return restauranteMapper.toModel(restaurante);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteResponse save(@RequestBody @Valid RestauranteInput restauranteInput) {
 
-        return mapper.toResponseModel(service.save(mapper.toEntity(restauranteInput)));
+        return restauranteMapper.toModel(service.save(restauranteMapper.toEntity(restauranteInput)));
     }
 
     @PutMapping("{restauranteId}")
@@ -120,9 +108,9 @@ public class RestauranteController {
 
         Restaurante restaurante = service.findById(restauranteId);
 
-        mapper.updateEntity(restauranteInput, restaurante);
+        restauranteMapper.updateEntity(restauranteInput, restaurante);
 
-        return mapper.toResponseModel(service.update(restaurante));
+        return restauranteMapper.toModel(service.update(restaurante));
     }
 
     @DeleteMapping("{restauranteId}")
@@ -135,13 +123,13 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.OK)
     public RestauranteResponse patchUpdate(@PathVariable Long restauranteId, @RequestBody Map<String, Object> updates) {
 
-        return mapper.toResponseModel(service.patchUpdate(restauranteId, updates));
+        return restauranteMapper.toModel(service.patchUpdate(restauranteId, updates));
     }
 
     @GetMapping("/nome-cozinha")
     @ResponseStatus(HttpStatus.OK)
     public Collection<RestauranteResponse> findByNomeCozinha(@RequestParam String nomeCozinha) {
-        return mapper.toCollection(service.findByNomeCozinha(nomeCozinha));
+        return restauranteMapper.toCollection(service.findByNomeCozinha(nomeCozinha));
     }
 
     @GetMapping("/find")
@@ -149,7 +137,7 @@ public class RestauranteController {
     public Collection<RestauranteResponse> anyCriteria(String nomeRestaurante, BigDecimal taxaEntregaMin,
                                                        BigDecimal taxaEntregaMax, String nomeCozinha) {
 
-        return mapper.toCollection(service.anyCriteria(nomeRestaurante, taxaEntregaMin, taxaEntregaMax, nomeCozinha));
+        return restauranteMapper.toCollection(service.anyCriteria(nomeRestaurante, taxaEntregaMin, taxaEntregaMax, nomeCozinha));
 
     }
 
@@ -159,42 +147,46 @@ public class RestauranteController {
         var comFreteGratis = new RestauranteComFreteGratisSpec();
         var comNomeSemelhante = new RestauranteNomeLikeSpec(nome);
 
-        return mapper.toCollection(service.findAll(comFreteGratis, comNomeSemelhante));
+        return restauranteMapper.toCollection(service.findAll(comFreteGratis, comNomeSemelhante));
     }
 
     @GetMapping("/specs")
     @ResponseStatus(HttpStatus.OK)
     public Collection<RestauranteResponse> getComSpecs(String nomeRestaurante, String nomeCozinha) {
-        return mapper.toCollection(service.findAll(nomeRestaurante, nomeCozinha));
+        return restauranteMapper.toCollection(service.findAll(nomeRestaurante, nomeCozinha));
     }
 
     @GetMapping("/first")
     @ResponseStatus(HttpStatus.OK)
     public RestauranteResponse getFirst() {
-        return mapper.toResponseModel(service.getFirst());
+        return restauranteMapper.toModel(service.getFirst());
     }
 
     @PatchMapping("{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void ativar(@PathVariable Long restauranteId) {
+
         service.ativar(restauranteId);
     }
 
     @PutMapping("/ativacoes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void ativar(@RequestBody List<Long> restauranteIds) {
+
         service.ativar(restauranteIds);
     }
 
     @DeleteMapping("/ativacoes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@RequestBody List<Long> restauranteIds) {
+
         service.inativar(restauranteIds);
     }
 
     @DeleteMapping("{restauranteId}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
+
         service.inativar(restauranteId);
     }
 
@@ -230,14 +222,14 @@ public class RestauranteController {
     @PatchMapping("{restauranteId}/aberto")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void abrirRestaurante(@PathVariable @Positive Long restauranteId) {
+
         service.abrir(restauranteId);
     }
 
     @PatchMapping("{restaruanteId}/fechado")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void fecharRestaurante(@PathVariable @Positive Long restaruanteId) {
+
         service.fechar(restaruanteId);
     }
-
-
 }

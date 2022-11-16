@@ -3,10 +3,11 @@ package br.com.ccs.delivery.api.model.representation.response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Setter
-public class EnderecoResponse {
+public class EnderecoResponse extends RepresentationModel<EnderecoResponse> {
 
     private String logradouro;
     private String numero;

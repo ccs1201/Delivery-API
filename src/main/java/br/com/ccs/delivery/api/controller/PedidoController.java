@@ -4,16 +4,14 @@ import br.com.ccs.delivery.api.model.representation.input.PedidoInput;
 import br.com.ccs.delivery.api.model.representation.response.PedidoResponse;
 import br.com.ccs.delivery.api.model.representation.response.filter.PedidoResponseFilter;
 import br.com.ccs.delivery.core.exception.FieldValidationException;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
+import br.com.ccs.delivery.core.mapper.PedidoMapper;
 import br.com.ccs.delivery.core.mapper.PedidoResponseFilterMapper;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Pedido;
 import br.com.ccs.delivery.domain.model.specification.filter.PedidoFilter;
 import br.com.ccs.delivery.domain.service.PedidoService;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,15 +29,15 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("api/pedidos")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PedidoController {
 
-    private PedidoService service;
-   @MapperQualifier(MapperQualifierType.PEDIDO)
-   private MapperInterface<PedidoResponse, PedidoInput, Pedido> mapper;
+    private final PedidoService service;
+//   @MapperQualifier(MapperQualifierType.PEDIDO)
+//   private MapperInterface<PedidoResponse, PedidoInput, Pedido> mapper;
 
-//    private PedidoMapper mapper;
-    private PedidoResponseFilterMapper pedidoResponseFilterMapper;
+    private final PedidoMapper mapper;
+    private final PedidoResponseFilterMapper pedidoResponseFilterMapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -52,16 +50,17 @@ public class PedidoController {
     public Page<PedidoResponse> filter(PedidoFilter pedidoFilter, @PageableDefault(size = 5) Pageable pageable) {
         return mapper.toPage(service.filter(pedidoFilter, pageable));
     }
+
     @Transactional
     @GetMapping("/byExample")
     @ResponseStatus(HttpStatus.OK)
-    public Page<PedidoResponse> findByExample(PedidoInput pedidoInput, @PageableDefault(size = 5) Pageable pageable){
+    public Page<PedidoResponse> findByExample(PedidoInput pedidoInput, @PageableDefault(size = 5) Pageable pageable) {
         var pedido = mapper.toEntity(pedidoInput);
         pedido.setSubTotal(null);
         pedido.setValorTotal(null);
         pedido.setId(null);
         pedido.setCliente(null);
-        
+
         return mapper.toPage(service.findByExample(pedido, pageable));
     }
 
@@ -111,20 +110,20 @@ public class PedidoController {
         SimpleFilterProvider filter = new SimpleFilterProvider();
         filter.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
 
-        return mapper.toResponseModel(service.findById(pedidoId));
+        return mapper.toModel(service.findById(pedidoId));
     }
 
     @GetMapping(params = "pedido")
     @ResponseStatus(HttpStatus.OK)
     public PedidoResponse getByCodigo(@RequestParam("pedido") @NotBlank String codigoPedido) {
-        return mapper.toResponseModel(service.findByCodigo(codigoPedido));
+        return mapper.toModel(service.findByCodigo(codigoPedido));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PedidoResponse add(@RequestBody @Valid PedidoInput pedidoInput) {
         Pedido pedido = mapper.toEntity(pedidoInput);
-        return mapper.toResponseModel(service.cadastrarPedido(pedido));
+        return mapper.toModel(service.cadastrarPedido(pedido));
     }
 
     @PatchMapping("{pedidoId}/cancelamento")

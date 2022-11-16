@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.core.mapper;
 
+import br.com.ccs.delivery.api.controller.CozinhaController;
 import br.com.ccs.delivery.api.model.representation.input.CozinhaInput;
 import br.com.ccs.delivery.api.model.representation.response.CozinhaResponse;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @MapperQualifier(MapperQualifierType.COZINHA)
-public class CozinhaMapper extends AbstractMapper<CozinhaResponse, CozinhaInput, Cozinha> {
+public final class CozinhaMapper extends AbstractMapper<CozinhaResponse, CozinhaInput, Cozinha> {
 
+    public CozinhaMapper() {
+        super(CozinhaController.class, CozinhaResponse.class);
+    }
 }

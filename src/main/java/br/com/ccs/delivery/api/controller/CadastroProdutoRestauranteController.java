@@ -2,14 +2,12 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.ProdutoInput;
 import br.com.ccs.delivery.api.model.representation.response.ProdutoResponse;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
+import br.com.ccs.delivery.core.mapper.ProdutoMapper;
 import br.com.ccs.delivery.domain.model.entity.Produto;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
 import br.com.ccs.delivery.domain.service.ProdutoService;
 import br.com.ccs.delivery.domain.service.RestauranteService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +18,14 @@ import java.util.Collection;
 @SuppressWarnings("MVCPathVariableInspection")
 @RestController
 @RequestMapping("/api/restaurantes/{restauranteId}/produtos")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CadastroProdutoRestauranteController {
 
-    private RestauranteService service;
-    @MapperQualifier(MapperQualifierType.PRODUTO)
-    private MapperInterface<ProdutoResponse, ProdutoInput, Produto> produtoMapper;
-    private ProdutoService produtoService;
+    private final RestauranteService service;
+    //    @MapperQualifier(MapperQualifierType.PRODUTO)
+//    private MapperInterface<ProdutoResponse, ProdutoInput, Produto> produtoMapper;
+    private final ProdutoService produtoService;
+    private final ProdutoMapper mapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -40,7 +39,7 @@ public class CadastroProdutoRestauranteController {
             restaurante = service.findProdutos(restauranteId, ativos);
         }
 
-        return produtoMapper.toCollection(restaurante.getProdutos());
+        return mapper.toCollection(restaurante.getProdutos());
     }
 
     @PutMapping
@@ -49,23 +48,23 @@ public class CadastroProdutoRestauranteController {
 
         Restaurante restaurante = service.findById(restauranteId);
 
-        Produto produto = produtoMapper.toEntity(produtoInput);
+        Produto produto = mapper.toEntity(produtoInput);
 
         produto.setRestaurante(restaurante);
         produto.setAtivo(true);
 
         produtoService.save(produto);
 
-        return produtoMapper.toCollection(service.findProdutos(restauranteId, true).getProdutos());
+        return mapper.toCollection(service.findProdutos(restauranteId, true).getProdutos());
     }
 
     @PutMapping("{produtoId}")
     @ResponseStatus(HttpStatus.OK)
     public ProdutoResponse updateProduto(@PathVariable @Positive Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
         Produto produto = produtoService.findById(produtoId);
-        produtoMapper.updateEntity(produtoInput, produto);
+        mapper.updateEntity(produtoInput, produto);
 
-        return produtoMapper.toResponseModel(produtoService.update(produto));
+        return mapper.toModel(produtoService.update(produto));
     }
 
     @DeleteMapping("{produtoId}")

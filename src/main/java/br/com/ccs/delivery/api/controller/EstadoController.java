@@ -2,12 +2,10 @@ package br.com.ccs.delivery.api.controller;
 
 import br.com.ccs.delivery.api.model.representation.input.EstadoInput;
 import br.com.ccs.delivery.api.model.representation.response.EstadoResponse;
-import br.com.ccs.delivery.core.mapper.MapperInterface;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
-import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
+import br.com.ccs.delivery.core.mapper.EstadoMapper;
 import br.com.ccs.delivery.domain.model.entity.Estado;
 import br.com.ccs.delivery.domain.service.EstadoService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +14,12 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/estados")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EstadoController {
-    EstadoService service;
-    @MapperQualifier(MapperQualifierType.ESTADO)
-    MapperInterface<EstadoResponse, EstadoInput, Estado> mapper;
+    private final EstadoService service;
+//    @MapperQualifier(MapperQualifierType.ESTADO)
+//    MapperInterface<EstadoResponse, EstadoInput, Estado> mapper;
+    private final EstadoMapper mapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -31,7 +30,7 @@ public class EstadoController {
     @GetMapping("/{estadoId}")
     @ResponseStatus(HttpStatus.OK)
     public EstadoResponse findById(@PathVariable int estadoId) {
-        return mapper.toResponseModel(service.findById(estadoId));
+        return mapper.toModel(service.findById(estadoId));
 
     }
 
@@ -39,7 +38,7 @@ public class EstadoController {
     @ResponseStatus(HttpStatus.OK)
     public EstadoResponse save(@RequestBody @Valid EstadoInput estadoInput) {
         Estado estado = mapper.toEntity(estadoInput);
-        return mapper.toResponseModel(service.save(estado));
+        return mapper.toModel(service.save(estado));
     }
 
     @PutMapping("{estadoId}")
@@ -49,7 +48,7 @@ public class EstadoController {
         Estado estado = service.findById(estadoId);
         mapper.updateEntity(estadoInput, estado);
 
-        return mapper.toResponseModel(service.update(estado));
+        return mapper.toModel(service.update(estado));
     }
 
     @DeleteMapping("{estadoId}")

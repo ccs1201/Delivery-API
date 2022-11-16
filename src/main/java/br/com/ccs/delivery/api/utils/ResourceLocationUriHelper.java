@@ -32,4 +32,38 @@ public class ResourceLocationUriHelper {
 
         response.setHeader(HttpHeaders.LOCATION, uri.toString());
     }
+
+    /**
+     * <p>Retorna uma string contento o URI completa da requisição
+     * incluído o path e suas varáveis.</p>
+     *
+     * @return String representado a URI
+     */
+    public static String getUri() {
+
+        return ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
+    }
+
+    /**
+     * <p>Retorna uma string contendo o contexto da API.</p>
+     *
+     * <p> Ex.</p>
+     * <p><b>Request para:</b>
+     * <br>
+     * <p><i>https://meudominio.com/api/user/1</i></p>
+     * <br>
+     * <p><b>Retorna:</b>
+     * <br>
+     * <p><i>https://meudominio.com</i></p>
+     * </p>
+     * <br>
+     * <br>
+     *
+     * @return String representando a URI
+     */
+    public static String getServletContext() {
+        var context = ServletUriComponentsBuilder.fromCurrentServletMapping().toUriString();
+
+        return context;
+    }
 }
