@@ -6,11 +6,14 @@ import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.service.RestauranteService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
-import java.util.Collection;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/restaurantes/{restauranteId}/usuarios")
@@ -23,8 +26,11 @@ public class CadastroUsuarioRestauranteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<UsuarioResponse> getUsuarios(@PathVariable @Positive Long restauranteId) {
-        return usuarioMapper.toCollection(service.findUsuarios(restauranteId).getUsuarios());
+    public CollectionModel<UsuarioResponse> getUsuarios(@PathVariable @Positive Long restauranteId) {
+        return usuarioMapper.toCollectionModel(service.findUsuarios(restauranteId).getUsuarios())
+                .removeLinks()
+                .add(linkTo(methodOn(CadastroUsuarioRestauranteController.class)
+                        .getUsuarios(restauranteId)).withSelfRel());
     }
 
     @PutMapping("{usuarioId}")
