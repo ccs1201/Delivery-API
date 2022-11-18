@@ -26,14 +26,16 @@ public class UsuarioMapper extends AbstractMapper<UsuarioResponse, UsuarioInput,
         var model = createModelWithId(usuario.getId(), usuario);
         copyProperties(usuario, model);
 
-        model.add(linkTo(UsuarioController.class).withRel("usuarios"));
+        model.add(linkTo(methodOn(UsuarioController.class).getGrupos(usuario.getId()))
+                        .withRel("grupos-usuario"))
+                .add(linkTo(UsuarioController.class).withRel("usuarios"));
 
         return model;
     }
 
     @Override
     public CollectionModel<UsuarioResponse> toCollectionModel(Iterable<? extends Usuario> entities) {
-        var models =  super.toCollectionModel(entities);
+        var models = super.toCollectionModel(entities);
 
         models.add(linkTo(methodOn(UsuarioController.class).getAll()).withRel("usuarios"));
 
