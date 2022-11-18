@@ -9,6 +9,8 @@ import br.com.ccs.delivery.domain.service.exception.RepositoryEntityPersistExcep
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +26,8 @@ public class CozinhaService {
     public static final String NAO_PODE_REMOVER_COZINHA = "Cozinha ID: %d não pode ser removida pois está em uso.";
     CozinhaRepository repository;
 
-    public Collection<Cozinha> findAll() {
-        return repository.findAll();
+    public Page<Cozinha> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Cozinha findById(Long cozinhaId) {
@@ -104,5 +106,9 @@ public class CozinhaService {
         return repository.getFirstOccurrence()
                 .orElseThrow(() ->
                         new RepositoryEntityNotFoundException(COZINHA_NAO_ENCONTRADA));
+    }
+
+    public Collection<Cozinha> findAll() {
+        return repository.findAll();
     }
 }

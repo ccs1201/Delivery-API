@@ -7,6 +7,10 @@ import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.model.wrapper.CozinhaXmlResponse;
 import br.com.ccs.delivery.domain.service.CozinhaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +28,15 @@ public class CozinhaController {
 
     private final CozinhaMapper mapper;
 
+    private final PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Collection<CozinhaResponse> findAll() {
-        return mapper.toCollection(service.findAll());
+    public PagedModel<CozinhaResponse> findAll(@PageableDefault(size = 10) Pageable pageable) {
+
+        var page = service.findAll(pageable);
+
+        return pagedResourcesAssembler.toModel(page, mapper);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
