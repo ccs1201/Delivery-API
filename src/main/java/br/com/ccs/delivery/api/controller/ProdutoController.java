@@ -15,8 +15,8 @@ import java.util.Collection;
 @RequestMapping("/api/produtos")
 @RequiredArgsConstructor
 public class ProdutoController {
-    ProdutoService service;
-    ProdutoMapper mapper;
+    private final ProdutoService service;
+    private final ProdutoMapper mapper;
 
 //    @MapperQualifier(MapperQualifierType.PRODUTO)
 //    MapperInterface<ProdutoResponse, ProdutoInput, Produto> mapper;

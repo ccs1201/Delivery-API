@@ -6,6 +6,7 @@ import br.com.ccs.delivery.core.mapper.TipoPagamentoMapper;
 import br.com.ccs.delivery.domain.model.entity.TipoPagamento;
 import br.com.ccs.delivery.domain.service.TipoPagamentoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class TipoPagamentoController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Collection<TipoPagamentoResponse>> getAll(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<TipoPagamentoResponse>> getAll(ServletWebRequest request) {
 
         /*
         Desabilita a implementação de ShallowEtags, para usarmos
@@ -69,7 +70,7 @@ public class TipoPagamentoController {
                     .build();
         }
 
-        var tiposPagamento = mapper.toCollection(service.findAll());
+        var tiposPagamento = mapper.toCollectionModel(service.findAll());
 
         return ResponseEntity.ok()
                 /*
@@ -80,7 +81,7 @@ public class TipoPagamentoController {
 
                 /*
                 noCache faz com que todas as requisições sejam validadas com etag no servidor
-                 e não que não seja feito cache como o nome sugere.
+                e não que não seja feito cache como o nome sugere.
                 .cacheControl(CacheControl.noCache())
                 */
 

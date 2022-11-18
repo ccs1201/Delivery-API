@@ -34,9 +34,9 @@ public class CozinhaController {
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<CozinhaResponse> findAll(@PageableDefault(size = 10) Pageable pageable) {
 
-        var page = service.findAll(pageable);
+        var cozinhasPage = service.findAll(pageable);
 
-        return pagedResourcesAssembler.toModel(page, mapper);
+        return mapper.toPagedModel(cozinhasPage);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)

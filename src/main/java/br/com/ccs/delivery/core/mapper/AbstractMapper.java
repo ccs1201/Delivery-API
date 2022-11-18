@@ -3,6 +3,8 @@ package br.com.ccs.delivery.core.mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
@@ -16,6 +18,8 @@ public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<R
     protected ModelMapper mapper;
     private final Class<RESPONSEMODEL> responseModelClass;
     private final Class<ENTITY> entityClass;
+    @Autowired
+    private PagedResourcesAssembler<ENTITY> pagedResourcesAssembler;
 
     @SuppressWarnings("unchecked")
     public AbstractMapper(Class<?> controllerClass, Class<RESPONSEMODEL> resourceType) {
@@ -44,7 +48,7 @@ public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<R
 
     public void copyProperties(ENTITY source, RESPONSEMODEL destination) {
 
-         mapper.map(source, destination);
+        mapper.map(source, destination);
     }
 
     /**
@@ -118,5 +122,16 @@ public abstract class AbstractMapper<RESPONSEMODEL extends RepresentationModel<R
      */
     public Collection<RESPONSEMODEL> toCollection(Collection<ENTITY> collection) {
         return collection.stream().map(this::toModel).collect(Collectors.toList());
+    }
+
+    /**
+     * <p>Tranforma um {@link Page} em {@link PagedModel}</p>
+     *
+     * @param page Contendo as entidades de domínio.
+     * @return PagedModel com a representação HATEOAS do {@code page}
+     */
+
+    public PagedModel<RESPONSEMODEL> toPagedModel(Page<ENTITY> page) {
+        return pagedResourcesAssembler.toModel(page, this);
     }
 }

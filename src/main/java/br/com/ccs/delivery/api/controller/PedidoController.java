@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +42,11 @@ public class PedidoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<PedidoResponse> getAll(Pageable pageable) {
-        return mapper.toPage(service.findAllEager(pageable));
+    public PagedModel<PedidoResponse> getAll(Pageable pageable) {
+
+        var pedidosPage = service.findAllEager(pageable);
+
+        return mapper.toPagedModel(pedidosPage); //pagedResourcesAssembler.toModel(response, mapper);
     }
 
     @GetMapping("/filter")

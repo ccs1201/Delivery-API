@@ -6,7 +6,11 @@ import br.com.ccs.delivery.api.model.representation.response.RestauranteResponse
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifier;
 import br.com.ccs.delivery.core.mapperanotations.MapperQualifierType;
 import br.com.ccs.delivery.domain.model.entity.Restaurante;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 @MapperQualifier(MapperQualifierType.RESTAURANTE)
@@ -16,7 +20,22 @@ public class RestauranteMapper extends AbstractMapper<RestauranteResponse, Resta
         super(RestauranteController.class, RestauranteResponse.class);
     }
 
- /*   @Override
+    @Override
+    public RestauranteResponse toModel(Restaurante restaurante) {
+        return super.toModel(restaurante)
+                .add(linkTo(
+                        methodOn(RestauranteController.class)
+                                .findById(restaurante.getId())).withSelfRel())
+                .add(linkTo(RestauranteController.class).withRel("restaurantes"));
+    }
+
+    @Override
+    public CollectionModel<RestauranteResponse> toCollectionModel(Iterable<? extends Restaurante> entities) {
+        return super.toCollectionModel(entities)
+                .add(linkTo(RestauranteController.class).withSelfRel());
+    }
+
+    /*   @Override
     public Restaurante toEntity(RestauranteInput restauranteInput) {
 
 //        Foi preciso criar uma variável local

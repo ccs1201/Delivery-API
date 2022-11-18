@@ -12,12 +12,11 @@ import br.com.ccs.delivery.domain.model.specification.RestauranteNomeLikeSpec;
 import br.com.ccs.delivery.domain.service.RestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,12 +65,9 @@ public class RestauranteController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     // @JsonView(RestauranteResponseView.Resumo.class) //não funciona com page
-    public ResponseEntity<Page<RestauranteResponse>> getAll(@PageableDefault(size = 5) Pageable pageable) {
-        Page<Restaurante> restaurantePage = service.findAll(pageable);
+    public PagedModel<RestauranteResponse> getAll(@PageableDefault(size = 5) Pageable pageable) {
 
-        var pageResponse = restauranteMapper.toPage(restaurantePage);
-
-        return ResponseEntity.ok(pageResponse);
+        return restauranteMapper.toPagedModel(service.findAll(pageable));
 
         //Habilita o CORS somente para este método
 //        return ResponseEntity.ok()
