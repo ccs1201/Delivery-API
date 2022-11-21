@@ -25,22 +25,13 @@ public class CidadeMapperV2 extends AbstractMapper<CidadeResponseV2, CidadeInput
 
     public CidadeResponseV2 toModel(Municipio municipio) {
 
-        //Cria um model contendo o o link _Self
-        var municipioResponse = createModelWithId(municipio.getId(), municipio);
-        //Usando o createModelWithId é necessário copiar
-        copyProperties(municipio, municipioResponse);
-
-//        var municipioResponse = super.toModel(municipio);
-
-//        municipioResponse.add(linkTo(methodOn(
-//                        MunicipioController.class).findById(municipio.getId()))
-//                        .withSelfRel()
-//                )
-
-                municipioResponse.add(linkTo(methodOn(CidadeControllerV2.class).getAll())
+        return super.toModel(municipio)
+                .add(linkTo(methodOn(CidadeControllerV2.class)
+                        .findById(municipio.getId())).withSelfRel())
+                .add(linkTo(methodOn(CidadeControllerV2.class).getAll())
                         .withRel("Municipios"));
 
-        return municipioResponse;
+
     }
 
     @Override

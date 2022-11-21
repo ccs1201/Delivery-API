@@ -30,11 +30,7 @@ public class RootEntryPointController {
         root.add(linkTo(EstatisticasController.class).withRel("estatisticas"));
 
         return root;
-
     }
 
-    private static final class RootEntryPointModel extends RepresentationModel<RootEntryPointModel> {
-
-    }
-
+    private static final class RootEntryPointModel extends RepresentationModel<RootEntryPointModel> { }
 }

@@ -5,13 +5,13 @@ import br.com.ccs.delivery.api.v1.mapper.MunicipioMapper;
 import br.com.ccs.delivery.api.v1.model.representation.input.MunicipioInput;
 import br.com.ccs.delivery.api.v1.model.representation.response.EstadoResponse;
 import br.com.ccs.delivery.api.v1.model.representation.response.MunicipioResponse;
-import br.com.ccs.delivery.core.configurations.ApiMediaTypes;
 import br.com.ccs.delivery.domain.service.MunicipioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,7 +21,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(value = "/api/municipios", produces = ApiMediaTypes.V1_APPLICATION_JSON_VALUE)
+// para ser utilizado com versionamento com custom media type
+//@RequestMapping(value = "/api/municipios", produces = ApiMediaTypes.V1_APPLICATION_JSON_VALUE)
+
+@RequestMapping(value = {"/api/municipios", "/api/v1/municipios"}, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class MunicipioController {
 
