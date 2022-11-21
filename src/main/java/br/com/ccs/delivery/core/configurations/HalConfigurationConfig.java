@@ -12,6 +12,7 @@ public class HalConfigurationConfig {
 
         return new HalConfiguration()
                 .withMediaType(MediaType.APPLICATION_JSON)
-                .withMediaType(ApiMediaTypes.V1_APPLICATION_JSON);
+                .withMediaType(ApiMediaTypes.V1_APPLICATION_JSON)
+                .withMediaType(ApiMediaTypes.V2_APPLICATION_JSON);
     }
 }
