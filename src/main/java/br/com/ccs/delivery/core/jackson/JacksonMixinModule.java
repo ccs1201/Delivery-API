@@ -1,6 +1,6 @@
 package br.com.ccs.delivery.core.jackson;
 
-import br.com.ccs.delivery.api.model.mixin.*;
+import br.com.ccs.delivery.api.v1.model.mixin.*;
 import br.com.ccs.delivery.domain.model.entity.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.stereotype.Component;
