@@ -22,7 +22,7 @@ public class GrupoService {
     PermissaoService permissaoService;
 
     public Collection<Grupo> findAll() {
-        return repository.findAll();
+        return repository.findAllEager();
     }
 
     public Grupo save(Grupo grupo) {
@@ -34,7 +34,7 @@ public class GrupoService {
     }
 
     public Grupo findById(Long grupoId) {
-        return repository.findById(grupoId).orElseThrow(() ->
+        return repository.findByIdComPermissoes(grupoId).orElseThrow(() ->
                 new RepositoryEntityNotFoundException(
                         String.format("Grupo ID: %d não encontrado.", grupoId)));
     }
@@ -58,9 +58,16 @@ public class GrupoService {
 
         this.findById(grupoId);
 
-        return repository.findByIdComPermissoes(grupoId).orElseThrow(() ->
+        var grupo = repository.findByIdComPermissoes(grupoId).orElseThrow(() ->
                 new RepositoryEntityNotFoundException(
                         String.format("Grupo ID: %d, não possui permissões.", grupoId)));
+
+        if (grupo.getPermissoes().isEmpty()) {
+            throw new RepositoryEntityNotFoundException(
+                    String.format("Grupo ID: %d, não possui permissões.", grupoId));
+        }
+
+        return grupo;
     }
 
     @Transactional

@@ -10,6 +10,7 @@ import br.com.ccs.delivery.domain.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -71,5 +72,15 @@ public class UsuarioController {
     public UsuarioResponse getGrupos(@PathVariable Long usuarioId){
 
         return mapper.toModel(service.findGrupos(usuarioId));
+    }
+
+    @PutMapping("{usuarioId}/grupos/{grupoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Void> addGrupo(@PathVariable Long usuarioId, @PathVariable Long grupoId){
+
+        service.addGrupo(usuarioId, grupoId);
+
+
+        return ResponseEntity.ok().build();
     }
 }

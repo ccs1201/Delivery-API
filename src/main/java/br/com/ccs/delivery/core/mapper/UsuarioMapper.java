@@ -30,6 +30,10 @@ public class UsuarioMapper extends AbstractMapper<UsuarioResponse, UsuarioInput,
                         .withRel("grupos-usuario"))
                 .add(linkTo(UsuarioController.class).withRel("usuarios"));
 
+        model.add(linkTo(
+                methodOn(UsuarioController.class).addGrupo(usuario.getId(), null)
+        ).withRel("associar-grupo"));
+
         return model;
     }
 

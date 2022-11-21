@@ -6,12 +6,12 @@ import br.com.ccs.delivery.core.mapper.PermissaoMapper;
 import br.com.ccs.delivery.domain.model.entity.Permissao;
 import br.com.ccs.delivery.domain.service.PermissaoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/permissoes")
@@ -28,8 +28,8 @@ public class PermissaoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<PermissaoResponse> getAll() {
-        return mapper.toCollection(service.findAll());
+    public CollectionModel<PermissaoResponse> getAll() {
+        return mapper.toCollectionModel(service.findAll());
     }
 
     @GetMapping("{permissaoId}")

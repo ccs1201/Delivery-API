@@ -1,5 +1,6 @@
 package br.com.ccs.delivery.api.model.representation.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
@@ -11,6 +12,7 @@ import java.util.Collection;
 @Relation("pedido")
 @Getter
 @Setter
+@Schema(name = "Pedido")
 public class PedidoResponse extends RepresentationModel<PedidoResponse> {
 
     private String codigo;

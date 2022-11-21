@@ -4,14 +4,18 @@ import br.com.ccs.delivery.api.model.representation.response.jsonview.Restaurant
 import br.com.ccs.delivery.domain.model.component.Endereco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.math.BigDecimal;
 
+@Relation("restaurantes")
 @Getter
 @Setter
+@Schema(name = "Restaurante")
 public class RestauranteResponse extends RepresentationModel<RestauranteResponse> {
 
     @JsonView({RestauranteResponseView.Resumo.class, RestauranteResponseView.Nome.class})

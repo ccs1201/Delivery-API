@@ -1,11 +1,9 @@
 package br.com.ccs.delivery.domain.service;
 
+import br.com.ccs.delivery.domain.model.entity.Grupo;
 import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.repository.UsuarioRepository;
-import br.com.ccs.delivery.domain.service.exception.AtualizaSenhaException;
-import br.com.ccs.delivery.domain.service.exception.EmailJaCadastradoException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityInUseException;
-import br.com.ccs.delivery.domain.service.exception.RepositoryEntityNotFoundException;
+import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,7 +25,7 @@ public class UsuarioService {
     }
 
     public Usuario findaById(Long id) {
-        return repository.findById(id).orElseThrow(() ->
+        return repository.findByIdEager(id).orElseThrow(() ->
                 new RepositoryEntityNotFoundException(String.format("Usuário ID: %d, não encontrado.", id)));
     }
 
@@ -82,9 +80,29 @@ public class UsuarioService {
 
     public Usuario findGrupos(Long usuarioId) {
 
-        return repository.findGrupos(usuarioId).orElseThrow(() ->
+        var usuario =  repository.findSeTiverGrupos(usuarioId).orElseThrow(() ->
                 new RepositoryEntityNotFoundException(
                         String.format("Usuário id %d não possui nenhum grupo cadastrado.", usuarioId))
         );
+
+        return usuario;
+    }
+
+    public void addGrupo(Long usuarioId, Long grupoId) {
+
+        Grupo grupo = new Grupo();
+        grupo.setId(grupoId);
+
+        try {
+            var usuario = repository.findByIdEager(usuarioId).get();
+            usuario.getGrupos().add(grupo);
+            repository.saveAndFlush(usuario);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("Erro ao adicionar Usuário ao grupo.");
+
+        }
+
     }
 }

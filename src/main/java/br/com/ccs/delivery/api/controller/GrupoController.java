@@ -9,6 +9,7 @@ import br.com.ccs.delivery.domain.model.entity.Grupo;
 import br.com.ccs.delivery.domain.service.GrupoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -74,15 +75,18 @@ public class GrupoController {
 
     @PutMapping("{grupoId}/permissoes/{permissaoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addPermissao(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
+    public ResponseEntity<Void> addPermissao(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
 
         service.addPermissao(grupoId, permissaoId);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{grupoId}/permissoes/{permissaoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removePermissao(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
+    public ResponseEntity<Void> removePermissao(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
 
         service.removePermissao(grupoId, permissaoId);
+        return ResponseEntity.noContent().build();
     }
 }
