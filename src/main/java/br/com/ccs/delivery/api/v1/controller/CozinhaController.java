@@ -1,12 +1,13 @@
 package br.com.ccs.delivery.api.v1.controller;
 
+import br.com.ccs.delivery.api.v1.mapper.CozinhaMapper;
 import br.com.ccs.delivery.api.v1.model.representation.input.CozinhaInput;
 import br.com.ccs.delivery.api.v1.model.representation.response.CozinhaResponse;
-import br.com.ccs.delivery.api.v1.mapper.CozinhaMapper;
 import br.com.ccs.delivery.domain.model.entity.Cozinha;
 import br.com.ccs.delivery.domain.model.wrapper.CozinhaXmlResponse;
 import br.com.ccs.delivery.domain.service.CozinhaService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -17,11 +18,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
-
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/cozinhas", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 @RequiredArgsConstructor
 public class CozinhaController {
+
+    //Podemos usar o anotações do lombok @Slf4j
+   //private static final Logger LOGGER = LoggerFactory.getLogger(CozinhaController.class);
+
     private final CozinhaService service;
 //    @MapperQualifier(MapperQualifierType.COZINHA)
 //    MapperInterface<CozinhaResponse, CozinhaInput, Cozinha> cozinhaMapper;
@@ -33,6 +38,8 @@ public class CozinhaController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public PagedModel<CozinhaResponse> findAll(@PageableDefault(size = 10) Pageable pageable) {
+
+        log.info("Listando cozinhas com pagina de tamanho {} ...", pageable.getPageSize());
 
         var cozinhasPage = service.findAll(pageable);
 

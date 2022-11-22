@@ -1,9 +1,6 @@
 package br.com.ccs.delivery.api.v2.controller;
 
 import br.com.ccs.delivery.api.utils.ResourceLocationUriHelper;
-import br.com.ccs.delivery.api.v1.controller.EstadoController;
-import br.com.ccs.delivery.api.v1.model.representation.response.EstadoResponse;
-import br.com.ccs.delivery.api.v1.model.representation.response.MunicipioResponse;
 import br.com.ccs.delivery.api.v2.mapper.CidadeMapperV2;
 import br.com.ccs.delivery.api.v2.model.input.CidadeInputV2;
 import br.com.ccs.delivery.api.v2.model.response.CidadeResponseV2;
@@ -11,6 +8,7 @@ import br.com.ccs.delivery.domain.service.MunicipioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,9 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 // usando para versionamento com custom media type
@@ -82,37 +77,11 @@ public class CidadeControllerV2 {
         service.delete(municipioId);
     }
 
-    /**
-     * <p> Adiciona HyperMedia ao {@link MunicipioResponse}</p>
-     *
-     * @param response {@link MunicipioResponse}
-     */
-    private void addSelfRef(MunicipioResponse response) {
+    @GetMapping("/error")
+    @ResponseStatus(HttpStatus.OK)
+    protected void logError(){
 
-        response.add(linkTo(
-                methodOn(
-                        CidadeControllerV2.class)
-                        .findById(response.getId()))
-                .withSelfRel());
-
-        //Adiciona a HyperMedia ao Estado
-        addSelfRef(response.getEstado());
-
-    }
-
-    /**
-     * <p>Adiciona HyperMedia ao {@link EstadoResponse}</p>
-     *
-     * @param response {@link EstadoResponse}
-     */
-    private void addSelfRef(EstadoResponse response) {
-
-        response.add(
-                linkTo(
-                        methodOn(EstadoController.class)
-                                .findById(response.getId()))
-                        .withSelfRel());
-
+        throw new NotImplementedException("Método não implementado....");
     }
 
 }

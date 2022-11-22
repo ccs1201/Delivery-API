@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.TypeMismatchException;
@@ -38,7 +39,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler implements ApiExceptionHandlerInterface {
 
@@ -57,7 +58,7 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ApiResponse(responseCode = "500", description = "An unexpected error occur.")
     public ResponseEntity<Object> unCaughtHandler(Exception e) {
-        // e.printStackTrace();
+        log.error("Erro não previsto...", e);
         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR,
                 String.format("Uncaught error, please contact SYS Admin. Details: %s", e.getMessage()), "An unexpected error occur.");
     }
@@ -302,7 +303,8 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
     private ResponseEntity<Object> jsonParseExceptionHandler(JsonParseException e, HttpStatus status) {
         ApiValidationErrorResponse errorResponse = buildApiValidationErrorResponse(status);
 
-        String message = e.getMessage().replace("\n at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 4, column: 21]", "");
+        String message = e.getMessage()
+                .replace("\n at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 4, column: 21]", "");
 
         errorResponse.getDetails().add(ApiValidationErrorResponse.FieldValidationError
                 .builder()
@@ -326,7 +328,9 @@ public class ApiExceptionHandlerImpl extends ResponseEntityExceptionHandler impl
                 .add(ApiValidationErrorResponse.FieldValidationError
                         .builder()
                         .field(path.getFieldName())
-                        .fieldValidationMessage(String.format("Esperado %s recebido %s", e.getTargetType().getSimpleName(), e.getValue().getClass().getSimpleName()))
+                        .fieldValidationMessage(
+                                String.format("Esperado %s recebido %s",
+                                        e.getTargetType().getSimpleName(), e.getValue().getClass().getSimpleName()))
                         .rejectedValue((String) e.getValue())
                         .build()));
 
