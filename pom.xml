@@ -17,6 +17,7 @@
         <java.version>19</java.version>
         <jasperreport.version>6.20.0</jasperreport.version>
         <aws-java-sdk-s3.version>1.12.272</aws-java-sdk-s3.version>
+        <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
     </properties>
     <dependencies>
         <dependency>
@@ -168,6 +169,13 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-hateoas</artifactId>
             <version>1.6.12</version>
+        </dependency>
+
+        <!-- Loggly Gerenciamento de Logs na nuvem -->
+        <dependency>
+            <groupId>org.logback-extensions</groupId>
+            <artifactId>logback-ext-loggly</artifactId>
+            <version>${logback-ext-loggly.version}</version>
         </dependency>
 
     </dependencies>
