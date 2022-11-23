@@ -49,6 +49,7 @@ public class CozinhaController {
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public CozinhaXmlResponse findAllXml() {
+
         return new CozinhaXmlResponse(service.findAll());
     }
 
@@ -62,6 +63,7 @@ public class CozinhaController {
     @GetMapping("{cozinhaId}")
     @ResponseStatus(HttpStatus.OK)
     public CozinhaResponse findById(@PathVariable Long cozinhaId) {
+
         return mapper.toModel(service.findById(cozinhaId));
     }
 
@@ -91,7 +93,7 @@ public class CozinhaController {
     @GetMapping("/first")
     @ResponseStatus(HttpStatus.OK)
     public CozinhaResponse getFirst() {
+
         return mapper.toModel(service.getFirst());
     }
-
 }

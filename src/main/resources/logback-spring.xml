@@ -1,22 +1,26 @@
 <configuration debug="true">
 
     <!-- Inclui as configurações de log. padrão do spring -->
-    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <!-- Nome da propriedade que contem o token do loggly -->
-    <springProperty name="logglyToken" source="delivery-api.loggly.token"/>
+    <springProfile name="prod">
 
-    <!-- Apender para o Loggly -->
-    <appender name="loggly" class="ch.qos.logback.ext.loggly.LogglyAppender">
-        <endpointUrl>https://logs-01.loggly.com/inputs/${logglyToken}/tag/logback</endpointUrl>
-        <pattern>%d{"ISO8601", UTC}  %p %t %c{0}.%M - %m%n</pattern>
-    </appender>
+        <!-- Nome da propriedade que contem o token do loggly -->
+        <springProperty name="logglyToken" source="delivery-api.loggly.token"/>
 
-    <appender name="logglyAsync" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="loggly" />
-    </appender>
+        <!-- Apender para o Loggly -->
+        <appender name="loggly" class="ch.qos.logback.ext.loggly.LogglyAppender">
+            <endpointUrl>https://logs-01.loggly.com/inputs/${logglyToken}/tag/logback</endpointUrl>
+            <pattern>%d{"ISO8601", UTC} %p %t %c{0}.%M - %m%n</pattern>
+        </appender>
 
-    <root level="info">
-        <appender-ref ref="logglyAsync" />
-    </root>
+        <appender name="logglyAsync" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="loggly"/>
+        </appender>
+
+        <root level="info">
+            <appender-ref ref="logglyAsync"/>
+        </root>
+
+    </springProfile>
 </configuration>
