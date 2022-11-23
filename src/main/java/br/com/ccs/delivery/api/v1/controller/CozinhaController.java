@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import java.util.Collection;
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/cozinhas", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+@RequestMapping(value = "/api/cozinhas", produces = {MediaType.APPLICATION_JSON_VALUE})//, MediaType.APPLICATION_XML_VALUE})
 @RequiredArgsConstructor
 public class CozinhaController {
 
