@@ -17,5 +17,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2ResourceServer().opaqueToken();
     }
-
 }
