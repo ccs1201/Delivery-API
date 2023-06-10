@@ -14,12 +14,26 @@
     <name>Delivery-API</name>
     <description>API Rest com Spring Boot para Estudos</description>
     <properties>
-        <java.version>19</java.version>
+        <java.version>17</java.version>
         <jasperreport.version>6.20.0</jasperreport.version>
         <aws-java-sdk-s3.version>1.12.272</aws-java-sdk-s3.version>
         <logback-ext-loggly.version>0.1.5</logback-ext-loggly.version>
+        <jaxb-core.version>4.0.1</jaxb-core.version>
     </properties>
     <dependencies>
+
+<!--        <dependency>-->
+<!--            <groupId>com.sun.xml.bind</groupId>-->
+<!--            <artifactId>jaxb-impl</artifactId>-->
+<!--            <version>${javax-jaxb.version}</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.sun.xml.bind</groupId>-->
+<!--            <artifactId>jaxb-core</artifactId>-->
+<!--            <version>${jaxb-core.version}</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -178,10 +192,15 @@
         </dependency>
 
         <!-- Spring Security -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
+
+        <!-- Spring oauth2 Resource Server -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-<!--            <version>2.7.5</version>-->
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
     </dependencies>

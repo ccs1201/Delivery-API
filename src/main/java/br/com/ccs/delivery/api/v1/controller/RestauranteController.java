@@ -26,6 +26,8 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //@CrossOrigin(origins = "http://localhost:8081", maxAge = 10)
 @RestController
@@ -86,6 +88,9 @@ public class RestauranteController {
     @GetMapping("{restauranteId}")
     @ResponseStatus(HttpStatus.OK)
     public RestauranteResponse findById(@PathVariable Long restauranteId) {
+
+        Logger.getLogger("DeliveryAPI").log(Level.INFO,"Entrou no findById do Delivery API");
+
         Restaurante restaurante = service.findById(restauranteId);
 
         return restauranteMapper.toModel(restaurante);
@@ -125,6 +130,7 @@ public class RestauranteController {
     @GetMapping("/nome-cozinha")
     @ResponseStatus(HttpStatus.OK)
     public Collection<RestauranteResponse> findByNomeCozinha(@RequestParam String nomeCozinha) {
+
         return restauranteMapper.toCollection(service.findByNomeCozinha(nomeCozinha));
     }
 
@@ -149,12 +155,14 @@ public class RestauranteController {
     @GetMapping("/specs")
     @ResponseStatus(HttpStatus.OK)
     public Collection<RestauranteResponse> getComSpecs(String nomeRestaurante, String nomeCozinha) {
+
         return restauranteMapper.toCollection(service.findAll(nomeRestaurante, nomeCozinha));
     }
 
     @GetMapping("/first")
     @ResponseStatus(HttpStatus.OK)
     public RestauranteResponse getFirst() {
+
         return restauranteMapper.toModel(service.getFirst());
     }
 
