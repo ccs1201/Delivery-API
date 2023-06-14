@@ -27,9 +27,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .oauth2ResourceServer().opaqueToken();
     }
 
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        var secretkey = new SecretKeySpec(SECRET.getBytes(), "HmacSHA256");
-        return NimbusJwtDecoder.withSecretKey(secretkey).build();
-    }
+
+//para uso com chaves simetricas
+//    @Bean
+//    public JwtDecoder jwtDecoder() {
+//        var secretkey = new SecretKeySpec(SECRET.getBytes(), "HmacSHA256");
+//        return NimbusJwtDecoder.withSecretKey(secretkey).build();
+//    }
 }
