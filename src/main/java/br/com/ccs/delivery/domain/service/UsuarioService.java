@@ -5,18 +5,21 @@ import br.com.ccs.delivery.domain.model.entity.Usuario;
 import br.com.ccs.delivery.domain.repository.UsuarioRepository;
 import br.com.ccs.delivery.domain.service.exception.*;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UsuarioService {
 
-    UsuarioRepository repository;
+    private final UsuarioRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     private final String EMAIL_JA_CADASTRADO = "Já existe um usuário com e-mail %s cadastrado.";
 
@@ -32,6 +35,7 @@ public class UsuarioService {
     @Transactional
     public Usuario save(Usuario usuario) {
         try {
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
             return repository.saveAndFlush(usuario);
         } catch (DataIntegrityViolationException e) {
             throw new EmailJaCadastradoException(String.format(EMAIL_JA_CADASTRADO, usuario.getEmail()), e);
@@ -61,26 +65,27 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void updateSenha(Long idUsuario, String senhaAtual, String novaSenha) {
+    public void updateSenha(Long idUsuario, String senhaInformada, String novaSenha) {
 
         Usuario usuario = this.findaById(idUsuario);
 
-        if (!validarSenha(usuario.getSenha(), senhaAtual)) {
+        if (validarSenha(usuario.getSenha(), senhaInformada)) {
+            usuario.setSenha(passwordEncoder.encode(novaSenha));
+            repository.saveAndFlush(usuario);
+        } else {
             throw new AtualizaSenhaException("Senha atual incorreta verifique.");
         }
-
-        usuario.setSenha(novaSenha);
-
-        repository.saveAndFlush(usuario);
     }
 
-    private boolean validarSenha(String senha, String senhaParaValidar) {
-        return senha.contentEquals(senhaParaValidar);
+    private boolean validarSenha(String senhaAtual, String senhaInformada) {
+
+        return passwordEncoder.matches(senhaInformada, senhaAtual);
+//        return senhaAtual.contentEquals(senhaParaValidar);
     }
 
     public Usuario findGrupos(Long usuarioId) {
 
-        var usuario =  repository.findSeTiverGrupos(usuarioId).orElseThrow(() ->
+        var usuario = repository.findSeTiverGrupos(usuarioId).orElseThrow(() ->
                 new RepositoryEntityNotFoundException(
                         String.format("Usuário id %d não possui nenhum grupo cadastrado.", usuarioId))
         );
