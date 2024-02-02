@@ -1,0 +1,17 @@
+version: '3.9'
+name: 'delivery-api'
+
+services:
+  #Data Base
+  mysql:
+    image: mysql
+    environment:
+#      - MYSQL_DATABASE:delivery
+      - MYSQL_ROOT_PASSWORD=root
+#      - MYSQL_USER=root
+    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1GB'
